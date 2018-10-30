@@ -2,14 +2,13 @@
 
 
 
-#' berechne: Berechne Mittelwerte
+#' berechne: berechne Mittelwerte
 #'
 #' Die Lagemasse werden ueber die Standard-Funktionen berechnet unterschied ist nur dass
 #' Faktoren zu Zahlen transformiert werden und das \code{na.rm=TRUE} gesetzt wird.
 #' CI = Hmisc::smean.cl.normal
 #'
 #'
-#' @name berechne
 #' @return  ein dataframe Objekt oder ein Character-String
 #' @param ... alles weitere
 #' @export
@@ -294,7 +293,7 @@ calc_mean <-  function(x,
 
 
 
-#' @rdname Berechne
+#' @rdname berechne
 #' @export
 Mean2default <- function(x,
                          digits = 2,
@@ -329,7 +328,7 @@ Mean2default <- function(x,
 
 
 
-#' @rdname Berechne
+#' @rdname berechne
 
 Median2default <- function(x,
                            digits = 2,
