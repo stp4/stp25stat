@@ -7,6 +7,8 @@
 \alias{berechne_all}
 \alias{calc_median}
 \alias{calc_mean}
+\alias{Mean2default}
+\alias{Median2default}
 \alias{Multi2default}
 \alias{mean2}
 \alias{median2}
@@ -23,7 +25,7 @@
 \alias{Prozent}
 \alias{Prozent2default}
 \alias{Prozent2APA}
-\title{berechne: Berechne Mittelwerte}
+\title{berechne: berechne Mittelwerte}
 \usage{
 berechne(...)
 
@@ -41,6 +43,14 @@ calc_median(x, digits = 2, n = length(x),
 
 calc_mean(x, digits = 2, n = length(x),
   mean.style = get_my_options()$apa.style$mittelwert$mean.style)
+
+Mean2default(x, digits = 2, n = length(x),
+  mean.style = get_my_options()$apa.style$mittelwert$mean.style,
+  include.level = get_my_options()$apa.style$mittelwert$include_name)
+
+Median2default(x, digits = 2, n = length(x),
+  median.style = get_my_options()$apa.style$mittelwert$median.style,
+  include.level = get_my_options()$apa.style$mittelwert$include_name)
 
 Multi2default(x, digits = 0, n = length(x), use.level = 1,
   include.level = get_my_options()$apa.style$prozent$include_name)
@@ -111,9 +121,9 @@ Multi2default(x, digits = 0, n = length(x), use.level = 1,
 
 \item{median.style, mean.style}{intern in calc_median}
 
-\item{use.level}{welcher level wir gezaelt}
-
 \item{include.level}{mit yes in labels?}
+
+\item{use.level}{welcher level wir gezaelt}
 
 \item{continuous, breaks, labels}{fuer cut}
 
