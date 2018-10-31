@@ -153,7 +153,7 @@ Klassifikation.xtabs<- function(x,
  attr(x, "dimnames")[[2]] <- lvs
  xtab<-x
  x <- caret::confusionMatrix(x)
- #rndr_(2.5689)
+ 
  out <- as.character(c(
    rndr_(x$overall["Accuracy"], digits),
    rndr_CI(x$overall[c("AccuracyLower", "AccuracyUpper")]),

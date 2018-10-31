@@ -123,7 +123,7 @@ APA2.xtabs  <- function(x,
                         ...) {
   res <- NULL
   type <- match.arg(type, several.ok = TRUE)
-  # test <- if (test)  type  else  0
+ 
 
     if (is.null(digits)) digits <- options()$stp25$apa.style$prozent$digits[1]
 
@@ -150,10 +150,11 @@ APA2.xtabs  <- function(x,
 
 
   res <- list(xtab = x_tab, test = NULL)
-  #  print(class(res))
+    print(class(res))
   if (test){
+    cat("\n in test")
     dimension <- length(dimnames(x))
-
+ print(length(x))
   # margin und add.margins ueber include.total festlegen
   if (dimension == 1) {
     # Proportion
@@ -386,9 +387,11 @@ APA_Xtabs.default <- function(x, ...) {
 
 fisher_Statistik <- function(x, digits = 2) {
   fisher <- fisher.test(x)
+  
+  
   res <- data.frame(
     OR  = Format2(fisher$estimate, digits),
-    CI  = rndr_CI(fisher$conf.int),
+    CI  = rndr_CI(as.vector(fisher$conf.int)),
     p   = rndr_P(fisher$p.value)
   )
   names(res) <- c("OR", "95% CI" , "p-Value")
@@ -480,7 +483,7 @@ which_margin <- function(mydim, #x,
   }
 
 
-  #cat("\nmargin: "); print(margin)
+ 
   margin
 
 }
@@ -506,7 +509,7 @@ Xtabelle <- function(x,
                  include.total.columns,
                  include.total.sub,
                  include.total.rows)
- # print(mrgn)
+ 
   if (!is.na(margin))
     mrgn$prop <- margin
   if (!is.na(add.margins))
@@ -558,22 +561,24 @@ test_xtabl_NxM <- function (x, type, output, ...) {
 }
 
 test_xtabl_2x2 <- function(x, type, output, lvs = c("+", "-"), ...) {
-
+ 
   res <- list(fisher=NULL, sensitivity=NULL)
   # type kann mehr sein  #-- c("fischer", "odds","sensitivity", "chisquare" )
   if ("fischer" %in%  type) {
+ 
     x_fisher <- prepare_output(fisher_Statistik(x),
                                caption = "Fisher's Exact Test ")
 
+    
     Output(x_fisher,  output = output)
     res$fisher <- x_fisher
+ 
   }
   if ("sensitivity" %in% type) {
+  
     x_diagnostic <- prepare_output(Klassifikation.xtabs(x, lvs),
                                    caption = "Sensitivity Test")
-
-  #  cat("\n in test_xtabl_2x2\n")
-   # print(x_diagnostic)
+   
     Output(x_diagnostic$statistic, output = output)
 
     res$sensitivity <- x_diagnostic
