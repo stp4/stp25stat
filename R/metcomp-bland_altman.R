@@ -1,4 +1,4 @@
-#' @rdname APA2
+#' @rdname APA
 #' @export
 APA.bland_altman <-
   function(x, ...) {
@@ -24,38 +24,31 @@ APA2.bland_altman <- function(x,
   invisible(res)
 }
 
- print.bland_altman <- function(x, ...){ print(x$stat) }
+print.bland_altman <- function(x, ...){ print(x$stat) }
 
 
 
-#' @rdname BlandAltman
-#' @title BlandAltman
-#' @name BlandAltman
-#' @description Diese Funktion ist ein Platzhalter
-#' (see \code{\link[haven]{tagged_na}})
-#' und zeigt die ...
-#' @param x Objekt
+
+#' @rdname MetComp
+#' @description  BlandAltman() Plot-Methode ist unter plot.bland_altman() zu finden.
+#'  
+#' @param .data, x Objekt
 #' @param ... weitere Objekte nicht benutzt
 #' @return A \code{\link[tibble]{tibble}} with counted tagged NA values.
-#'
-#' @examples
-#' library(haven)
-#'
-#'
-
 #' @export
 
 BlandAltman<-function(.data, x, ...) {
   UseMethod("BlandAltman")
 }
 
-#' @rdname BlandAltman
+#' @rdname MetComp
 #' @export
 BlandAltman.data.frame <- function(.data, x, ...) {
   #-- hier Fehlt noch die Unterscheidung in 2 oder mehr Vergleiche
   BAP(x, .data, ...)
 }
-#' @rdname BlandAltman
+
+#' @rdname MetComp
 #' @export
 BlandAltman.formula <- function(x, .data, ...) {
   BlandAltman.data.frame(.data, x, ...)
@@ -107,12 +100,12 @@ function (dfr,
 
 
   mean.percent<-mean(diffs.percent)
-  ssd.persent<- sd(diffs.percent)
-  critical.diff.percent <- two * ssd.persent
-  se.ci.percent<- sqrt(ssd.persent^2 * 3/based.on)
-  se.mean.percent<-ssd.persent/sqrt(based.on)
+  ssd.percent<- sd(diffs.percent)
+  critical.diff.percent <- two * ssd.percent
+  se.ci.percent<- sqrt(ssd.percent^2 * 3/based.on)
+  se.mean.percent<-ssd.percent/sqrt(based.on)
   lower.limit.percent = mean.percent-critical.diff.percent
-  upper.limit.percent = ssd.persent+critical.diff.percent
+  upper.limit.percent = ssd.percent+critical.diff.percent
 
   CI.lines.percent <- c(lower.limit.ci.lower = lower.limit.percent + t1 * se.ci.percent,
                 lower.limit.ci.upper = lower.limit.percent + t2 * se.ci.percent,
@@ -129,19 +122,22 @@ function (dfr,
                                  mean.percent+critical.diff.percent),
               CI.lines.percent = CI.lines.percent,
 
-              stat= data.frame(Parameter=c("df (n-1)","difference mean (d)",
-                                           "standard deviation (s)", "critical.diff (1.96s)",
-                                           "d-1.96s", "d+1.96s"),
+              stat= data.frame(Parameter=c("df (n-1)",
+                                           "difference mean (d)",
+                                           "standard deviation (s)", "
+                                           critical.diff (1.96s)",
+                                           "d-1.96s", 
+                                           "d+1.96s"),
                                Unit= c(Format2(based.on - 1, 0),
                                        Format2( c(mean.diffs, sd.diffs,critical.diff,
                                                     lower.limit,upper.limit), digits)
                                        ),
                                Percent= c("",
-                                        ffprozent.default(
-                                           c(mean.percent, ssd.persent,
-                                           critical.diff.percent,
-                                           lower.limit.percent,
-                                           upper.limit.percent)
+                                          rndr_percent(
+                                           c(mean.percent, ssd.percent,
+                                             critical.diff.percent,
+                                             lower.limit.percent,
+                                             upper.limit.percent)
                                             ,digits=1)),
                                 SE= Format2(c(NA,se.mean, NA,NA, se.ci, se.ci),digits),
                                CI.low= Format2(c(NA,CI.lines[3],NA,NA,CI.lines[1],CI.lines[5]),digits),

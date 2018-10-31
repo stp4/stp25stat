@@ -1,25 +1,20 @@
-#' @rdname MetComp
-#' @title Uebereinstimmung und Praezision von Messwerten
-#' @name MetComp
-#' @description Tukey Mean Difference oder auch Bland Altman Methode. Oft interessiert die Zuverlaessigkeit und Reproduzierbarkeit ein einer Diagnose. Die Beurteilung kann dabei durch einen Bewerter (Messverfahren) in wiederholter Form erfolgen und wird dann als Intra-Rater bezeichnet oder die Beurteilung eines Merkmals erfolgt durch mehrere Bewerter (Messverfahren). und hier spricht man von Inter-Rater.
+#'  Uebereinstimmung und Praezision von Messwerten
+#'
+#'   Tukey Mean Difference oder auch Bland Altman Methode. Oft interessiert die Zuverlaessigkeit und Reproduzierbarkeit ein einer Diagnose. Die Beurteilung kann dabei durch einen Bewerter (Messverfahren) in wiederholter Form erfolgen und wird dann als Intra-Rater bezeichnet oder die Beurteilung eines Merkmals erfolgt durch mehrere Bewerter (Messverfahren). und hier spricht man von Inter-Rater.
 #' Die Methode der Beurteilung der uebereinstimmung haengt von den jeweiligen Datentype ab.
 #' Bei Nominalen wird abgezaehlt und die Rate der uebereinstimmung bewertet (Cohen-Koeffizient) Bei Ordinalen-Daten werden die gewichteten uebereinstimmungen ausgezaehlt (gewichteter Cohen-Koeffizient). Bei metrischen(stetigen) Daten werden die Differenzen beurteilt (Bland-Altman-Methode).
 #'
 #' Bland-Altman-Methode Bias (d) systematische Abweichung Messfehler (s) Standardabweichung der Differenz Limits of agreement (LOA) Intervall von 95 (entspricht d+-1.96 -> es wird eine Normalverteilung unterstellt).
 #' Methoden Die generische Funktion MetComp() kann sowohl Kappa als auch Tukey-means berechnen. Kappa kann aber auch ueber die xtab() und APA2 berechnet werden. Wobei hier nur 2x2-Tabellen untersucht werden und bei Kappa() sind hingegen auch mehrere ordinale Kategorien erlaubt sind.
 #' aehnliche Methode ist ICC die aber eher zur Reliabilitaetsanalyse gehoert.
-#'
+#' @name MetComp
 #' @param .data Daten
 #' @param x Formula Objekt
 #' @param ... weitere Objekte nicht benutzt
 #' @return Ein bland_altman-Objekt mit den Daten (data) und der Statistik (stat).
 #' @export
 #' @examples
-#' #library(stp25)
-#' #library(tidyr)
-#' #graphics.off()
-#' #setwd("C:/Users/wpete/Dropbox/1_Projekte/000 Temp")
-#' #Projekt("html", "bland_altman")
+#' 
 #' #- Understanding Bland Altman analysis
 #' #Davide Giavarina
 #' #Biochemia medica 2015;25(2) 141-51
@@ -50,13 +45,11 @@
 #'                 D = round( A + rnorm(30,0,10) + A/10 ),
 #'                 E = round( A + rnorm(30,5,10) + (100-A/10) ))
 #'
-#' #head(DF)
 #'  xt <-xtabs(~A+B, DF2)
 #'  Klassifikation2(xt)
 #'
 #' x<- BlandAltman(~A+E , DF)
-#' #x$groups
-#' x %>% Output( )
+#
 #' ICC2(~A+E , DF)
 #' #windows(8,3)
 #' #plot(x)
@@ -83,15 +76,6 @@
 #' #plot(x)
 #'
 #'
-#' #library(stp25)
-#' #library(tidyr)
-#' #graphics.off()
-#' #setwd("C:/Users/wpete/Dropbox/1_Projekte/000 Temp")
-#' #Projekt("html", "bland_altman")
-#' #- Understanding Bland Altman analysis
-#' #Davide Giavarina
-#' #Biochemia medica 2015;25(2) 141-51
-#' #http://dx.doi.org/10.11613/BM.2015.015
 #'
 #' set.seed(0815)
 #'
@@ -132,7 +116,7 @@
 #' #plot(x)
 #' #SaveData(caption="A und E Messen das unterschiedlich es esistiert ein knik im Wertebereich 100")
 #'
-#' #End()
+#'
 MetComp<-function(.data, x, ...) {
   UseMethod("MetComp")
 }
