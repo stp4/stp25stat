@@ -1,6 +1,6 @@
 Package: stp25stat
 Title: Functions for statistical computations
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
 Description: Collection of convenient functions for common statistical computations.
 License: GPL-3
@@ -38,7 +38,10 @@ Suggests:
   testthat,
   tidyr, 
   dplyr,
-  stringr
+  stringr,
+  magrittr,
+  caret,
+  pscl
 LazyData: true
 RoxygenNote: 6.1.0
 VignetteBuilder: knitr  
