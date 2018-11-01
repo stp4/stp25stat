@@ -1,9 +1,8 @@
-#' @rdname Kaplan_Meier
 #' @title Kaplan Maier
 #' @name Kaplan_Meier
 #' @description Summary -Funktion für Kaplan-Maier
 #' Beispiel unter
-#' (see \code{\link[stp25data]{hkarz}})
+#' (see  \link[stp25data]{hkarz} )
 #'
 #' \subsection{Mediane}{
 #'    \code{m <- Surv(Time, status) ~ 1}

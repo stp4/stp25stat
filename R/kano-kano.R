@@ -156,7 +156,7 @@
 #'
 #' kano_res1 <-  Kano( ~ . , DF[-c(1,2)])
 #' APA2(kano_res1, caption = "Einzeln")
-#' #stp25APA2:::Kano_Auswertung(kano_res1, rnd_output=FALSE)
+#' #stp25stat:::Kano_Auswertung(kano_res1, rnd_output=FALSE)
 #' # kano_plot(kano_res1)
 #'
 #' # library(lattice)
@@ -179,7 +179,7 @@
 #' #           cex.legend=1)
 #'
 #' kano_res <- Kano( .~ Geschlecht + Edu, DF )
-#' #stp25APA2:::Kano_Auswertung( kano_res, rnd_output=FALSE)
+#' #stp25stat:::Kano_Auswertung( kano_res, rnd_output=FALSE)
 #'
 #'
 #' # Kontrolle der Logik

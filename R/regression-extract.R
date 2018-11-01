@@ -130,7 +130,7 @@ extract_param  <- function(x,
         if (conf.style.1) {
           param <- c(param,   c("conf"))
           coefs$conf <-
-             rndr_CI2(
+             stp25rndr::rndr_CI2(
               res[, c("conf.high", "conf.low")] ,
               digits= digits.param,
               format=format)
@@ -215,7 +215,7 @@ extract_param  <- function(x,
       if (conf.style.1) {
         param <- c(param, c("odds.conf"))
         coefs$odds.conf <-
-         rndr_CI2(res[, c( "odds.conf.low","odds.conf.high")] ,
+          stp25rndr::rndr_CI2(res[, c( "odds.conf.low","odds.conf.high")] ,
                  digits= digits.odds,
                  format="f")
         if (res[1, 1] == "(Intercept)")

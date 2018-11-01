@@ -301,8 +301,8 @@ format_diagonale <- function(mycorrtable,
 #'
 #' #-- Corr1
 #' # APA2(~a+b+cd, data)
-#' #stp25APA2:::Corr1(data[1:3], dimnames=TRUE)
-#' #stp25APA2:::Corr1(data[1:3], dimnames=TRUE, include.p=TRUE)
+#' #stp25stat:::Corr1(data[1:3], dimnames=TRUE)
+#' #stp25stat:::Corr1(data[1:3], dimnames=TRUE, include.p=TRUE)
 Corr1 <- function(y,
                   n = nrow(y),
                   type = "pearson",

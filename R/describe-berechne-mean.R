@@ -12,11 +12,7 @@
 #' @return  ein dataframe Objekt oder ein Character-String
 #' @param ... alles weitere
 #' @export
-#' @importFrom stats IQR aggregate median na.omit qt quantile sd
-#' @importFrom lazyeval lazy_dots
-#' @importFrom plyr llply
-#' @importFrom Hmisc smean.cl.normal
-#' @import stp25rndr
+
 berechne <- function(...) {
   UseMethod("berechne")
 }

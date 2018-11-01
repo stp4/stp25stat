@@ -39,7 +39,7 @@ APA2_multiresponse<- function(Formula,
   }
 
   X <- Formula_Data(Formula, data, na.action=na.action)
-  if( is_all_dichotom(X$Y_data)){
+  if( stpvers::is_all_dichotom(X$Y_data)){
      if(is.factor(X$Y_data[,1])){
        firstLevel<- levels(X$Y_data[,1])[use.level]
        note <- paste0(note, "\nBenutze den ", use.level, " Level, <", firstLevel, "> als Zaehler. \n")
