@@ -7,9 +7,8 @@
 #' Bland-Altman-Methode Bias (d) systematische Abweichung Messfehler (s) Standardabweichung der Differenz Limits of agreement (LOA) Intervall von 95 (entspricht d+-1.96 -> es wird eine Normalverteilung unterstellt).
 #' Methoden Die generische Funktion MetComp() kann sowohl Kappa als auch Tukey-means berechnen. Kappa kann aber auch ueber die xtab() und APA2 berechnet werden. Wobei hier nur 2x2-Tabellen untersucht werden und bei Kappa() sind hingegen auch mehrere ordinale Kategorien erlaubt sind.
 #' aehnliche Methode ist ICC die aber eher zur Reliabilitaetsanalyse gehoert.
-#' @param .data Daten
+#' @param data Daten
 #' @param x Formula Objekt
-#' @param ... weitere Objekte nicht benutzt
 #' @return Ein bland_altman-Objekt mit den Daten (data) und der Statistik (stat).
 #' @export
 #' @examples
@@ -96,6 +95,7 @@ MetComp <- function(x,
                     ci.level = .95,
                     caption = NULL,
                     note = "",
+                    digits=2,
                     output = stp25output::which_output()) {
   X <- Formula_Data(x, data)
   res <- NULL
@@ -106,7 +106,7 @@ MetComp <- function(x,
   
   
   if (is.numeric(X$Y_data[[1]]) | is.integer(X$Y_data[[1]])) {
-    res <-  MetComp_BAP(X = X)
+    res <-  MetComp_BAP(X = X, include.ci=include.ci, ci.level=ci.level, digits=digits)
     stp25output::Output(res$stat,
                         caption = caption,
                         note = note,
@@ -218,14 +218,14 @@ MetComp_Kappa <- function(x,
 #'   group= sample(gl(2, 15, labels = c("Control", "Treat")))
 #' )
 #'
-#' MetComp2(~A+B, DF, caption = "Giavarina")
+#' MetComp(~A+B, DF, caption = "Giavarina")
 #' 
 #' 
-MetComp_BAP <- function(..., X = NULL) {
+MetComp_BAP <- function(..., X = NULL, include.ci=TRUE, ci.level=.95, digits=2) {
   if (is.null(X))
     X <- Formula_Data(...)
-  
-  ba.stats <- bland.altman.stats(X$Y_data)
+ 
+  ba.stats <- bland.altman.stats(X$Y_data, include.ci=include.ci, ci.level=ci.level, digits=digits)
   ba.stats$name <-  paste(X$yname, collapse = ", ")
   ba.stats$name.diff <-  paste(X$yname[1:2], collapse = " - ")
   ba.stats$met_A <- X$yname[1]
@@ -263,6 +263,9 @@ APA2.bland_altman <- function(x,
   invisible(res)
 }
 
+
+#' @rdname APA2
+#' @export
 print.bland_altman <- function(x) {
   print(x$stat)
 }
@@ -272,8 +275,8 @@ print.bland_altman <- function(x) {
 #-- Helper Bland Altman
 bland.altman.stats <- function (dfr,
                                 two = 1.96,
-                                #mode = 1,
-                                conf.int = 0.95,
+                                include.ci=TRUE, 
+                                ci.level=.95,
                                 digits = 2) {
   called.with <- nrow(dfr)
   dfr <- na.omit(dfr)
@@ -299,8 +302,8 @@ bland.altman.stats <- function (dfr,
     mean.diffs = mean.diffs,
     upper.limit = upper.limit
   )
-  t1 <- qt((1 - conf.int) / 2, df = based.on - 1)
-  t2 <- qt((conf.int + 1) / 2, df = based.on - 1)
+  t1 <- qt((1 - ci.level) / 2, df = based.on - 1)
+  t2 <- qt((ci.level + 1) / 2, df = based.on - 1)
   
   se.ci <- sqrt(sd(diffs) ^ 2 * 3 / based.on)
   se.mean <- sd(diffs) / sqrt(based.on)
@@ -338,6 +341,52 @@ bland.altman.stats <- function (dfr,
     up = c(CI.lines[4], CI.lines[2], CI.lines[6])
   ) ,
   digits = digits)
+  
+  
+  
+  stat<- data.frame(
+    Parameter = c(
+      "df (n-1)",
+      "difference mean (d)",
+      "standard deviation (s)",
+      "critical.diff (1.96s)",
+      "d-1.96s",
+      "d+1.96s"
+    ),
+    Unit = c(
+      stp25rndr::Format2(based.on - 1, 0),
+      stp25rndr::Format2(
+        c(
+          mean.diffs,
+          sd.diffs,
+          critical.diff,
+          lower.limit,
+          upper.limit
+        ),
+        digits
+      )
+    ),
+    CI = c(NA, ci_format[1], NA, NA, ci_format[2], ci_format[3]) ,
+    
+    
+    SE = stp25rndr::Format2(c(NA, se.mean, NA, NA, se.ci, se.ci), digits),
+    Percent = c("",
+                stp25rndr::rndr_percent(
+                  c(
+                    mean.percent,
+                    ssd.percent,
+                    critical.diff.percent,
+                    lower.limit.percent,
+                    upper.limit.percent
+                  )
+                  ,
+                  digits = 1
+                ))
+    
+    ,stringsAsFactors = FALSE
+  )
+  if(!include.ci) {stat <- stat[,- 3]}
+  
   res <- list(
     lines = lines,
     # wie oben ll mean ul
@@ -349,48 +398,7 @@ bland.altman.stats <- function (dfr,
     ),
     CI.lines.percent = CI.lines.percent,
     
-    stat = data.frame(
-      Parameter = c(
-        "df (n-1)",
-        "difference mean (d)",
-        "standard deviation (s)",
-        "
-        critical.diff (1.96s)",
-        "d-1.96s",
-        "d+1.96s"
-      ),
-      Unit = c(
-        stp25rndr::Format2(based.on - 1, 0),
-        stp25rndr::Format2(
-          c(
-            mean.diffs,
-            sd.diffs,
-            critical.diff,
-            lower.limit,
-            upper.limit
-          ),
-          digits
-        )
-      ),
-      CI = c(NA, ci_format[1], NA, NA, ci_format[2], ci_format[3]) ,
-      
-      
-      SE = stp25rndr::Format2(c(NA, se.mean, NA, NA, se.ci, se.ci), digits),
-      Percent = c("",
-                  stp25rndr::rndr_percent(
-                    c(
-                      mean.percent,
-                      ssd.percent,
-                      critical.diff.percent,
-                      lower.limit.percent,
-                      upper.limit.percent
-                    )
-                    ,
-                    digits = 1
-                  ))
-      
-      
-    ),
+    stat = stat,
     data = cbind(dfr,
                  means,
                  diffs,
