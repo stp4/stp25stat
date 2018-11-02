@@ -1,7 +1,5 @@
- #' APA Syle Table
+#' APA Syle Table
 #'
-#' All functions in stringr start with APA_ and take a Object (formula, data.frame, lm, ...)
-#' as the first argument.
 #'
 #' @name APA_
 #' @param x An object to be converted into a tidy data.frame or Formula

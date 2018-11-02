@@ -7,22 +7,21 @@
 \title{MetComp:  Uebereinstimmung und Praezision von Messwerten}
 \usage{
 MetComp(x, data, include.ci = TRUE, ci.level = 0.95, caption = NULL,
-  note = "", output = stp25output::which_output())
+  note = "", digits = 2, output = stp25output::which_output())
 
 MetComp_Kappa(x, include.ci = TRUE, ci.level = 0.95)
 
-MetComp_BAP(..., X = NULL)
+MetComp_BAP(..., X = NULL, include.ci = TRUE, ci.level = 0.95,
+  digits = 2)
 }
 \arguments{
 \item{x}{Formula Objekt}
 
-\item{...}{weitere Objekte nicht benutzt}
-
-\item{X}{Aufbereitete Daten aus Formula_Data}
-
-\item{.data}{Daten}
+\item{data}{Daten}
 
 \item{...}{an Formula_Data}
+
+\item{X}{Aufbereitete Daten aus Formula_Data}
 }
 \value{
 Ein bland_altman-Objekt mit den Daten (data) und der Statistik (stat).
@@ -151,7 +150,7 @@ DF<- data.frame(
   group= sample(gl(2, 15, labels = c("Control", "Treat")))
 )
 
-MetComp2(~A+B, DF, caption = "Giavarina")
+MetComp(~A+B, DF, caption = "Giavarina")
 
 
 }

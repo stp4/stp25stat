@@ -9,7 +9,7 @@ A \code{\link[tibble]{tibble}} with counted tagged NA values.
 \description{
 Summary -Funktion für Kaplan-Maier
 Beispiel unter
-(see \code{\link[stp25data]{hkarz}})
+(see  \link[stp25data]{hkarz} )
 
 \subsection{Mediane}{
    \code{m <- Surv(Time, status) ~ 1}
