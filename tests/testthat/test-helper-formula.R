@@ -1,32 +1,5 @@
 context("test-helper-formula.R")
 
-test_that("clean_dots_formula", {
-  data <- data.frame(x = NA, y = NA, z = NA)
-  expect_equal(stp25APA2:::clean_dots_formula(x ~ y, data),
-               x ~ y)
-  
-  expect_equal(stp25APA2:::clean_dots_formula(. ~ x + y, data),
-               z ~ x + y)
-  
-  expect_equal(stp25APA2:::clean_dots_formula(x + y ~ ., data),
-               x + y ~ z)
-  
-  expect_equal(stp25APA2:::clean_dots_formula(~ ., data),
-               ~ x + y + z)
-  
-  expect_equal(
-    stp25APA2:::formula_split(a + b ~ x | y),
-    list(
-      formula = a + b ~ x,
-      condition =  ~ y,
-      facet_type = "facet_wrap"
-    )
-  )
-})
-
-
-
-
 test_that("prepare_data2 formula simpel", {
   r1 <- prepare_data2( ~ m1 + m2 + m3 + m4, varana)
   
