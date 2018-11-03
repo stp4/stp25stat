@@ -12,14 +12,14 @@
 #' @return Ein bland_altman-Objekt mit den Daten (data) und der Statistik (stat).
 #' @export
 #' @examples
-#'    
+#'
 #' #require(stp25stat)
 #' #require(stp25plot)
 #' #require(stp25output)
 #' ### Verschiedene Situationen Im folgenden habe ich eine fiktive Messung mit simulierten Daten
-#' 
+#'
 #' set.seed(0815)
-#' 
+#'
 #' n <- 100
 #' DF <- data.frame(
 #'   A = rnorm(n, 100, 50),
@@ -30,7 +30,7 @@
 #'   F = NA,
 #'   group = sample(gl(2, n / 2, labels = c("Control", "Treat")))
 #' )
-#' 
+#'
 #' cutA <- mean(DF$A)
 #' DF <- transform(
 #'   DF,
@@ -39,84 +39,88 @@
 #'   E = A + ifelse(A < cutA, A / 5,-A / 5) + rnorm(n, 0, 10),
 #'   F = A +  rnorm(n, 50, 10)
 #' )
-#' 
-#' 
-#' 
+#'
+#'
+#'
 #' #### Methoden messen das Selbe
-#' 
+#'
 #' x<- MetComp(~A+C, DF)
 #' #plot(x)
 #' tab<- x$stat[,1:2]
 #' names(tab)   <- c("Parameter", "Methoden messen das Selbe_M=0" )
-#' 
+#'
 #' x<- MetComp(~A+F, DF)
 #' tab<- cbind(tab, "Methoden messen das Selbe_Fehler M=50"= x$stat$Unit)
 #' #plot(x)
-#' 
-#' 
-#' 
+#'
+#'
+#'
 #' #### Methoden messen unterschiedlich Werte
 #' x<- MetComp(~A+B, DF)
 #' tab<- cbind(tab, "Methoden unterschiedliche_Fehler M=0"= x$stat$Unit)
 #' #plot(x)
-#' 
-#' 
-#' 
-#' 
+#'
+#'
+#'
+#'
 #' Output(tab, caption="BA" )
-#' 
+#'
 #' t1 <-
 #'   APA2(with(DF, t.test( A, C,  paired = TRUE)), output=FALSE)
 #' t2 <-
 #'   APA2(with(DF, t.test( A, F,  paired = TRUE)), output=FALSE)
 #' t3 <-
 #'   APA2(with(DF, t.test( A, B,  paired = TRUE)), output=FALSE)
-#' 
-#' 
+#'
+#'
 #' #Output(rbind( t1, t2, t3), caption="T-Test")
-#' 
-#' 
+#'
+#'
 #' #### Methoden haben systematische Abweichungen
-#' 
+#'
 #' x<- MetComp(~A+D, DF)
 #' #plot(x)
-#' 
-#' 
-#' 
+#'
+#'
+#'
 #' x<- MetComp(~A+E, DF)
 #' #plot(x)
-#' 
+#'
 
 
 
-MetComp <- function(x,
-                    data,
+MetComp <- function(...,
                     include.ci = TRUE,
                     ci.level = .95,
                     caption = NULL,
                     note = "",
-                    digits=2,
+                    digits = 2,
                     output = stp25output::which_output()) {
-  X <- Formula_Data(x, data)
+  X <- stp25formula::prepare_data2(...)
   res <- NULL
   
-  if (!stpvers::all_identical2(X$Y_data))
-    stop("Unterschiedliche Daten")
   
   
-  
-  if (is.numeric(X$Y_data[[1]]) | is.integer(X$Y_data[[1]])) {
-    res <-  MetComp_BAP(X = X, include.ci=include.ci, ci.level=ci.level, digits=digits)
+  if (all(X$measure.class == "numeric") |
+      all(X$measure.class == "integer")) {
+    res <-
+      MetComp_BAP(
+        X = X,
+        include.ci = include.ci,
+        ci.level = ci.level,
+        digits = digits
+      )
     stp25output::Output(res$stat,
                         caption = caption,
                         note = note,
                         output = output)
   }
-  
-  else if (is.factor(X$Y_data[[1]])) {
+  else if (all(X$measure.class == "factor")) {
     if (is.null(caption))
       caption = "Cohen's Kappa-Koeffizient"
-    xtb <- xtabs(x, data)
+    
+    
+    xtb <- xtabs(X$formula, X$data[X$measure.vars])
     res <-
       MetComp_Kappa(xtb, include.ci = include.ci, ci.level = ci.level)
     
@@ -125,10 +129,16 @@ MetComp <- function(x,
                         note = note,
                         output = output)
   }
+  else{
+    print(X$measure.class)
+    
+    stop("Unbekannte measure.variablen!")
+  }
   
   
   invisible(res)
 }
+
 
 #' @rdname MetComp
 #' @export
@@ -142,18 +152,16 @@ MetComp <- function(x,
 #'   B= factor(c(rep(1, 14), rep(0, 3),
 #'               rep(1, 5),rep(0, 18)),
 #'             1:0, c("+", "-")))
-#' require(vcd)
 #'
-#' Kappa(xtabs(~A+B, Botulinum))
-#' data("SexualFun")
-#' K <- Kappa(SexualFun)
-#' #K
-#' #confint(K)
-#' #summary(K)
-#' #print(K, CI = TRUE)
+#'   MetComp(~A+B, Botulinum)
 #'
-#' MetComp(~A+B, Botulinum)
-#' MetComp_Kappa(SexualFun)
+#' #require(vcd)
+#'
+#' vcd::Kappa(xtabs(~A+B, Botulinum))
+#' #data("SexualFun")
+#' #MetComp_Kappa(SexualFun)
+#'
+#'
 #'
 #'
 MetComp_Kappa <- function(x,
@@ -198,14 +206,14 @@ MetComp_Kappa <- function(x,
 
 #' @rdname MetComp
 #' @param ... an Formula_Data
-#' @param X  Aufbereitete Daten aus Formula_Data
+#' @param X  Aufbereitete Daten aus prepare_data2
 #'
 #' @return list(stats, name, name.dif. met_A, met_B, groups)
 #' @export
 #'
 #' @examples
-#' 
-#'  
+#'
+#'
 #' #- Understanding Bland Altman analysis
 #' #Davide Giavarina
 #' #Biochemia medica 2015;25(2) 141-51
@@ -219,22 +227,32 @@ MetComp_Kappa <- function(x,
 #' )
 #'
 #' MetComp(~A+B, DF, caption = "Giavarina")
-#' 
-#' 
-MetComp_BAP <- function(..., X = NULL, include.ci=TRUE, ci.level=.95, digits=2) {
-  if (is.null(X))
-    X <- Formula_Data(...)
- 
-  ba.stats <- bland.altman.stats(X$Y_data, include.ci=include.ci, ci.level=ci.level, digits=digits)
-  ba.stats$name <-  paste(X$yname, collapse = ", ")
-  ba.stats$name.diff <-  paste(X$yname[1:2], collapse = " - ")
-  ba.stats$met_A <- X$yname[1]
-  ba.stats$met_B <- X$yname[2]
-  ba.stats$groups = X$X_data
-  
-  
-  ba.stats
-}
+#'
+#'
+MetComp_BAP <-
+  function(...,
+           X = NULL,
+           include.ci = TRUE,
+           ci.level = .95,
+           digits = 2) {
+    if (is.null(X))
+      X <- prepare_data2(...)
+    
+    ba.stats <- bland.altman.stats(
+      X$data[X$measure.vars],
+      include.ci = include.ci,
+      ci.level = ci.level,
+      digits = digits
+    )
+    ba.stats$name <-  paste(X$yname, collapse = ", ")
+    ba.stats$name.diff <-  paste(X$yname[1:2], collapse = " - ")
+    ba.stats$met_A <- X$yname[1]
+    ba.stats$met_B <- X$yname[2]
+    ba.stats$groups = X$X_data
+    
+    
+    ba.stats
+  }
 
 
 #' @rdname APA
@@ -275,10 +293,10 @@ print.bland_altman <- function(x) {
 #-- Helper Bland Altman
 bland.altman.stats <- function (dfr,
                                 two = 1.96,
-                                include.ci=TRUE, 
-                                ci.level=.95,
+                                include.ci = TRUE,
+                                ci.level = .95,
                                 digits = 2) {
-  called.with <- nrow(dfr)
+  # called.with <- nrow(dfr)
   dfr <- na.omit(dfr)
   based.on <- nrow(dfr)
   if (based.on < 2)
@@ -344,7 +362,7 @@ bland.altman.stats <- function (dfr,
   
   
   
-  stat<- data.frame(
+  stat <- data.frame(
     Parameter = c(
       "df (n-1)",
       "difference mean (d)",
@@ -383,9 +401,12 @@ bland.altman.stats <- function (dfr,
                   digits = 1
                 ))
     
-    ,stringsAsFactors = FALSE
+    ,
+    stringsAsFactors = FALSE
   )
-  if(!include.ci) {stat <- stat[,- 3]}
+  if (!include.ci) {
+    stat <- stat[,-3]
+  }
   
   res <- list(
     lines = lines,
@@ -409,7 +430,3 @@ bland.altman.stats <- function (dfr,
   
   res
 }
-
-
-
-
