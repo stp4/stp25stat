@@ -1,39 +1,39 @@
 #' @rdname APA2
 #' @export
 APA2.anova <- function(x,
-                       caption=gsub("\\n", "", paste(attr(x, "heading"), collapse=", ") ),
-                       note=paste("contrasts: ", paste(options()$contrasts, collapse=", ")),
+                       caption = gsub("\\n", "", paste(attr(x, "heading"), collapse =
+                                                         ", ")),
+                       note = paste("contrasts: ", paste(options()$contrasts, collapse =
+                                                           ", ")),
                        output = stp25output::which_output(),
                        include.eta = FALSE,
                        include.sumsq = TRUE,
                        include.meansq = FALSE,
-                       ...
-) {
-
+                       ...) {
   res <-  Ordnen(
     x,
     include.eta = include.eta,
     include.sumsq = TRUE,
     include.meansq = FALSE
   )
-
-  if(include.meansq) {
-  res <- cbind( res[1:2], meansq= res$sumsq / res$df, res[3:ncol(res)])
+  
+  if (include.meansq) {
+    res <-
+      cbind(res[1:2], meansq = res$sumsq / res$df, res[3:ncol(res)])
   }
-  if(!include.sumsq) res <- res[-2]
-
+  if (!include.sumsq)
+    res <- res[-2]
+  
   res <-  stp25output::fix_format(res)
   stp25output::Output(res,
-         caption = caption,
-         note = note,
-         output = output)
+                      caption = caption,
+                      note = note,
+                      output = output)
   invisible(res)
 
-  # APA2.lm(x, caption, note,
-  #         output =  output ,
-  #         col_names = col_names,
-  #         ...)
 }
+
+
 #' @rdname APA2
 #' @description anova: APA2.aov(x, include.eta = TRUE)
 #' @export
@@ -48,13 +48,16 @@ APA2.anova <- function(x,
 #' #APA2(npk.aov, include.eta = FALSE)
 #'
 APA2.aov <- function(x,
-                     caption="ANOVA",
-                     note=paste("contrasts: ", paste(options()$contrasts, collapse=", ")),
+                     caption = "ANOVA",
+                     note = paste("contrasts: ", paste(options()$contrasts, collapse =
+                                                         ", ")),
                      output = stp25output::which_output(),
                      col_names = NULL,
-                     ...
-                     ) {
-  APA2.lm(x, caption, note, output =  output ,
+                     ...) {
+  APA2.lm(x,
+          caption,
+          note,
+          output =  output ,
           col_names = col_names,
           ...)
 }
@@ -64,19 +67,19 @@ APA2.aov <- function(x,
 #' @rdname APA2
 #' @export
 APA2.summary.aov <- function(x,
-                        caption = "ANOVA",
-                        note = "",
-                        output = stp25output::which_output(),
-                        col_names = NULL,
-                        ...) {
+                             caption = "ANOVA",
+                             note = "",
+                             output = stp25output::which_output(),
+                             col_names = NULL,
+                             ...) {
   res <- stp25output::fix_format(broom::tidy(x[[1]]))
   res <- prepare_output(cbind(Source = rownames(res), res),
                         caption = caption,
                         note = note)
   stp25output::Output(res,
-         output =  output ,
-         col_names = col_names)
-
+                      output =  output ,
+                      col_names = col_names)
+  
   invisible(res)
 }
 
@@ -101,17 +104,17 @@ APA2.aovlist <- function(x,
                          col_names = NULL,
                          ...) {
   x <- summary(x)
-
+  
   x1 <-
     stp25output::fix_data_frame2(x[[1]][[1]])
   x1 <- cbind(Source = rownames(x1), x1)
   #APA_Table(npk.aov, type="anova")
   stp25output::Output(x1 , caption = names(x[1]), output = output)
-
+  
   x2 <- stp25output::fix_data_frame2(x[[2]][[1]])
   x2 <- cbind(Source = rownames(x2), x2)
   stp25output::Output(x2 , caption = names(x[2]), output = output)
-
+  
   invisible(x)
 }
 
@@ -120,7 +123,9 @@ APA2.aovlist <- function(x,
 
 
 #' @rdname APA_Table
-#' @description \code{type="anova"} Anova (car::Anova) Funktionen aus APA_Table(..., include.anova=TRUE)
+#' @description \code{type="anova"} Anova (car::Anova) 
+#' Funktionen aus APA_Table(..., include.anova=TRUE)
+#' 
 #' @export
 APA_Table_Anova <- function(myfits,
                             caption = "Anova",
@@ -134,20 +139,20 @@ APA_Table_Anova <- function(myfits,
 {
   #cat("\nAPA_Table_Anova()\n")
   result <- list()
- # print(names(myfits))
+  # print(names(myfits))
   for (i in seq_len(length(myfits)))  {
     my_input <- model_info(myfits[[i]])
-
- #   cat("\nclass:", class(myfits[[i]]))
+    
+    #   cat("\nclass:", class(myfits[[i]]))
     if (!is.null(names))
-          caption <- paste(caption, names[i])
-
-
+      caption <- paste(caption, names[i])
+    
+    
     if (length(my_input$x) == 0) {
       result[[i]] <- "Null-Model"
     }
-     else{
-       result[[i]] <-  APA2.anova(
+    else{
+      result[[i]] <-  APA2.anova(
         car::Anova(myfits[[i]]),
         caption = caption,
         note = note,
@@ -158,7 +163,7 @@ APA_Table_Anova <- function(myfits,
       )
     }
     # Error bei dreifach-Interaktionen
-
+    
     # else if (is(myfits[[i]], "aov")
     #          | is(myfits[[i]], "anova")) {
     #   cat("\naov")
@@ -171,36 +176,36 @@ APA_Table_Anova <- function(myfits,
     #     include.sumsq = include.sumsq ,
     #     include.meansq = include.meansq
     #   )
-   # }
-
-
-
-      # res <- Ordnen(
-      #   car::Anova(myfits[[i]]),
-      #   include.eta = include.eta,
-      #   include.sumsq = include.sumsq,
-      #   include.meansq = include.meansq
-      # )
-      # if (!is.null(caption)) {
-      #   if (!is.null(names))
-      #     caption <-  names[i]
-      #   else
-      #     caption <-  attr(res, "caption")
-      # }
-      #
-      # if (is.null(note))
-      #   note <- attr(res, "note")
-      #
-      # res <-  stp25output::fix_format(res)
-      #
-      # stp25output::Output(res,
-      #        caption = caption,
-      #        note = note,
-      #        output = output)
-      # result[[i]] <- res
-
-
-
+    # }
+    
+    
+    
+    # res <- Ordnen(
+    #   car::Anova(myfits[[i]]),
+    #   include.eta = include.eta,
+    #   include.sumsq = include.sumsq,
+    #   include.meansq = include.meansq
+    # )
+    # if (!is.null(caption)) {
+    #   if (!is.null(names))
+    #     caption <-  names[i]
+    #   else
+    #     caption <-  attr(res, "caption")
+    # }
+    #
+    # if (is.null(note))
+    #   note <- attr(res, "note")
+    #
+    # res <-  stp25output::fix_format(res)
+    #
+    # stp25output::Output(res,
+    #        caption = caption,
+    #        note = note,
+    #        output = output)
+    # result[[i]] <- res
+    
+    
+    
   } # -end for
   result
 }
