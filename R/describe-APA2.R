@@ -185,9 +185,7 @@ APA2.formula <- function(x,
       ...
     )
   )
-
-
- # cat("\noutput: ", output)
+ 
 
     if (is.data.frame(result))
       Output(result, output=output)
@@ -246,71 +244,5 @@ Recast2_fun <- function(x,
 
 }
 
-
-#
-#
-#
-#
-# Describe2 <- function(...){  UseMethod("Describe2")}
-#
-#
-# Describe2.data.frame <- function(data,
-#                                  caption = "",
-#                                  note = "",
-#                                  stat = c("n", "mean", "sd", "min", "max"),
-#                                  output= stp25output::which_output(),
-#                                  ...
-#                                  ) {
-#   result <-  as.data.frame(psych::describe(data),
-#                            stringsAsFactors = FALSE)[stat]
-#   result[-1] <- stp25rndr::Format2(result[-1])
-#   result <-
-#     prepare_output(cbind(Item = stp25aggregate::GetLabelOrName(data), result),
-#                    caption,
-#                    note,
-#                    nrow(data))
-#   stp25output::Output(result, output = output)
-# }
-#
-#
-#
-#   Describe2.formula <- function(x,
-#                       data,
-#                       caption = "",
-#                       note = "",
-#                       stat = c("n", "mean", "sd", "min", "max"),
-#                       output= stp25output::which_output(),
-#                       ...) {
-#
-#
-#  # X <- prepare_data2(..., na.action = na.action)
-#
-#   fml <- stp25formula:::clean_dots_formula(x, data)
-#   vars <- which(names(data) %in% all.vars(fml))
-#   data <- data[vars]
-#   Describe2.data.frame(data)
-#
-# }
-# mtcars$vs <- factor(  mtcars$vs )
-# mtcars$am <- factor(  mtcars$am )
-#
-# levels(mtcars$am) <- c("A","B")
-# levels(mtcars$vs) <- c("a","b")
-# Describe2( .~ am, mtcars)
-#
-# #?psych::describe(mtcars)
-#
-# psych::describeBy(mtcars, mtcars$am)
-#
-#
-# split(mtcars,list( mtcars$am, mtcars$vs) )
-#
-#
-# x<-by(mtcars,list( mtcars$am, mtcars$vs), Describe2)
-#
-#
-# x[[1]]
-# x[1]
-#
-# dimnames(x)
+ 
 

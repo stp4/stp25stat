@@ -216,7 +216,7 @@ Rangreihe.default <- function (items,
     z.wert <- qnorm(kum_feq[,-ncol(kum_feq)])
     z.wert[which(is.infinite(z.wert))] <- NA
     zeilen.mittel <- rowMeans(z.wert, na.rm = TRUE)
-    spalten.mittel <- colMeans(z.wert, na.rm = TRUE)
+  #  spalten.mittel <- colMeans(z.wert, na.rm = TRUE)
 
     ANS <- rndr_percent(rel_feq * 100, my_table, return_as_vector=FALSE)
 

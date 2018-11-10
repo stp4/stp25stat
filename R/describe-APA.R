@@ -58,8 +58,8 @@ APA.formula <- function(x,
   #-Aus Funktion Tabelle(..., APA=TRUE)
   for (i in 1:length(X$measure)) {
     x <- X$data[[X$measure.vars[i]]]
-    x_NA <- x
-    N    <- length(x)
+  #  x_NA <- x
+   # N    <- length(x)
     x    <- na.omit(x)
     n    <- length(x)
 
@@ -83,7 +83,7 @@ APA.formula <- function(x,
     if (length(m) == 1)
       names(m) <- X$measure.vars[i]
     else
-      names(m) <- paste(X$measure.vars[i] , res1$lev, sep = "_")
+      names(m) <- paste(X$measure.vars[i], res1$lev, sep = "_")
     res <- c(res, m)
 
   }

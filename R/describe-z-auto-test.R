@@ -78,7 +78,7 @@ errate_statistik2 <- function(Formula,
     }
 
     x_NA <- x
-    N    <- length(x)
+  #  N    <- length(x)
     x    <- na.omit(x)
     n    <- length(x)
 
@@ -415,8 +415,8 @@ errate_statistik3 <-
 
     Mittelwert_Einzel <- function(i, x) {
 
-      x_NA <- x
-      N    <- length(x)
+   #   x_NA <- x
+   #   N    <- length(x)
       x    <- na.omit(x)
       n    <- length(x)
       rr <- NULL #Result

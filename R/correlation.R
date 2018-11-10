@@ -128,7 +128,8 @@ Hmisc_rcorr <- function(...,
   measure_data <- apply(X$data[measure.vars], 2, as.numeric)
   group.vars <- X$group.vars
   N <- nrow(X$data[measure.vars])
-  row_name <- GetLabelOrName(X$data[measure.vars])
+# noch nicht benutzt:  row_name <- GetLabelOrName(X$data[measure.vars])
+  
   ans <- NULL
 
   if (!is.null(condition)) {
@@ -204,7 +205,7 @@ Hmisc_rcorr <- function(...,
   else{
     # Korrelations_Matrix  ~ a+ b + c
     ans_list <- Hmisc::rcorr(measure_data, type = type)
-    n <- Format2(ans_list$n, 0)
+   #noch nicht benuzt  n <- Format2(ans_list$n, 0)
 
     if (include.stars & !include.p) {
       p <- apply(ans_list$P, 2,
@@ -356,7 +357,7 @@ Corr2 <- function(x,
                   type = "pearson",
                   stars,
                   ...) {
-  names_x <- names(x)
+ # names_x <- names(x)
   x <- apply(x, 2, as.numeric)
   y <- as.matrix(y)
   ans <- Hmisc::rcorr(x, y, type = type)

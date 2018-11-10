@@ -42,7 +42,7 @@ berechne.data.frame <- function(data,
 
   meAsNum <- grep("^[[:digit:]]", measure)
   if (length(meAsNum) != 0) {
-    measure[meAsNum] <- names(.data[as.numeric(measure[meAsNum])])
+    measure[meAsNum] <- names(data[as.numeric(measure[meAsNum])])
   }
 
   if (stpvers::is_formula2(by))
@@ -203,7 +203,7 @@ berechne_all <- function(data,
 
 
   if (is.null(fm)) {
-    fm <- makeFormula(x, by)
+    fm <- stp25formula::make_formula(x, by)
   }
 
   res <- switch (
@@ -573,7 +573,7 @@ Median2.default<- function(x, digits = NULL,
       x <- as.numeric(x)
 
     if (median.style == "IQR") {
-      rndr_median(median(x), ifelse(n > 2, IQR(x), NA), digits)
+      rndr_median(median(x), ifelse(length(x) > 2, IQR(x), NA), digits)
     } else {
       rndr_median_quant(quantile(x, na.rm = TRUE), digits)
     }
@@ -603,9 +603,9 @@ Meanci2<- function(x, digits=NULL, ...){
   if (length(x)<=0) return("NaN")
   if(!is.numeric(x)) x <- as.numeric(x)
 
-  N <- length(x)
+  #N <- length(x)
   x <- na.omit(x)
-  n <- length(x)
+ # n <- length(x)
   res <- Hmisc::smean.cl.normal(x, ...)
 
   if(is.null(digits)) digits <- stp25rndr::countDigits(signif(res[1], 4))
@@ -730,8 +730,8 @@ Prozent2default <-
     if (!is.factor(x))
       x <- factor(x)
 
-    x_NA <- x
-    N    <- length(x)
+  #  x_NA <- x
+  #  N    <- length(x)
 
     if (n == 0) {
       result <- ""

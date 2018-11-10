@@ -120,7 +120,7 @@ extract_param  <- function(x,
     param <- c(param,  "estimate")
     if (fix_format)
       coefs$estimate <-
-        stp25rndr:::Format2.default(res$estimate,
+        stp25rndr::Format2(res$estimate,
                                     digits = digits.param, format = format)
   }
 
@@ -138,10 +138,10 @@ extract_param  <- function(x,
         else{
           param <- c(param, c("conf.high", "conf.low"))
           coefs$conf.high <-
-            stp25rndr:::Format2.default(res$conf.high,
+            stp25rndr::Format2(res$conf.high,
                                         digits.param, format = format)
           coefs$conf.low <-
-            stp25rndr:::Format2.default(res$conf.low,
+            stp25rndr::Format2(res$conf.low,
                                         digits.param, format = format)
         }
       } else {
@@ -166,7 +166,7 @@ extract_param  <- function(x,
 
       if (fix_format)
         coefs$beta <-
-        stp25rndr:::Format2.default(coefs$beta,
+        stp25rndr::Format2(coefs$beta,
                                     digits.beta,
                                     format = "f")
 
@@ -177,7 +177,7 @@ extract_param  <- function(x,
     param <- c(param, "std.error")
     if (fix_format)
       coefs$std.error <-
-        stp25rndr:::Format2.default(res$std.error,
+        stp25rndr::Format2(res$std.error,
                                     digits.param, format = format)
 
   }
@@ -188,7 +188,7 @@ extract_param  <- function(x,
 
       param <- c(param, "statistic")
       if (fix_format)
-        coefs$statistic <- stp25rndr:::Format2.default(res$statistic,
+        coefs$statistic <- stp25rndr::Format2(res$statistic,
                                                      digits.test, format = "f")
     }
 
@@ -303,14 +303,14 @@ extract_param_aov <- function(x,
     param <- c(param, "sumsq")
     if (fix_format)
       res$sumsq <-
-        stp25rndr:::Format2.default(res$sumsq, digits = 2, format = format)
+        stp25rndr::Format2(res$sumsq, digits = 2, format = format)
   }
 
   if (!include.meansq) {
     param <- c(param, "meansq")
     if (fix_format)
       res$meansq <-
-        stp25rndr:::Format2.default(res$meansq, digits = 2, format = format)
+        stp25rndr::Format2(res$meansq, digits = 2, format = format)
   }
 
   param <- c(param, c("df", "statistic"))
@@ -329,10 +329,10 @@ extract_param_aov <- function(x,
 
       if (fix_format) {
         res$eta.sq <-
-          stp25rndr:::Format2.default(res$eta.sq,
+          stp25rndr::Format2(res$eta.sq,
                                       digits = digits.test, format = format)
         res$eta.sq.part <-
-          stp25rndr:::Format2.default(res$eta.sq.part,
+          stp25rndr::Format2(res$eta.sq.part,
                                       digits = digits.test,
                                       format = format)
 
@@ -347,10 +347,11 @@ extract_param_aov <- function(x,
 
   if (fix_format) {
     res$statistic <-
-      stp25rndr:::Format2.default(res$statistic, digits = digits.test, format = format)
-    res$p.value <- stp25rndr::rndr_P(res$p.value, , symbol.leading = c("", "<"))
+      stp25rndr::Format2(res$statistic, digits = digits.test, format = format)
+    
+    res$p.value <- stp25rndr::rndr_P(res$p.value, symbol.leading = c("", "<"))
     res$df <-
-      stp25rndr:::Format2.default(res$df, digits = 0, format = format)
+      stp25rndr::Format2(res$df, digits = 0, format = format)
   }
   tibble::as_tibble(res[param])
 }
@@ -457,7 +458,7 @@ tidy_lmer <- function(x,
     ## fix each group to be a tidy data frame
 
     nn <- c("estimate", "std.error")
-    re <- ranef(x, condVar = TRUE)
+    re <- lme4::ranef(x, condVar = TRUE)
     getSE <- function(x) {
       v <- attr(x, "postVar")
       setNames(as.data.frame(sqrt(t(
