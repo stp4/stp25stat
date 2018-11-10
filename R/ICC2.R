@@ -88,7 +88,8 @@ APA_ICC <- function(...,
 #'  c("ICC1" "ICC2", "ICC3" "ICC1k" "ICC2k"  "ICC3k")
 #' @export
 ICC2 <- function(...,
-                 caption = "ICC",note="",
+                 caption = "ICC",
+                 note = "",
                  type = c(1, 4),
                  output = which_output()) {
   APA_ICC(
@@ -112,7 +113,7 @@ APA2.ICC <- function(x,
   if (is.null(note))
     note <- paste("Number of subjects: ", n)
   
-  ans <-  prepare_output(x$results[type, ],
+  ans <-  prepare_output(x$results[type,],
                          caption = caption,
                          N = n)
   Output(fix_format(ans),
@@ -140,8 +141,8 @@ ICC.data.frame <- function(data) {
 #' @param data dataframe oder Matrix an psych::ICC
 #' @export
 ICC.formula <- function(x, data) {
-  X <- Formula_Data(x, data)
-  psych::ICC(as.matrix(X$Y_data))
+  X <- stp25formula::prepare_data2(x, data)
+  psych::ICC(as.matrix(X$data[X$measure.vars]))
 }
 
 
@@ -186,12 +187,13 @@ AD_Index2 <- function(x,
                       caption = "Interrater Agreement",
                       note = "AD index (based on deviations from the item medians)",
                       output = which_output()) {
-  X <- Formula_Data(x, data)
+  X <- stp25formula::prepare_data2(x, data)
   
-  if (is.factor(X$Y_data[, 1])) {
+  if (all(X$measure.class == "factor")) {
     #prüfen wie viele stufen
-    A <- nlevels(X$Y_data[, 1])
-    X$Y_data <- dapply2(X$Y_data)
+    A <- nlevels(X$data[X$measure.vars][, 1])
+    X$data[X$measure.vars] <-
+      stp25aggregate::dapply2(X$data[X$measure.vars])
   } else{
     if (is.null(A)) {
       A <- 5
@@ -204,13 +206,19 @@ AD_Index2 <- function(x,
     }
   
   if (type == "judge")
-    X$Y_data <- data.frame(t(X$Y_data))
-  N <- nrow(X$Y_data)
-  AD.Index <- sapply(X$Y_data, AD_Index_helper, ...)
-  Mean <- sapply(X$Y_data, mean_na_rm, ...)
-  SD <- sapply(X$Y_data, var_na_rm, ...)
+    data <- data.frame(t(X$data[X$measure.vars]))
+  else
+    data <- X$data[X$measure.vars]
   
-  J <- length(X$yname)
+  
+  N <- nrow(data)
+  
+  
+  AD.Index <- sapply(data, AD_Index_helper, ...)
+  Mean <- sapply(data, mean_na_rm, ...)
+  SD <- sapply(data, var_na_rm, ...)
+  
+  J <- length(data)
   sx <- mean(SD, na.rm = TRUE)
   
   # seite 91 triangular Distribution
@@ -235,7 +243,7 @@ AD_Index2 <- function(x,
   means <-
     fix_format(rbind(
       data.frame(
-        Item = stp25aggregate::GetLabelOrName(X$Y_data),
+        Item = stp25aggregate::GetLabelOrName(data),
         Mean,
         SD,
         AD.Index,
@@ -273,7 +281,7 @@ AD_Index2 <- function(x,
 #' @rdname ICC
 #' @export
 AD_Index.data.frame <- function(data, ...) {
-  AD_Index.formula( ~ ., data, ...)
+  AD_Index.formula(~ ., data, ...)
 }
 
 
@@ -283,11 +291,14 @@ AD_Index.formula <- function(x,
                              data,
                              type = "judge",
                              ...) {
-  X <-  Formula_Data(x,  data)
-  if (is.factor(X$Y_data[, 1])) {
+  X <-  stp25formula::prepare_data2(x,  data)
+  
+  
+  if (all(X$measure.class == "factor")) {
     #prüfen wie viele stufen
-    A <- nlevels(X$Y_data[, 1])
-    X$Y_data <- dapply2(X$Y_data)
+    #  A <- nlevels(X$Y_data[, 1])
+    X$data[X$measure.vars] <-
+      stp25aggregate::dapply2(X$data[X$measure.vars])
   }  else{
     warning(
       "Fuer Interrater Agreement muss
@@ -297,11 +308,11 @@ AD_Index.formula <- function(x,
   }
   
   if (type == "judge")
-    X$Y_data <- data.frame(t(X$Y_data))
+    X$data[X$measure.vars] <- data.frame(t(X$data[X$measure.vars]))
   
   data.frame(
-    Item = stp25aggregate::GetLabelOrName(X$Y_data),
-    AD.Index = sapply(X$Y_data,
+    Item = stp25aggregate::GetLabelOrName(X$data[X$measure.vars]),
+    AD.Index = sapply(X$data[X$measure.vars],
                       AD_Index_helper, ...)
   )
   
@@ -327,6 +338,6 @@ AD_Index_helper <- function(x,
 
 mean_na_rm <- function(x, na.rm = TRUE)
   mean(x, na.rm = na.rm)
-# im Artikel sird sd verwendet
+# im Artikel wird sd verwendet
 var_na_rm <- function(x, na.rm = TRUE)
   var(x, na.rm = na.rm)
