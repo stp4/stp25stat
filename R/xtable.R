@@ -241,11 +241,11 @@ APA2.xtabs  <- function(x,
 
 
   res <- list(xtab = x_tab, test = NULL)
-    print(class(res))
+  #  print(class(res))
   if (test){
-    cat("\n in test")
+   # cat("\n in test")
     dimension <- length(dimnames(x))
- print(length(x))
+# print(length(x))
   # margin und add.margins ueber include.total festlegen
   if (dimension == 1) {
     # Proportion
