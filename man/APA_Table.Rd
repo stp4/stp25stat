@@ -93,7 +93,8 @@ type_long(...)
 invisible data.frame und Output mit html/knit oder Text.
 }
 \description{
-\code{type="anova"} Anova (car::Anova) Funktionen aus APA_Table(..., include.anova=TRUE)
+\code{type="anova"} Anova (car::Anova) 
+Funktionen aus APA_Table(..., include.anova=TRUE)
 
 APA_Table(..., type="long") ist ein Workaround von texreg
 

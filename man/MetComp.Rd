@@ -6,7 +6,7 @@
 \alias{MetComp_BAP}
 \title{MetComp:  Uebereinstimmung und Praezision von Messwerten}
 \usage{
-MetComp(x, data, include.ci = TRUE, ci.level = 0.95, caption = NULL,
+MetComp(..., include.ci = TRUE, ci.level = 0.95, caption = NULL,
   note = "", digits = 2, output = stp25output::which_output())
 
 MetComp_Kappa(x, include.ci = TRUE, ci.level = 0.95)
@@ -15,13 +15,13 @@ MetComp_BAP(..., X = NULL, include.ci = TRUE, ci.level = 0.95,
   digits = 2)
 }
 \arguments{
-\item{x}{Formula Objekt}
-
-\item{data}{Daten}
-
 \item{...}{an Formula_Data}
 
-\item{X}{Aufbereitete Daten aus Formula_Data}
+\item{x}{Formula Objekt}
+
+\item{X}{Aufbereitete Daten aus prepare_data2}
+
+\item{data}{Daten}
 }
 \value{
 Ein bland_altman-Objekt mit den Daten (data) und der Statistik (stat).
@@ -39,7 +39,7 @@ Methoden Die generische Funktion MetComp() kann sowohl Kappa als auch Tukey-mean
 aehnliche Methode ist ICC die aber eher zur Reliabilitaetsanalyse gehoert.
 }
 \examples{
-   
+
 #require(stp25stat)
 #require(stp25plot)
 #require(stp25output)
@@ -122,22 +122,20 @@ Botulinum <- data.frame(
   B= factor(c(rep(1, 14), rep(0, 3),
               rep(1, 5),rep(0, 18)),
             1:0, c("+", "-")))
-require(vcd)
 
-Kappa(xtabs(~A+B, Botulinum))
-data("SexualFun")
-K <- Kappa(SexualFun)
-#K
-#confint(K)
-#summary(K)
-#print(K, CI = TRUE)
+  MetComp(~A+B, Botulinum)
 
-MetComp(~A+B, Botulinum)
-MetComp_Kappa(SexualFun)
+#require(vcd)
+
+vcd::Kappa(xtabs(~A+B, Botulinum))
+#data("SexualFun")
+#MetComp_Kappa(SexualFun)
 
 
 
- 
+
+
+
 #- Understanding Bland Altman analysis
 #Davide Giavarina
 #Biochemia medica 2015;25(2) 141-51
