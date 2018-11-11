@@ -1,35 +1,52 @@
+# "Sun Nov 11 06:48:12 2018"
+# APA_PCA einfacher Test OK
+
+
 #' @rdname APA_
 #' @description APA_PCA: Faktoranalyse wie SPSS \link{PCA}
-#' @param include.pca,include.plot,include.kmo  type=c("pca", "plot", "kmo")
-#' @param w,h,main Grafik Fenster w=5 h=5 Ueberschrift
+#' @param include.pca,include.loading,include.test,include.plot,include.kmo   
+#' @param w,h,main,opene_graphic_device,save_graphic Fenster w=5 h=5 Ueberschrift
 #' @export
 #'
 APA_PCA <- function(data,
                     ...,
-                    # type=c("pca", "plot", "kmo"),
+                   
                     include.pca = TRUE,
+                    include.loading=include.pca,
+                    include.test=include.pca,
                     include.plot = FALSE,
                     include.kmo = TRUE,
                     w = 5,
                     h = 5,
+                    opene_graphic_device = FALSE,
+                    save_graphic = opene_graphic_device,
                     caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
                     note = "",
+                    output = which_output(),
                     main = "") {
   res <- PCA(data, ...)
-
-  if (include.pca) {
-    res$Loadings %>% Output(caption = caption)
-    res$Test %>% Output(caption = caption)
+  
+  if (include.loading) {
+    Output(res$Loadings, caption = caption, output = output)
+ 
   }
+  if (include.test) {
+      Output(res$Test, caption = caption, output = output)
+  }
+  
   if (include.plot) {
     x.matrix <- as.matrix(data)
-    windows(w, h)
+    if (opene_graphic_device)
+      grDevices::windows(w, h)
     print(psych::VSS.scree(cor(x.matrix), main = main))
-    SaveData("scree_plot", caption = "scree plot")
+    if (save_graphic)
+      stp25output::SaveData("scree_plot", caption = "scree plot")
   }
   if (include.kmo) {
-    res$KMO %>% Output(caption = caption)
+    Output(res$KMO, caption = caption, output = output)
   }
+  
+  invisible(res)
 }
 
 
@@ -673,7 +690,7 @@ PCA.default <- function(data,
                       N = nrow(data),
                       caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
                       ...) {
-  if (!is_all_identical2(data)) {
+  if (!stpvers::is_all_identical2(data)) {
     Text("Die Skalenniveaus sind gemischt daher ist die Berechnung nicht m?glich.")
     return(NULL)
   } else if (any(sapply(data, is.factor))) {
@@ -722,14 +739,16 @@ PCA.default <- function(data,
   # resK$MSA
   resBar <-
     psych::cortest.bartlett(data) #-  Bartlett-Test  auf  Sphärizität,
-  resKMO <- prepare_output(data.frame(
+  resKMO <- prepare_output(
+    data.frame(
     Measures = c("Kaiser-Meyer-Olkin Measure",
                  "Bartlett's test of sphericity") ,
     Statistic = c(
       Format2(resK$MSA, 2),
       rndr_X(resBar$chisq,
              resBar$df, NULL, resBar$p.value)
-    )
+    ),
+    stringsAsFactors = FALSE
   )
   , caption = "Measures of Appropriateness of Factor Analysis")
 
@@ -984,7 +1003,8 @@ extract_principal <-
           round(mean(x$complexity), 1),
           Format2(x$rms, 2),
           rndr_X(x$chi, NULL, NULL, x$EPVAL)
-        )
+        ),
+        stringsAsFactors = FALSE
       ),
       caption = paste(
         "Test of the hypothesis that ",
@@ -1018,7 +1038,8 @@ cbind_pca <- function(Items,
                       note = "") {
   names(fx)[1] <- "Nr"
 
-  prepare_output(cbind(Item = Items, fx, h2),
+  prepare_output(cbind(Item = Items, fx, h2,
+                       stringsAsFactors = FALSE),
                  caption = caption,
                  note = note)
 }
