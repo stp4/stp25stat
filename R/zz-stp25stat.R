@@ -1,3 +1,35 @@
+
+
+#' @param .data an dplyr
+#'
+#' @param fun an dplyr default = as.numeric
+#' @param stringsAsFactors an data.frame default = FALSE
+#' @param ... 
+#'
+#' @noRd
+#' 
+#' 
+#' 
+#' 
+dapply1 <-
+  function (.data,
+            fun = function(x)
+              as.numeric(x),
+            stringsAsFactors = FALSE,
+            ...) {
+    if (inherits(.data, "tbl_df"))
+      dplyr::tbl_df(plyr::llply(.data, fun, ...)) 
+    else
+      data.frame(plyr::llply(.data, fun, ...),
+                 stringsAsFactors=stringsAsFactors) 
+  }
+
+
+
+
+
+
+
 #' stp25stat: Functions for Statistical Computations
 #'
 #'
