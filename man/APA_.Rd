@@ -52,12 +52,15 @@ APA2_multiresponse(Formula, data, caption = "", note = "",
   test = FALSE, order = FALSE, decreasing = TRUE,
   sig_test = "fischer.test", na.action = na.pass, use.level = 1, ...)
 
-APA_PCA(data, ..., include.pca = TRUE, include.plot = FALSE,
-  include.kmo = TRUE, w = 5, h = 5,
+APA_PCA(data, ..., include.pca = TRUE, include.loading = include.pca,
+  include.test = include.pca, include.plot = FALSE,
+  include.kmo = TRUE, w = 5, h = 5, opene_graphic_device = FALSE,
+  save_graphic = opene_graphic_device,
   caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
-  note = "", main = "")
+  note = "", output = which_output(), main = "")
 
-APA_Reliability(..., caption = "", note = "")
+APA_Reliability(..., caption = "", note = "",
+  output = which_output())
 
 APA_Validation(..., include.ftest = TRUE, include.loglik = FALSE,
   include.minus.LL = include.loglik, include.pseudo = TRUE,
@@ -135,9 +138,7 @@ APA_Xtabs(x, ...)
 
 \item{Formula, test, order, decreasing, sig_test, na.action}{Interne Parameter}
 
-\item{include.pca, include.plot, include.kmo}{type=c("pca", "plot", "kmo")}
-
-\item{w, h, main}{Grafik Fenster w=5 h=5 Ueberschrift}
+\item{w, h, main, opene_graphic_device, save_graphic}{Fenster w=5 h=5 Ueberschrift}
 
 \item{include.ftest, include.loglik}{F-sratistik}
 

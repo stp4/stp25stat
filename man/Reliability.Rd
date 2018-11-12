@@ -7,6 +7,7 @@
 \alias{Reliability.data.frame}
 \alias{Reliability.formula}
 \alias{Alpha}
+\alias{Alpha2}
 \alias{Reliability.default}
 \alias{Index}
 \title{Reliability und Cronbach-Alpha}
@@ -21,7 +22,10 @@ Reliability2(...)
 
 \method{Reliability}{formula}(x, data, name = "Skale", ...)
 
-Alpha(..., type = 1)
+Alpha(..., type = 1, names = NULL)
+
+Alpha2(..., caption = "", note = "", output = which_output(),
+  type = 1, names = NULL)
 
 \method{Reliability}{default}(x, revcoded = FALSE, check.keys = FALSE,
   max.level = NA, min.level = NA, type = "mean", na.rm = TRUE, ...)
@@ -40,13 +44,16 @@ Index(x, revcoded = FALSE, fun = "mean", na.rm = TRUE, digits = 4,
 
 \item{revcoded}{position zum umcodieren. Kann entweder nummer oder name oder TRUE sein.}
 
-\item{max.level, max.level}{ueberschrift}
+\item{max.level, max.level}{an aggregate}
 
 \item{na.rm}{Fehlende Werte}
 
 \item{return.index}{TRUE/FALSE index oder Daten}
 
-\item{check.keye}{aus psych wenn \code{check.keye=TRUE} gesetzt wird werden die Daten automatisch umkodiert}
+\item{check.keye}{aus psych wenn \code{check.keye=TRUE} 
+gesetzt wird werden die Daten automatisch umkodiert}
+
+\item{...}{an psych::alpha()}
 }
 \value{
 \code{Reliability()} gibt eine Liste mit den Resultaten und den transformierten Daten

@@ -67,12 +67,13 @@
 \method{APA2}{pairwise.htest}(x, caption = "", ...)
 
 \method{APA2}{manova}(x, test = "Wilks", caption = "MANOVA",
-  note = "", output = c("anova", "manova"))
+  note = "", type = c("anova", "manova"), output = which_output())
 
 \method{APA2}{lda}(x, fit_predict = MASS:::predict.lda(x),
-  newdata = model.frame(x), ...)
+  newdata = model.frame(x), caption = "", note = "",
+  output = which_output(), ...)
 
-\method{APA2}{TukeyHSD}(x, caption = " TukeyHSD", note = "",
+\method{APA2}{TukeyHSD}(x, caption = "TukeyHSD", note = "",
   output = stp25output::which_output(), ...)
 
 \method{APA2}{glht}(x, caption = "Multiple Comparisons of Means",
@@ -147,7 +148,8 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
   all = FALSE, cut = 0.3, sort = TRUE, suppress.warnings = TRUE,
   ...)
 
-\method{APA2}{stp25_reliability}(x, caption = "", note = "", ...)
+\method{APA2}{stp25_reliability}(x, caption = "", note = "",
+  output = which_output(), ...)
 
 \method{APA2}{Kano}(x, caption = "", note = NULL,
   output = which_output(), ...)
@@ -357,7 +359,7 @@ Likert type : c(1, 2), oder c("Freq", "Precent")
 
 Errate korekte Auswertung und Extrahieren der Variablen aus Formula.
 
-Kano Auswerten von Kano-Fragebogen.
+Kano: von Kano-Fragebogen.
 
 Ordered Logistic or Probit Regression
 https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/
@@ -377,7 +379,7 @@ op <- options(contrasts = c("contr.helmert", "contr.poly"))
 npk2 <- within(npk, foo <- rnorm(24))
 npk2 <- within(npk2, foo2 <- rnorm(24))
 npk2.aov <- manova(cbind(yield, foo, foo2) ~ block + N * P * K, npk2)
-   
+
 APA2(npk2.aov) #wilks
 APA2(npk2.aov, "Pillai")
 
@@ -433,9 +435,6 @@ summary(fit1)$Eigenvalues
 #-- LDA -------------------------
 
 library(MASS)
-#fit2 <- lda(GROUP ~ ., data=DF )
-#APA2(fit2)
-#plot(fit2)
 
 require(stp25output)
 
@@ -453,6 +452,10 @@ fit3 <- lda(Job2 ~ OUTDOOR+SOCIAL+CONSERVATIVE, data=DF2)
 
 APA2(fit2)
 APA2(fit3)
+
+#' #fit2 <- lda(GROUP ~ ., data=DF )
+#APA2(fit2)
+#plot(fit2)
 #----------------------------------------------------------------
 # multcomp
 #----------------------------------------------------------------

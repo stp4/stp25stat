@@ -6,7 +6,7 @@
 \alias{PCA2}
 \alias{Principal}
 \alias{PCA.default}
-\title{PCA}
+\title{PCA (Faktoranalyse)}
 \usage{
 PCA(x, ...)
 
@@ -68,6 +68,9 @@ Die Ergebnisse stimmen mit SPSS weitgehend ueberein. Ueberprueft habe ich das
 anhand der Daten vom Stampfl.
 mehr unter \link{fkv}
 
+Principal() ist die Kopie von principal aus psych
+}
+\details{
 Interpretation:
 
 KorrelationsMatrix: Korrelation von mindestens r=.30
@@ -88,9 +91,7 @@ Anzahl an Faktoren
 Faustregel nur Eigenwerte größer als eins (Kaiser-Guttman-Kriterium)
 oder Scree-Plot hier wird der charakteristische Knick als kriterium gewaehlt
 
-
 Rotierte Komponentenmatrix (varimax)
-
 
 Quelle: \url{http://statistikguru.de/spss/hauptkomponentenanalyse/auswerten-und-berichten.html}
 
@@ -106,25 +107,18 @@ English
 
 We performed a Principal Component Analysis (PCA) to extract the most important independent factors. The Kaiser–Meyer–Olkin measure of sampling adequacy was .867, representing a relatively good factor analysis, and Bartlett’s test of Sphericity was significant (p < .001), indicating that correlations between items were sufficiently large for performing a PCA. Only factors with eigenvalues ≥ 1 were considered (Guttman, 1954; Kaiser, 1960).
 Examination of Kaiser’s criteria and the scree-plot yielded empirical justification for retaining two factors with eigenvalues exceeding 1 which accounted for 60.45 of the total variance. Among the factor solutions, the varimax-rotated two-factor solution yielded the most interpretable solution, and most items loaded highly on only one of the two factors.
-
-Principal() ist die Kopie von principal aus psych
 }
 \examples{
 
- require(stp25output)
-require(stp25aggregate)
-pc <- principal(Harman74.cor$cov,4,rotate="varimax")
-mr <- fa(Harman74.cor$cov,4,rotate="varimax")  #minres factor analysis
-pa <- fa(Harman74.cor$cov,4,rotate="varimax",fm="pa")  # principal axis factor analysis
+pc <- psych::principal(Harman74.cor$cov,4,rotate="varimax")
+mr <- psych::fa(Harman74.cor$cov,4,rotate="varimax")  #minres factor analysis
+pa <- psych::fa(Harman74.cor$cov,4,rotate="varimax",fm="pa")  # principal axis factor analysis
 
-round(factor.congruence(list(pc,mr,pa)),2)
-pc2 <- principal(Harman.5,2,rotate="varimax",scores=TRUE)
-round(cor(Harman.5,pc2$scores),2)  #compare these correlations to the loadings
-biplot(pc2,main="Biplot of the Harman.5 socio-economic variables")
+round(psych::factor.congruence(list(pc,mr,pa)),2)
+
 APA2(pc)
 APA2(mr)
 APA2(pa)
-APA2(pc2)
 
 
 # -- Buehl Faktoranalyse Seite 475
@@ -136,7 +130,7 @@ APA2(pc2)
 # windows(5,5)
 # corrplot(DF, abs=TRUE, n.col.legend=7)#  corrplot {arm}
 # SaveData( )
-# APA_PCA(DF, 5, cut=.35)
+# APA_PCA(DF, 5, cut=.35,include.plot = FALSE)
 
 
 

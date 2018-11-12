@@ -10,13 +10,18 @@ SEM(x, ...)
 
 \method{SEM}{default}(x, ...)
 
-\method{APA2}{lavaan}(fit, baseline.model = NULL, caption = "",
-  note = "", type = "all", ci = FALSE, est = FALSE, ...)
+\method{APA2}{lavaan}(x, baseline.model = NULL, caption = "",
+  note = "", output = which_output(), type = "all",
+  include.ci = FALSE, include.model = if (type == "all") TRUE else
+  FALSE, include.varianz = if (type == "all") TRUE else FALSE,
+  include.latent = if (type == "all") TRUE else FALSE, ...)
 }
 \arguments{
 \item{x}{Objekt}
 
 \item{...}{weitere Objekte nicht benutzt}
+
+\item{include.ci, include.varianz, include.latent, include.model, include.loading}{was soll ausgegeben werden}
 }
 \value{
 Ein lavaan -Objekt oder html.
@@ -25,7 +30,7 @@ Ein lavaan -Objekt oder html.
 Struckturgleichungs Modelle mit lavaan. Die Funktionen sind Kopieen von lavaan
 und helfen den Output zu erstellen.
 SEM ist davei einfach lavaan::sem(x, ...)
-mehr unter \link{fkv}
+mehr unter \link{http://www.understandingdata.net/2017/03/22/cfa-in-lavaan/}
 
 \subsection{APA2.lavaan}{Ueber APA2 wird die Ausgabe formatiert. Ausgegeben werden die Guetemasse und der ModelFit.
 Loading ist dabei der standartisierte Estimate und Communality ist die quadrierte Ladung
@@ -67,9 +72,9 @@ Moosbrugger, Kelava 2012 Testtheorie 2. Auflage Seite 339
 head(fkv)
 APA2( ~., fkv, test=T)
 library(arm)
-windows(5,5)
-corrplot(fkv, abs=TRUE, n.col.legend=7)#  corrplot {arm}
-SaveData( )
+# windows(5,5)
+# corrplot(fkv, abs=TRUE, n.col.legend=7)#  corrplot {arm}
+#
 Principal2(fkv, 5, cut=.35)
 
 library(lavaan)
@@ -94,6 +99,6 @@ APA2(fit.Lavaan)
 # #show(fit.Lavaan)
 # anova(fit.Lavaan)
 
-semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
-title("Std", line = 3)
+#semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
+#title("Std", line = 3)
 }
