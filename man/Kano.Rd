@@ -2,21 +2,11 @@
 % Please edit documentation in R/kano.R
 \name{Kano}
 \alias{Kano}
-\alias{Kano.data.frame}
-\alias{Kano.formula}
-\alias{Kano_default}
 \alias{Kano_Auswertung}
 \title{Analyze Kano Type Items.}
 \usage{
-Kano(x, ...)
-
-\method{Kano}{data.frame}(x, na.action = na.pass, ...)
-
-\method{Kano}{formula}(x, data, subset, na.action = na.pass, ...)
-
-Kano_default(X, grouping = NULL, type = 5, umcodieren = FALSE,
-  rm_Q = 10000, rm_I = 10000, methode = 1, vars_func = NULL,
-  vars_dysfunc = NULL, ...)
+Kano(..., type = 5, umcodieren = FALSE, rm_Q = 10000, rm_I = 10000,
+  methode = 1, vars_func = NULL, vars_dysfunc = NULL, note = "")
 
 Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
   data = x$molten[-1],
@@ -25,13 +15,7 @@ Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
   include.test = TRUE, include.fong = TRUE, rnd_output = TRUE)
 }
 \arguments{
-\item{x, data, subset, na.action}{an Kano.formula}
-
-\item{...}{alles an Kano_default}
-
-\item{na.action}{an Kano.data.frame}
-
-\item{X, grouping, vars_func, vars_dysfunc}{intern an Kano_default}
+\item{...}{x, data, by, subset, na.action}
 
 \item{type}{type Fragetype entweder  vollstaendig (5) oder gekuerzt (3)}
 
@@ -55,17 +39,15 @@ Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
 
 \item{rnd_output}{Intern fuer Plot bei FALSE ausgabe als Zahl}
 
+\item{X, grouping, vars_func, vars_dysfunc}{intern an Kano_default}
+
 \item{include.total}{Anzahl Total}
 }
 \value{
 Liste mit:
-
 data: data mit der Kano-Kodierung.
-
 molten: Daten-Lang
-
 scors:  Scors sind eine Alternative Codierung zum Zweck der Transformierung zu einer metrischen Skala.
-
 formula, removed=Errorrs, N, attributes, answers
 }
 \description{
@@ -141,88 +123,81 @@ Ergebnis ist entweder ein signifikante oder ein nicht signifikante Verteilung.
 Ich verwende zur Berechnung die Kategorien A,O,M,I und R. Q verwende ich nur für die Gesamtsumme
 }
 \examples{
-
-#  require(stpvers)
-#   Projekt("html")
-
+ 
 kano_labels <- c( "like",
                   "must be",
                   "neutral",
                   "live with",
                   "dislike")
 
-require(stp25output)
-require(stp25aggregate)
-
-DF<-GetData("   Geschlecht Edu f1 d1 f2 d2 f3 d3 f4 d4 f5  d5  f6  d6  f7  d7  f8  d8  f9  d9  f10 d10
-            1           w  med 1  1  1  2  1  3  1  5  1   5   5   1   3   3   5   2   5   1   5   2
-            2           w  med 1  2  2  5  2  3  1  5  1   5   2   5   3   3   2   5   2   5   5   2
-            3           m  med 1  3  3  5  1  5  3  4  1   5   5   1   3   3   5   2   5   1   5   2
-            4           m  med 1  4  4  2  1  5  4  4  1   5   5   1   3   3   5   2   5   1   5   2
-            5           w  med 1  5  5  5  5  3  1  5  1   5   5   1   3   3   5   2   5   1   5   2
-            6           w  med NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
-            7           m  med 2  1  1  5  2  5  1  5  1   5   2   5   3   3   1   5   2   5   5   2
-            8           w  med 2  2  2  5  1  3  1  5  1   5   3   3   3   3   1   4   1   3   5   2
-            9           m  med 2  3  2  5  2  3  1  3  1   5   1   3   3   3   2   4   3   3   5   2
-            10          m  med 2  4  1  5  1  5  1  5  1   5   1   4   3   3   2   5   1   3   5   2
-            11          w  med 2  5  2  5  1  4  1  5  1   5   1   4   3   3   2   5   1   4   5   2
-            12          m  med NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
-            13          w  med 3  1  2  5  3  3  1  5  2   5   1   5   3   3   3   3   3   3   5   2
-            14          m  med 3  2  1  5  1  5  2  5  2  NA   1   5   3   3   2   5   1   5   5   2
-            15          w  med 3  3  2  5  1  3  1  5  1   5   1   3   3   3   2   5   1   3   5   2
-            16          w  low 3  4  2  5  2  5  2  5  1   5   1   4   3   3   2   5   1   3   5   2
-            17          w  low 3  5  2  5  1  5  1  5  2   5   1   4   3   3   2   5   1   4   5   2
-            18          w  low NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
-            19          m  low 4  1  2  5  1  5  2  5  2   5   1   4   2   3   2   5   1   3   5   2
-            20          w  low 4  2  2  5  2  5  2  5  2   5   1   3   3   3   2   5   1   3   5   2
-            21          w  low 4  3  2  5  1  5  2  5  2   5   1   5   1   3   2   5   1   3   5   2
-            22          m  low 4  4  2  5  1  5  2  5  2   5   1   3   3   3   1   3   1   3   5   2
-            23          w  low 4  5  2  5  3  3  2  5  2   5   1   4   1   3   2   5   1   4   5   2
-            24          w  low NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
-            25          m  hig 5  1  1  5  1  5  2  4  1   5   1   3   3   5   2   4   1   3   5   2
-            26          w  hig 5  2  1  5  1  3  1  5  1   5   1   3   1   5   1   5   3   3   5   2
-            27          w  hig 5  3  2  5  3  3  1  4  2   4   1   3   3   5   3   3   5   1   5   2
-            28          w  hig 5  4  2  5  1  4  2  5  1   5   1   3   3   5   2   5   4   1   5   2
-            29          w  hig 5  5  2  5  2  4  2  4  2   5   1   4   1   5   1   5   1   4   5   2
-            30          m  hig NA NA 2  5  1  5  1  3  1   4   1   3   1   5   1   3   1   3   5   2
-            31          m  hig NA NA 2  1  1  5  1  4  3   3   5   2   3   5  NA  NA   1   3   5   2
-            ")
+DF<-stp25aggregate::GetData( 
+  "sex Edu f1 d1 f2 d2 f3 d3 f4 d4 f5  d5  f6  d6  f7  d7  f8  d8  f9  d9  f10 d10
+  w  med 1  1  1  2  1  3  1  5  1   5   5   1   3   3   5   2   5   1   5   2
+  w  med 1  2  2  5  2  3  1  5  1   5   2   5   3   3   2   5   2   5   5   2
+  m  med 1  3  3  5  1  5  3  4  1   5   5   1   3   3   5   2   5   1   5   2
+  m  med 1  4  4  2  1  5  4  4  1   5   5   1   3   3   5   2   5   1   5   2
+  w  med 1  5  5  5  5  3  1  5  1   5   5   1   3   3   5   2   5   1   5   2
+  w  med NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
+  m  med 2  1  1  5  2  5  1  5  1   5   2   5   3   3   1   5   2   5   5   2
+  w  med 2  2  2  5  1  3  1  5  1   5   3   3   3   3   1   4   1   3   5   2
+  m  med 2  3  2  5  2  3  1  3  1   5   1   3   3   3   2   4   3   3   5   2
+  m  med 2  4  1  5  1  5  1  5  1   5   1   4   3   3   2   5   1   3   5   2
+  w  med 2  5  2  5  1  4  1  5  1   5   1   4   3   3   2   5   1   4   5   2
+  m  med NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
+  w  med 3  1  2  5  3  3  1  5  2   5   1   5   3   3   3   3   3   3   5   2
+  m  med 3  2  1  5  1  5  2  5  2  NA   1   5   3   3   2   5   1   5   5   2
+  w  med 3  3  2  5  1  3  1  5  1   5   1   3   3   3   2   5   1   3   5   2
+  w  low 3  4  2  5  2  5  2  5  1   5   1   4   3   3   2   5   1   3   5   2
+  w  low 3  5  2  5  1  5  1  5  2   5   1   4   3   3   2   5   1   4   5   2
+  w  low NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
+  m  low 4  1  2  5  1  5  2  5  2   5   1   4   2   3   2   5   1   3   5   2
+  w  low 4  2  2  5  2  5  2  5  2   5   1   3   3   3   2   5   1   3   5   2
+  w  low 4  3  2  5  1  5  2  5  2   5   1   5   1   3   2   5   1   3   5   2
+  m  low 4  4  2  5  1  5  2  5  2   5   1   3   3   3   1   3   1   3   5   2
+  w  low 4  5  2  5  3  3  2  5  2   5   1   4   1   3   2   5   1   4   5   2
+  w  low NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA  NA
+  m  hig 5  1  1  5  1  5  2  4  1   5   1   3   3   5   2   4   1   3   5   2
+  w  hig 5  2  1  5  1  3  1  5  1   5   1   3   1   5   1   5   3   3   5   2
+  w  hig 5  3  2  5  3  3  1  4  2   4   1   3   3   5   3   3   5   1   5   2
+  w  hig 5  4  2  5  1  4  2  5  1   5   1   3   3   5   2   5   4   1   5   2
+  w  hig 5  5  2  5  2  4  2  4  2   5   1   4   1   5   1   5   1   4   5   2
+  m  hig NA NA 2  5  1  5  1  3  1   4   1   3   1   5   1   3   1   3   5   2
+  m  hig NA NA 2  1  1  5  1  4  3   3   5   2   3   5  NA  NA   1   3   5   2")
 
 
-DF<- upData2(DF,  labels=c(f1="Fahreigenschaften"
-                           ,f2="Sicherheit"
-                           ,f3="Beschleunigung"
-                           ,f4="Verbrauch"
-                           ,f5="Lebensdauer"
-                           ,f6="Sonderausstattung"
-                           ,f7="Schiebedach"
-                           ,f8="Rostschutz"
-                           ,f9="Design"
-                           , f10= "Rostflecken"
+
+DF<- stp25aggregate::upData2(DF,  labels=c(f1="Fahreigenschaften"
+                                           ,f2="Sicherheit"
+                                           ,f3="Beschleunigung"
+                                           ,f4="Verbrauch"
+                                           ,f5="Lebensdauer"
+                                           ,f6="Sonderausstattung"
+                                           ,f7="Schiebedach"
+                                           ,f8="Rostschutz"
+                                           ,f9="Design"
+                                           , f10= "Rostflecken"
 ))
 
-#  match(DF$f1, 1) & match(DF$f2, 5)
-
-DF \%>\% Tabelle(Geschlecht, Edu)
 
 
 kano_res1 <-  Kano( ~ . , DF[-c(1,2)])
-APA2(kano_res1, caption = "Einzeln")
+DF[-c(1,2)] <- stp25aggregate::dapply2(DF[-c(1,2)], 
+                                       function(x) factor( x, 1:5, kano_labels))
+kano_res2 <-  Kano( ~ . , DF[-c(1,2)])
+kano_res1$scors
+kano_res2$scors
+
 #stp25stat:::Kano_Auswertung(kano_res1, rnd_output=FALSE)
 # kano_plot(kano_res1)
-
 # library(lattice)
 # x<-data.frame (xtabs(~ value+variable, kano_res1$molten ))
 #   barchart(Freq ~value|variable, x, origin=0)
-#
-DF[-c(1,2)] <- dapply2(DF[-c(1,2)], function(x) factor( x, 1:5, kano_labels))
-DF \%>\% Tabelle2(f1,d1)
 
-kano_res1 <-  Kano( ~ . , DF[-c(1,2)])
+
 APA2(kano_res1, caption = "Einzeln")
 
 
-kano_res <- Kano( .~ Geschlecht, DF[-2])
+kano_res <- Kano( .~ sex, DF[-2])
 APA2(kano_res, caption = "Gruppe")
 APA2(kano_res, caption = "Gruppe", include.percent=FALSE)
 # kano_plot(kano_res,
@@ -230,16 +205,11 @@ APA2(kano_res, caption = "Gruppe", include.percent=FALSE)
 #           #legend.title= "HAllo",
 #           cex.legend=1)
 
-kano_res <- Kano( .~ Geschlecht + Edu, DF )
+kano_res <- Kano( .~ sex + Edu, DF )
 #stp25stat:::Kano_Auswertung( kano_res, rnd_output=FALSE)
-
-
 # Kontrolle der Logik
-
- #kano_res1 <-  Kano( ~ . , DF[-c(1,2)], na.action = na.pass)
-
+#kano_res1 <-  Kano( ~ . , DF[-c(1,2)], na.action = na.pass)
 #dat<- na.omit(cbind(DF[c("f1", "d1")], kano_res1$data[2]))
 #tidyr::spread(dat , d1, Fahreigenschaften)
-
 
 }
