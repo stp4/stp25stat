@@ -1,3 +1,8 @@
+# "Sun Nov 11 06:28:19 2018"
+#  APA_Reliability euinfacher Test
+
+
+
 #' Reliability und Cronbach-Alpha
 #'
 #' \code{Reliability()} Reliabilitaets Analyse mit Cronbach-Alpha + Mittelwerte
@@ -107,9 +112,10 @@ Reliability2 <- function(...) {
 #' @rdname APA2
 #' @export
 APA2.stp25_reliability <- function(x,
-                                  caption = "",
-                                  note = "",
-                                  ...) {
+                                   caption = "",
+                                   note = "",
+                                   output=which_output(),
+                                   ...) {
 item <-
     data.frame(
       Items = paste0(x$labels, ifelse(x$keys < 0, " (-)", "")),
@@ -142,8 +148,8 @@ item <-
       caption = paste("Item-Mittelwerte", caption),
       note = note
     )
-  Output(x$item_statistics)
-  Output(x$aplha_statistics)
+  Output(x$item_statistics, output=output, ...)
+  Output(x$aplha_statistics, output=output, ...)
 
   invisible(x)
 
@@ -154,10 +160,13 @@ item <-
 #' @export
 APA_Reliability <- function(...,
                             caption = "",
-                            note = "") {
+                            note = "",
+                            output=which_output()
+                            ) {
   APA2.stp25_reliability(Reliability(...),
                          caption,
-                         note)
+                         note,
+                         output)
 }
 
 
@@ -225,8 +234,10 @@ Reliability.formula <- function(x,
 #' @export
 
 Alpha <- function(...,
-                  type = 1) {
-  names <- paste(as.list(sys.call())[-1])
+                  type = 1,
+                  names = NULL) {
+  if (is.null(names))
+    names <- paste(as.list(sys.call())[-1])
   skalen <- list(...)
   result <- NULL
   for (i in skalen) {
@@ -236,13 +247,39 @@ Alpha <- function(...,
   result
 }
 
+#' @rdname Reliability
+#' @export
+
+Alpha2 <- function(...,
+                   caption = "",
+                   note = "",
+                   output = which_output(),
+                   type = 1,
+                   names = NULL) {
+  if (is.null(names))
+    names <- paste(as.list(sys.call())[-1])
+  
+  result <- Alpha(..., type = type, names = names)
+  
+  Output(result,
+         caption = caption,
+         note = note,
+         output = output)
+  invisible(result)
+}
+
+
+
+
 
 #' @rdname Reliability
-#' @param max.level,max.level ueberschrift
+#' @param max.level,max.level an aggregate
 #' @param revcoded position zum umcodieren. Kann entweder nummer oder name oder TRUE sein.
 #' @param type Aggregatfunktion fuer die Skala (mean, median und trimmed)
 #' @param na.rm Fehlende Werte
-#' @param check.keye aus psych wenn \code{check.keye=TRUE} gesetzt wird werden die Daten automatisch umkodiert
+#' @param check.keye aus psych wenn \code{check.keye=TRUE} 
+#' gesetzt wird werden die Daten automatisch umkodiert
+#' @param ... an psych::alpha()
 Reliability.default <- function(x,
                                 revcoded = FALSE,
                                 check.keys = FALSE,
@@ -323,7 +360,9 @@ Index <- function(x,
 }
 
 
-
+#' Umcodieren
+#' 
+#' @noRd
 Umcodieren <- function(x,
                        revcoded,
                        max.level = NA,
@@ -345,7 +384,9 @@ Umcodieren <- function(x,
 
 
 
-#-- Helper Funktion
+#' Transformieren zu numeric
+#' 
+#' @noRd
 transform_to_numeric <- function(data, data_range) {
   #data2<- na.omit(data)
   lvls <- stp25aggregate::GetLabelOrName(data)
@@ -380,7 +421,10 @@ transform_to_numeric <- function(data, data_range) {
 }
 
 
-#-- Helper Funktion
+ 
+#' Item Statistik
+#' 
+#' @noRd
 item_statistik <- function(data, #Data ist Liste
                            revcoded,
                            check.keys = TRUE,
@@ -450,7 +494,10 @@ item_statistik <- function(data, #Data ist Liste
 }
 
 
-#-- Helper Funktion
+ 
+#' Helper Funktion Mittelwerte
+#' 
+#' @noRd
 skala_statistik <- function(data,
                             type = c("mean", "median", "trimmed", "sum"),
                             na.rm = TRUE) {
@@ -459,8 +506,7 @@ skala_statistik <- function(data,
   else if (!is.list(data))
     return(class(data))
   type <- match.arg(type)
-  #  type<-"mean"
-  # na.rm=TRUE
+ 
 
   data$index <- apply(
     data$data,
@@ -491,10 +537,11 @@ skala_statistik <- function(data,
   data
   }
 
-
-
+#' psych::alpha zu data.frame
+#' 
+#' @noRd
 fix_alpha <- function(x) {
-  aplha_statistik <- with(
+  with(
     x,
     data.frame(
       Source = name,
@@ -506,10 +553,9 @@ fix_alpha <- function(x) {
       Range = paste(Format2(range, 2), collapse = "; "),
       Skew = Format2(Skew, 2),
       Kurtosi = Format2(Kurtosi, 2) ,
-      "Shapiro Test" = shapiro
+      "Shapiro Test" = shapiro,
+      stringsAsFactors = FALSE
     )
   )
-
-  aplha_statistik
 }
 

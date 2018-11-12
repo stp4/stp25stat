@@ -2,18 +2,107 @@
 # APA_PCA einfacher Test OK
 
 
+
+#'  PCA (Faktoranalyse)
+#'
+#' Gestohlen von psych::print.psych.fa \link{print.psych}.
+#' Die Ergebnisse stimmen mit SPSS weitgehend ueberein. Ueberprueft habe ich das
+#' anhand der Daten vom Stampfl.
+#' mehr unter \link{fkv}
+#'
+#' Interpretation:
+#'
+#' KorrelationsMatrix: Korrelation von mindestens r=.30
+#'
+#' Erklaerte Gesamtvarianz (Eigenwerte)
+#' Erklärte Gesamtvarianz => Kummulierte %
+#'
+#'
+#'
+#' Measures of Appropriateness of Factor Analysis
+#' KMO- und Bartlett-Test (partiellen Korrelationen zwischen Itempaaren)
+#' KMO: Minimum   0.50
+#'
+#' Bartlett's test of sphericity (überprueft die Nullhypothese, ob die Korrelationsmatrix eine Identitaetsmatrix ist.)
+#' gut ist wenn p < .050
+#'
+#' Anzahl an Faktoren
+#' Faustregel nur Eigenwerte größer als eins (Kaiser-Guttman-Kriterium)
+#' oder Scree-Plot hier wird der charakteristische Knick als kriterium gewaehlt
+#'
+#'
+#' Rotierte Komponentenmatrix (varimax)
+#'
+#'
+#' Quelle: \url{http://statistikguru.de/spss/hauptkomponentenanalyse/auswerten-und-berichten.html}
+#'
+#' Deutsch
+#'
+#' Es wurde eine Hauptkomponentenanalyse durchgeführt, um die wichtigsten,
+#' unabhängigen Faktoren zu extrahieren. Das Kaiser-Meyer-Olkin-Kriterium war .867 und der Bartlett-Test hochsignifikant (p < .001), was eine ausreichend hohe Korrelation zwischen Items darstellt, um eine Hauptkomponentenanalyse durchzuführen. Nur Faktoren mit Eigenwerten ≥ 1 wurden in Betracht gezogen (Guttman, 1954; Kaiser, 1960).
+#' Eine Überprüfung des Kaiser–Kriteriums und Scree-Plots rechtfertigte
+#' die Extraktion von zwei Faktoren, jeweils mit Eigenwerten über 1,
+#' die eine Gesamtvarianz von 60.45 aufklären. Unter den Lösungen lieferte die Varimax rotierte zweifaktor-Lösung die Lösung, die am besten zu interpretieren war, bei der die meisten Items nur auf einen der beiden Faktoren hohe Ladungen zeigten.
+#'
+#' English
+#'
+#' We performed a Principal Component Analysis (PCA) to extract the most important independent factors. The Kaiser–Meyer–Olkin measure of sampling adequacy was .867, representing a relatively good factor analysis, and Bartlett’s test of Sphericity was significant (p < .001), indicating that correlations between items were sufficiently large for performing a PCA. Only factors with eigenvalues ≥ 1 were considered (Guttman, 1954; Kaiser, 1960).
+#' Examination of Kaiser’s criteria and the scree-plot yielded empirical justification for retaining two factors with eigenvalues exceeding 1 which accounted for 60.45 of the total variance. Among the factor solutions, the varimax-rotated two-factor solution yielded the most interpretable solution, and most items loaded highly on only one of the two factors.
+#'
+#'
+#' @param ... weitere Argumente wie:
+#' digits = 2 Number of digits to use in printing
+#' all = FALSE if all=TRUE, then the object is declassed and all output from the function is printed
+#' cut = NULL Cluster loadings < cut will not be printed. For the factor analysis functions (fa and factor.pa etc.), cut defaults to 0, for ICLUST to .3, for omega to .2.
+#' sort = TRUE Cluster loadings are in sorted order
+#' @return HTML oder Test Output
+#' @export
+#' @examples
+#'
+#' pc <- psych::principal(Harman74.cor$cov,4,rotate="varimax")
+#' mr <- psych::fa(Harman74.cor$cov,4,rotate="varimax")  #minres factor analysis
+#' pa <- psych::fa(Harman74.cor$cov,4,rotate="varimax",fm="pa")  # principal axis factor analysis
+#'
+#' round(psych::factor.congruence(list(pc,mr,pa)),2)
+#'
+#' APA2(pc)
+#' APA2(mr)
+#' APA2(pa)
+#'
+#'
+#' # -- Buehl Faktoranalyse Seite 475
+#' ## some(DF <- GetData("Raw data/FKV.SAV"))
+#' # -  Freiburger Fragebogen zur Krankheitsverarbeitung
+#' # #DF <- DF[,-1]
+#' # APA2( ~., DF, test=T)
+#' # library(arm)
+#' # windows(5,5)
+#' # corrplot(DF, abs=TRUE, n.col.legend=7)#  corrplot {arm}
+#' # SaveData( )
+#' # APA_PCA(DF, 5, cut=.35,include.plot = FALSE)
+#'
+#'
+#'
+PCA <- function(x, ...) {
+  UseMethod("PCA")
+}
+
+
+
+
+
 #' @rdname APA_
 #' @description APA_PCA: Faktoranalyse wie SPSS \link{PCA}
-#' @param include.pca,include.loading,include.test,include.plot,include.kmo   
+#' @param include.pca,include.loading,include.test,include.plot,include.kmo
 #' @param w,h,main,opene_graphic_device,save_graphic Fenster w=5 h=5 Ueberschrift
 #' @export
 #'
 APA_PCA <- function(data,
                     ...,
-                   
+                    
                     include.pca = TRUE,
-                    include.loading=include.pca,
-                    include.test=include.pca,
+                    include.loading = include.pca,
+                    include.test = include.pca,
                     include.plot = FALSE,
                     include.kmo = TRUE,
                     w = 5,
@@ -28,10 +117,10 @@ APA_PCA <- function(data,
   
   if (include.loading) {
     Output(res$Loadings, caption = caption, output = output)
- 
+    
   }
   if (include.test) {
-      Output(res$Test, caption = caption, output = output)
+    Output(res$Test, caption = caption, output = output)
   }
   
   if (include.plot) {
@@ -67,20 +156,22 @@ APA2.fa <- function(...) {
 #' @export
 APA2.principal <-
   function (x,
-            caption = "",note = "",
+            caption = "",
+            note = "",
             digits = 2,
             all = FALSE,
-            cut = .30, sort = TRUE,
+            cut = .30,
+            sort = TRUE,
             suppress.warnings = TRUE,
             ...)
   {
     res_loadings <- NULL
     res_stdloadings <- NULL
     res_einen <- NULL
-
+    
     colnames(x$loadings) <-
       paste0("PC", 1:(length(colnames(x$loadings))))
-
+    
     if (!is.matrix(x) && !is.null(x$fa) && is.list(x$fa))
       x <- x$fa
     if (!is.null(x$fn)) {
@@ -93,7 +184,7 @@ APA2.principal <-
     }
     # cat("\nCall: ")
     # print(x$Call)
-
+    
     load <- x$loadings
     if (is.null(cut))
       cut <- 0
@@ -104,16 +195,16 @@ APA2.principal <-
     } else {
       covar <- FALSE
     }
-
+    
     loads <- data.frame(item = seq(1:nitems),
                         cluster = rep(0, nitems),
                         unclass(load))
     u2.order <- 1:nitems
-
+    
     if (sort) {
       loads$cluster <- apply(abs(load), 1, which.max)
       ord <- sort(loads$cluster, index.return = TRUE)
-      loads[1:nitems,] <- loads[ord$ix,]
+      loads[1:nitems, ] <- loads[ord$ix, ]
       rownames(loads)[1:nitems] <- rownames(loads)[ord$ix]
       items <- table(loads$cluster)
       first <- 1
@@ -126,7 +217,7 @@ APA2.principal <-
                       index.return = TRUE)
           u2.order[first:last] <- item[ord$ix + first - 1]
           loads[first:last, 3:(nfactors + 2)] <-
-            load[item[ord$ix + first - 1],]
+            load[item[ord$ix + first - 1], ]
           loads[first:last, 1] <- item[ord$ix + first - 1]
           rownames(loads)[first:last] <-
             rownames(loads)[ord$ix + first - 1]
@@ -134,10 +225,10 @@ APA2.principal <-
         }
       }
     }
-
+    
     if (max(abs(load) > 1) && !covar)
       note <- "Warning: A Heywood case was detected"
-
+    
     ncol <- dim(loads)[2] - 2
     rloads <- round(loads, digits)
     fx <- format(rloads, digits = digits)
@@ -155,7 +246,7 @@ APA2.principal <-
       fx <- data.frame(fx.2)
       colnames(fx) <- colnames(x$loadings)
     }
-
+    
     if (nfactors > 1) {
       if (is.null(x$Phi)) {
         h2 <- rowSums(load.2 ^ 2)
@@ -167,20 +258,20 @@ APA2.principal <-
     else {
       h2 <- load.2 ^ 2
     }
-
+    
     if (!is.null(x$uniquenesses)) {
       u2 <- x$uniquenesses[u2.order]
     }
     else {
       u2 <- (1 - h2)
     }
-
+    
     vtotal <- sum(h2 + u2)
-
+    
     if (isTRUE(all.equal(vtotal, nitems))) {
       # cat("Standardized loadings (pattern matrix) based upon correlation matrix\n")
       com <- x$complexity[u2.order]
-
+      
       if (!is.null(com)) {
         res_loadings <- cbind_pca(
           Items = rownames(fx),
@@ -206,7 +297,7 @@ APA2.principal <-
             note = note
           )
         Output(res_loadings)
-
+        
       }
     }
     else {
@@ -224,9 +315,9 @@ APA2.principal <-
       )
       Output(res_loadings)
     }
-
-
-
+    
+    
+    
     if (is.null(x$Phi)) {
       if (nfactors > 1) {
         vx <- colSums(load.2 ^ 2)
@@ -248,13 +339,13 @@ APA2.principal <-
         rbind(varex, `Cumulative Proportion` = cumsum(vx / sum(vx)))
     }
     # cat("\n")
-
-
+    
+    
     res_einen <- round(varex, digits)
     Output(res_einen,
            caption = "Erklaerte Gesamtvarianz (Eigenwerte)")
-
-
+    
+    
     if (!isTRUE(all.equal(vtotal, nitems))) {
       # cat("\n Standardized loadings (pattern matrix)\n")
       fx <- format(loads, digits = digits)
@@ -273,9 +364,9 @@ APA2.principal <-
         h2 <- h2 / (h2 + u2)
       }
       u2 <- (1 - h2)
-
-
-
+      
+      
+      
       res_stdloadings <- cbind_pca(Items = rownames(fx),
                                    fx,
                                    h2 = Format2(h2, 2)#,
@@ -305,7 +396,7 @@ APA2.principal <-
           rbind(varex, `Cum. factor Var` = cumsum(vx / sum(vx)))
       }
       #  cat("\n")
-
+      
       res_einen <- round(varex, digits)
       Output(res_einen)
     }
@@ -344,7 +435,7 @@ APA2.principal <-
       # Text("Mean item complexity = ", round(mean(x$complexity), 1))
       result2[["mean"]] <-
       c("Mean item complexity", round(mean(x$complexity), 1))
-
+    
     objective <- x$criteria[1]
     if (!is.null(objective)) {
       if (!is.null(x$fn)) {
@@ -353,7 +444,7 @@ APA2.principal <-
           #   if (nfactors == 1)
           #      " component is"
           #  else " components are", " sufficient.")
-
+          
           result2[["head"]] <-
             paste(
               "Test of the hypothesis that ",
@@ -364,7 +455,7 @@ APA2.principal <-
                 " components are",
               " sufficient."
             )
-
+          
         }
         else {
           Text(
@@ -376,7 +467,7 @@ APA2.principal <-
               "factors are",
             "sufficient."
           )
-
+          
           result2[["head"]] <-
             paste(
               "Test of the hypothesis that",
@@ -387,7 +478,7 @@ APA2.principal <-
                 "factors are",
               "sufficient."
             )
-
+          
         }
       }
       if (x$fn != "principal") {
@@ -417,7 +508,7 @@ APA2.principal <-
       if (!is.null(x$rms)) {
         #Text("The root mean square of the residuals (RMSR) is ",
         #   round(x$rms, digits), "\n")
-
+        
         result2[["RMSR"]] <-   c("RMSR", Format2(x$rms, 2))
       }
       if (!is.null(x$crms)) {
@@ -433,12 +524,8 @@ APA2.principal <-
              round(x$nh))
       }
       if ((!is.null(x$chi)) && (!is.na(x$chi))) {
-
         result2[["chi"]]  <- c("empirical chi square",
-                               rndr_X(x$chi, NULL, NULL, x$EPVAL)
-
-
-                               )
+                               rndr_X(x$chi, NULL, NULL, x$EPVAL))
       }
       if (x$fn != "principal") {
         if (!is.na(x$n.obs)) {
@@ -520,7 +607,7 @@ APA2.principal <-
         }
       }
     }
-
+    
     Output(data.frame(
       Measures = c(result2[["mean"]][1],
                    result2[["RMSR"]][1],
@@ -529,125 +616,36 @@ APA2.principal <-
                     result2[["RMSR"]][2],
                     result2[["chi"]][2])
     ), caption = result2[["head"]])
-
+    
     result <- list(Vaccounted = varex)
     invisible(result)
   }
 
 
-#' @name PCA
-#' @rdname PCA
-#' @title PCA
-#' @description Gestohlen von psych::print.psych.fa \link{print.psych}.
-#' Die Ergebnisse stimmen mit SPSS weitgehend ueberein. Ueberprueft habe ich das
-#' anhand der Daten vom Stampfl.
-#' mehr unter \link{fkv}
-#'
-#' Interpretation:
-#'
-#' KorrelationsMatrix: Korrelation von mindestens r=.30
-#'
-#' Erklaerte Gesamtvarianz (Eigenwerte)
-#' Erklärte Gesamtvarianz => Kummulierte %
-#'
-#'
-#'
-#' Measures of Appropriateness of Factor Analysis
-#' KMO- und Bartlett-Test (partiellen Korrelationen zwischen Itempaaren)
-#' KMO: Minimum   0.50
-#'
-#' Bartlett's test of sphericity (überprueft die Nullhypothese, ob die Korrelationsmatrix eine Identitaetsmatrix ist.)
-#' gut ist wenn p < .050
-#'
-#' Anzahl an Faktoren
-#' Faustregel nur Eigenwerte größer als eins (Kaiser-Guttman-Kriterium)
-#' oder Scree-Plot hier wird der charakteristische Knick als kriterium gewaehlt
-#'
-#'
-#' Rotierte Komponentenmatrix (varimax)
-#'
-#'
-#' Quelle: \url{http://statistikguru.de/spss/hauptkomponentenanalyse/auswerten-und-berichten.html}
-#'
-#' Deutsch
-#'
-#' Es wurde eine Hauptkomponentenanalyse durchgeführt, um die wichtigsten,
-#' unabhängigen Faktoren zu extrahieren. Das Kaiser-Meyer-Olkin-Kriterium war .867 und der Bartlett-Test hochsignifikant (p < .001), was eine ausreichend hohe Korrelation zwischen Items darstellt, um eine Hauptkomponentenanalyse durchzuführen. Nur Faktoren mit Eigenwerten ≥ 1 wurden in Betracht gezogen (Guttman, 1954; Kaiser, 1960).
-#' Eine Überprüfung des Kaiser–Kriteriums und Scree-Plots rechtfertigte
-#' die Extraktion von zwei Faktoren, jeweils mit Eigenwerten über 1,
-#' die eine Gesamtvarianz von 60.45 aufklären. Unter den Lösungen lieferte die Varimax rotierte zweifaktor-Lösung die Lösung, die am besten zu interpretieren war, bei der die meisten Items nur auf einen der beiden Faktoren hohe Ladungen zeigten.
-#'
-#' English
-#'
-#' We performed a Principal Component Analysis (PCA) to extract the most important independent factors. The Kaiser–Meyer–Olkin measure of sampling adequacy was .867, representing a relatively good factor analysis, and Bartlett’s test of Sphericity was significant (p < .001), indicating that correlations between items were sufficiently large for performing a PCA. Only factors with eigenvalues ≥ 1 were considered (Guttman, 1954; Kaiser, 1960).
-#' Examination of Kaiser’s criteria and the scree-plot yielded empirical justification for retaining two factors with eigenvalues exceeding 1 which accounted for 60.45 of the total variance. Among the factor solutions, the varimax-rotated two-factor solution yielded the most interpretable solution, and most items loaded highly on only one of the two factors.
-#'
-#'
-#' @param ... weitere Argumente wie:
-#' digits = 2 Number of digits to use in printing
-#' all = FALSE if all=TRUE, then the object is declassed and all output from the function is printed
-#' cut = NULL Cluster loadings < cut will not be printed. For the factor analysis functions (fa and factor.pa etc.), cut defaults to 0, for ICLUST to .3, for omega to .2.
-#' sort = TRUE Cluster loadings are in sorted order
-#' @return HTML oder Test Output
-#' @export
-#' @examples
-#'
-#'  require(stp25output)
-#' require(stp25aggregate)
-#' pc <- principal(Harman74.cor$cov,4,rotate="varimax")
-#' mr <- fa(Harman74.cor$cov,4,rotate="varimax")  #minres factor analysis
-#' pa <- fa(Harman74.cor$cov,4,rotate="varimax",fm="pa")  # principal axis factor analysis
-#'
-#' round(factor.congruence(list(pc,mr,pa)),2)
-#' pc2 <- principal(Harman.5,2,rotate="varimax",scores=TRUE)
-#' round(cor(Harman.5,pc2$scores),2)  #compare these correlations to the loadings
-#' biplot(pc2,main="Biplot of the Harman.5 socio-economic variables")
-#' APA2(pc)
-#' APA2(mr)
-#' APA2(pa)
-#' APA2(pc2)
-#'
-#'
-#' # -- Buehl Faktoranalyse Seite 475
-#' ## some(DF <- GetData("Raw data/FKV.SAV"))
-#' # -  Freiburger Fragebogen zur Krankheitsverarbeitung
-#' # #DF <- DF[,-1]
-#' # APA2( ~., DF, test=T)
-#' # library(arm)
-#' # windows(5,5)
-#' # corrplot(DF, abs=TRUE, n.col.legend=7)#  corrplot {arm}
-#' # SaveData( )
-#' # APA_PCA(DF, 5, cut=.35)
-#'
-#'
-#'
-PCA <- function(x, ...) {
-  UseMethod("PCA")
-}
+
 
 #' @rdname PCA
 #' @export
-Principal2<- function(x,...){
+Principal2 <- function(x, ...) {
   APA_PCA(x, ...)
 }
 
 #' @rdname PCA
 #' @export
-PCA2<- function(x,...){
+PCA2 <- function(x, ...) {
   APA_PCA(x, ...)
 }
 
 #' @rdname PCA
 #' @export
-Principal <- function(x,...){
+Principal <- function(x, ...) {
   PCA(x, ...)
 }
 
 
-PCA.formula<- function(x,
-                       data,
-                       ...) {
-
+PCA.formula <- function(x,
+                        data,
+                        ...) {
   data <- Formula_Data(x, data)$Y_data
   PCA.default(data, ...)
 }
@@ -674,22 +672,22 @@ PCA.formula<- function(x,
 #' @export
 #'
 PCA.default <- function(data,
-                      nfactors = 1,
-                      cut = .35,
-                      residuals = FALSE,
-                      rotate = "varimax",
-                      n.obs = NA,
-                      covar = FALSE,
-                      scores = TRUE,
-                      missing = FALSE,
-                      impute = "median",
-                      oblique.scores = TRUE,
-                      method = "regression",
-                      #  type=c("pca", "plot", "kmo"), w=5, h=5,
-                      sort = TRUE,
-                      N = nrow(data),
-                      caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
-                      ...) {
+                        nfactors = 1,
+                        cut = .35,
+                        residuals = FALSE,
+                        rotate = "varimax",
+                        n.obs = NA,
+                        covar = FALSE,
+                        scores = TRUE,
+                        missing = FALSE,
+                        impute = "median",
+                        oblique.scores = TRUE,
+                        method = "regression",
+                        #  type=c("pca", "plot", "kmo"), w=5, h=5,
+                        sort = TRUE,
+                        N = nrow(data),
+                        caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
+                        ...) {
   if (!stpvers::is_all_identical2(data)) {
     Text("Die Skalenniveaus sind gemischt daher ist die Berechnung nicht m?glich.")
     return(NULL)
@@ -726,21 +724,20 @@ PCA.default <- function(data,
            nrow(data))
     }
   }
-
+  
   resPCS <- extract_principal(psych::principal(
     data,
     nfactors = nfactors,
     residuals = residuals,
     rotate = rotate
   ))
-
+  
   #-- Kaiser, Meyer, Olkin Measure of Sampling Adequacy
   resK <-  psych::KMO(data)
   # resK$MSA
   resBar <-
     psych::cortest.bartlett(data) #-  Bartlett-Test  auf  Sphärizität,
-  resKMO <- prepare_output(
-    data.frame(
+  resKMO <- prepare_output(data.frame(
     Measures = c("Kaiser-Meyer-Olkin Measure",
                  "Bartlett's test of sphericity") ,
     Statistic = c(
@@ -750,8 +747,9 @@ PCA.default <- function(data,
     ),
     stringsAsFactors = FALSE
   )
-  , caption = "Measures of Appropriateness of Factor Analysis")
-
+  ,
+  caption = "Measures of Appropriateness of Factor Analysis")
+  
   list(
     Loadings = resPCS$loadings,
     Eigenvalue = resPCS$eigen,
@@ -761,6 +759,9 @@ PCA.default <- function(data,
 }
 
 
+#' Werte aus psyche:pca extrahieren
+#' 
+#' @noRd
 extract_principal <-
   function (x,
             caption = "",
@@ -773,16 +774,11 @@ extract_principal <-
             ...)
   {
     res <- NULL
-    # res_loadings<-NULL
-    #res_stdloadings<- NULL
-    #res_einen<-NULL
-
-    # Vorbereitung ------------------------------------------------------------
-
-
+ 
+    
     colnames(x$loadings) <-
       paste0("PC", 1:(length(colnames(x$loadings))))
-
+    
     if (!is.matrix(x) && !is.null(x$fa) && is.list(x$fa))
       x <- x$fa
     if (!is.null(x$fn)) {
@@ -803,19 +799,16 @@ extract_principal <-
     } else {
       covar <- FALSE
     }
-
+    
     loads <- data.frame(item = seq(1:nitems),
                         cluster = rep(0, nitems),
                         unclass(load))
     u2.order <- 1:nitems
-
-    # Sortieren ---------------------------------------------------------------
-
-
+  
     if (sort) {
       loads$cluster <- apply(abs(load), 1, which.max)
       ord <- sort(loads$cluster, index.return = TRUE)
-      loads[1:nitems,] <- loads[ord$ix,]
+      loads[1:nitems, ] <- loads[ord$ix, ]
       rownames(loads)[1:nitems] <- rownames(loads)[ord$ix]
       items <- table(loads$cluster)
       first <- 1
@@ -828,7 +821,7 @@ extract_principal <-
                       index.return = TRUE)
           u2.order[first:last] <- item[ord$ix + first - 1]
           loads[first:last, 3:(nfactors + 2)] <-
-            load[item[ord$ix + first - 1],]
+            load[item[ord$ix + first - 1], ]
           loads[first:last, 1] <- item[ord$ix + first - 1]
           rownames(loads)[first:last] <-
             rownames(loads)[ord$ix + first - 1]
@@ -836,10 +829,10 @@ extract_principal <-
         }
       }
     }
-
+    
     if (max(abs(load) > 1) && !covar)
       note <- "Warning: A Heywood case was detected"
-
+    
     ncol <- dim(loads)[2] - 2
     rloads <- round(loads, digits)
     fx <- format(rloads, digits = digits)
@@ -857,7 +850,7 @@ extract_principal <-
       fx <- data.frame(fx.2)
       colnames(fx) <- colnames(x$loadings)
     }
-
+    
     if (nfactors > 1) {
       if (is.null(x$Phi)) {
         h2 <- rowSums(load.2 ^ 2)
@@ -869,20 +862,20 @@ extract_principal <-
     else {
       h2 <- load.2 ^ 2
     }
-
+    
     if (!is.null(x$uniquenesses)) {
       u2 <- x$uniquenesses[u2.order]
     }
     else {
       u2 <- (1 - h2)
     }
-
+    
     vtotal <- sum(h2 + u2)
-
+    
     if (isTRUE(all.equal(vtotal, nitems))) {
       # cat("Standardized loadings (pattern matrix) based upon correlation matrix\n")
       com <- x$complexity[u2.order]
-
+      
       if (!is.null(com)) {
         res$loadings <- cbind_pca(
           Items = rownames(fx),
@@ -918,7 +911,7 @@ extract_principal <-
         note = note
       )
     }
-
+    
     if (is.null(x$Phi)) {
       if (nfactors > 1) {
         vx <- colSums(load.2 ^ 2)
@@ -939,9 +932,9 @@ extract_principal <-
       varex <-
         rbind(varex, `Cumulative Proportion` = cumsum(vx / sum(vx)))
     }
-
+    
     res$eigen <- cbind_eigen(varex)
-
+    
     if (!isTRUE(all.equal(vtotal, nitems))) {
       # cat("\n Standardized loadings (pattern matrix)\n")
       fx <- format(loads, digits = digits)
@@ -990,10 +983,6 @@ extract_principal <-
       }
       res$eigen <- cbind_eigen(varex)
     }
-
-
-
-
     res$test <- prepare_output(
       data.frame(
         Measures = c("n.obs", "Mean item complexity", "RMSR",
@@ -1017,18 +1006,23 @@ extract_principal <-
       ),
       N = x$n.obs
     )
-
+    
     res
   }
 
 
-
+#' Eigenwert
+#' 
+#' @noRd
 cbind_eigen <- function(x,
                         caption = "Erklaerte Gesamtvarianz (Eigenwerte)",
                         digits = 3)  {
   prepare_output(round(x, digits), caption = caption)
 }
 
+#' data.frame der Ladungen
+#' 
+#' @noRd
 cbind_pca <- function(Items,
                       fx,
                       h2,
@@ -1037,9 +1031,11 @@ cbind_pca <- function(Items,
                       caption = "",
                       note = "") {
   names(fx)[1] <- "Nr"
-
-  prepare_output(cbind(Item = Items, fx, h2,
-                       stringsAsFactors = FALSE),
-                 caption = caption,
-                 note = note)
+  
+  prepare_output(
+    cbind(Item = Items, fx, h2,
+          stringsAsFactors = FALSE),
+    caption = caption,
+    note = note
+  )
 }

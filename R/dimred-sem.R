@@ -4,7 +4,7 @@
 #' @description Struckturgleichungs Modelle mit lavaan. Die Funktionen sind Kopieen von lavaan
 #' und helfen den Output zu erstellen.
 #' SEM ist davei einfach lavaan::sem(x, ...)
-#' mehr unter \link{fkv}
+#' mehr unter \link{http://www.understandingdata.net/2017/03/22/cfa-in-lavaan/}
 #'
 #' \subsection{APA2.lavaan}{Ueber APA2 wird die Ausgabe formatiert. Ausgegeben werden die Guetemasse und der ModelFit.
 #' Loading ist dabei der standartisierte Estimate und Communality ist die quadrierte Ladung
@@ -50,9 +50,9 @@
 #' head(fkv)
 #' APA2( ~., fkv, test=T)
 #' library(arm)
-#' windows(5,5)
-#' corrplot(fkv, abs=TRUE, n.col.legend=7)#  corrplot {arm}
-#' SaveData( )
+#' # windows(5,5)
+#' # corrplot(fkv, abs=TRUE, n.col.legend=7)#  corrplot {arm}
+#' #
 #' Principal2(fkv, 5, cut=.35)
 #'
 #' library(lavaan)
@@ -77,8 +77,8 @@
 #' # #show(fit.Lavaan)
 #' # anova(fit.Lavaan)
 #'
-#' semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
-#' title("Std", line = 3)
+#' #semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
+#' #title("Std", line = 3)
 #' @export
 SEM <- function(x, ...) {
   UseMethod("SEM")
@@ -91,127 +91,131 @@ SEM.default <- function(x, ...) {
 }
 
 #' @rdname SEM
+#' @param include.ci,include.varianz,include.latent,include.model,include.loading was soll ausgegeben werden
 #' @export
-APA2.lavaan <- function(fit,
+APA2.lavaan <- function(x,
                         baseline.model = NULL,
                         caption = "" ,
                         note = "",
+                        output = which_output(),
                         type = "all",
-                        ci = FALSE,
-                        est = FALSE,
-
+                        include.ci = FALSE,
+                        include.model = if (type == "all") TRUE else  FALSE, 
+                        include.varianz = if (type == "all") TRUE else FALSE,
+                        include.latent = if (type == "all") TRUE else FALSE,
                         ...) {
-
-
-  fit_Measures <- as.list(
-          lavaan::fitMeasures(
-                    fit,
-                    fit.measures = c(
-                      "chisq",
-                      "df",
-                      "pvalue",
-                      "baseline.chisq" ,
-                      "baseline.df",
-                      "baseline.pvalue" ,
-                      "rmsea" ,
-                      "srmr",
-                      "gfi",
-                      "agfi",
-                      "cfi" ,
-                      "nfi"
-                    ), baseline.model =  baseline.model
-                  )
-  )
-
-
-  fit_Measures$df <- fit_Measures$df + 1  # unbekannter Fehler
-
-
-  fit_Measures<- with(
-      fit_Measures,
-        rbind(
-            "ML"  = c(rndr_Chisq(chisq, df, pvalue), ""),
-            "Model test baseline model" = c(rndr_Chisq(baseline.chisq, baseline.df,baseline.pvalue), ""),
-            "Number of observations" = c(fit@Data@nobs[[1]], ""),
-            "chisq/df" = c(Format2(chisq/df, 2), rndr_Chisq_cfa(chisq, df)),
-            "GFI" = c(Format2(gfi, 2), rndr_gfi_cfa(gfi)),
-            "AGFI" = c(Format2(agfi, 2), rndr_agfi_cfa(agfi)),
-            "NFI"  = c(Format2(nfi, 2), rndr_nfi_cfa(nfi)),
-            "CFI" =  c(Format2(cfi, 2), rndr_cfi_cfa(cfi)),
-            "RMSEA" = c(Format2(rmsea, 2), rndr_rmsea_cfa(rmsea)),
-            "SRMR" =  c(Format2(srmr, 2), rndr_rmsea_cfa(srmr)))
+  res_lavaan <- as.list(lavaan::fitMeasures(
+    x,
+    fit.measures = c(
+      "chisq",
+      "df",
+      "pvalue",
+      "baseline.chisq" ,
+      "baseline.df",
+      "baseline.pvalue" ,
+      "rmsea" ,
+      "srmr",
+      "gfi",
+      "agfi",
+      "cfi" ,
+      "nfi"
+    ),
+    baseline.model =  baseline.model
+  ))
+  
+  
+  res_lavaan$df <- res_lavaan$df + 1  # unbekannter Fehler
+  
+  res_lavaan <- with(
+    res_lavaan,
+    rbind(
+      "ML"  = c(rndr_Chisq(chisq, df, pvalue), ""),
+      "Model test baseline model" = c(
+        rndr_Chisq(baseline.chisq, baseline.df, baseline.pvalue),
+        ""
+      ),
+      "Number of observations" = c(x@Data@nobs[[1]], ""),
+      "chisq/df" = c(Format2(chisq / df, 2), rndr_Chisq_cfa(chisq, df)),
+      "GFI" = c(Format2(gfi, 2), rndr_gfi_cfa(gfi)),
+      "AGFI" = c(Format2(agfi, 2), rndr_agfi_cfa(agfi)),
+      "NFI"  = c(Format2(nfi, 2), rndr_nfi_cfa(nfi)),
+      "CFI" =  c(Format2(cfi, 2), rndr_cfi_cfa(cfi)),
+      "RMSEA" = c(Format2(rmsea, 2), rndr_rmsea_cfa(rmsea)),
+      "SRMR" =  c(Format2(srmr, 2), rndr_rmsea_cfa(srmr))
     )
-
-    colnames(fit_Measures) <- c("Anpassungsmass", "Anforderung")
-    fit_Measures <- data.frame(Wert = rownames(fit_Measures), fit_Measures)
-
-    # label    est    se      z    pvalue ci.lower ci.upper std.lv std.all std.nox
-    #Lhr      0.230 0.051  4.483  0.000   0.129    0.330  0.230   0.230   0.230
-    my_std <- lavaan::standardizedSolution(fit)
-
-    #Formatieren dass nur die p werte haben
-    result_loadings <-
-        data.frame(
-            model = ifelse(my_std$lhs==my_std$rhs,
-                       my_std$rhs,
-                       paste(my_std$lhs, my_std$op, my_std$rhs)
-                      ),
-            loading = my_std$est.std,
-            h2 = ifelse(my_std$op=="=~",
-                        my_std$est.std^2, NA), #communality
-            SE = my_std$se,
-            z.value = my_std$z,
-            pvalue = my_std$pvalue
-        )
-
-    if (ci | est) {
-        my_est <-
-          lavaan::parameterEstimates(fit,
-                               zstat = FALSE,
-                               pvalue = FALSE,
-                               ci = FALSE)
-        result_loadings <-
-            cbind(result_loadings[1], est = my_est$est,  my_std[, 2:ncol(result_loadings)])
+  )
+  
+  colnames(res_lavaan) <- c("Anpassungsmass", "Anforderung")
+  res_lavaan <-
+    data.frame(Wert = rownames(res_lavaan),
+               res_lavaan)
+  
+  
+  if (include.model) {
+    Output(res_lavaan,
+           caption = caption,
+           note = note,
+           output = output)
+  }
+  
+  
+  # label    est    se      z    pvalue ci.lower ci.upper std.lv std.all std.nox
+  #Lhr      0.230 0.051  4.483  0.000   0.129    0.330  0.230   0.230   0.230
+  #Standardized solution of a latent variable model.
+   ldng <- lavaan::standardizedSolution(
+    x,
+    type = "std.all",
+    se = TRUE,
+    zstat = TRUE,
+    pvalue = TRUE,
+    ci = TRUE
+  )
+  
+   
+    var_type = ifelse(ldng$lhs == ldng$rhs, "Variances", "Latent")
+  res_ldng <-
+    data.frame(
+      model = ifelse(
+        ldng$lhs ==  ldng$rhs,
+        ldng$rhs,
+        paste(ldng$lhs, ldng$op, ldng$rhs)
+      ),
+      
+      loading = Format2(ldng$est.std, digits = 2),
+      h2 = ifelse(ldng$op == "=~",
+                  Format2(ldng$est.std ^ 2) , NA),
+      
+      SE = Format2(ldng$se, digits = 2),
+      z.value = Format2(ldng$z, digits = 2),
+      p.value = rndr_P(ldng$pvalue, include.symbol = FALSE),
+ 
+      stringsAsFactors = FALSE
+    )
+  
+  if(include.ci){
+    res_ldng$CI<- rndr_CI(ldng[c("ci.lower", "ci.upper")]  )
+ 
     }
-
-    #-- Output
-    if (ci) {
-        x_ci <- lavaan::parameterEstimates(fit, ci = ci, standardized = TRUE)
-        result_loadings$ci.lower = x_ci$ci.lower
-        result_loadings$ci.upper = x_ci$ci.upper
+    latent <- res_ldng[which(var_type=="Latent"),]
+  varianz <- res_ldng[which(var_type=="Variances"), 1:2]
+  
+  if (include.latent) {
+    Output(latent,
+           caption = caption ,
+           note = note,
+           output = output)
     }
-
-    if (type == "all"  | type == "1" | type == "fit")
-      Output(fit_Measures,
-
-        caption = caption,
-        note = note
-      )
-
-    if (type == "all" | type == "2"){
-      mysplit <- my_std$lhs==my_std$rhs
-      VR<- which(mysplit)
-      LV <- which(!mysplit)
-
-      Output(fix_format(result_loadings[LV,]),
-             caption = paste("Latent variables ",caption),
-             note = note
-      )
-
-      Output(fix_format(result_loadings[VR,1:2]),
-            caption = paste("Variances",caption),
+    
+   if(include.varianz){
+     Output(varianz,
+            caption = caption ,
             note = note,
-            col_names= c("Quelle","Variance" )
-      )
-
-      }
-
-
-
+            output = output)
+   }
+    
+  invisible(list(model=res_lavaan,
+              latent=latent,
+              varianz=varianz))
+  
+  
 }
-
-
-
-
-
-
