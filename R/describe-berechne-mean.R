@@ -138,7 +138,7 @@ berechne_all <- function(data,
                          type ,
                          fun = function(x)length(na.omit(x)),
                          fm = NULL,
-                         digits = NULL,
+                         digits = stp25rndr::default_stp25("digits", "mittelwert")[1],
                          measure.name = NULL
 ) {
   mdn <- function() {
@@ -149,19 +149,22 @@ berechne_all <- function(data,
         if (type == "auto_long")
           rndr_median_range(
             median(x, na.rm = TRUE),
-            IQR(x, na.rm = TRUE),
+            ifelse(length(x) > 2, IQR(x, na.rm = TRUE), NA),
             min(x, na.rm = TRUE),
             max(x, na.rm = TRUE),
             digits = digits
           )
         else
-          calc_median(x, digits)
+          
+          rndr_median(median(x), ifelse(length(x) > 2, IQR(x, na.rm = TRUE), NA), digits = digits)
+          #calc_median(x, digits)
 
       }
     )
   }
 
   mn <- function() {
+
     aggregate(
       fm,
       data,
@@ -169,13 +172,18 @@ berechne_all <- function(data,
         if (type == "auto_long")
           rndr_mean_range(
             mean(x, na.rm = TRUE),
-            sd(x, na.rm = TRUE),
+            ifelse(length(x) > 2, sd(x, na.rm = TRUE), NA),
             min(x, na.rm = TRUE),
             max(x, na.rm = TRUE),
             digits = digits
           )
         else
-          calc_mean(x, digits)
+          
+          rndr_mean(mean(x, na.rm = TRUE), 
+                    ifelse(length(x) > 2, sd(x, na.rm = TRUE), NA), 
+                    digits=digits)
+          
+         # calc_mean(x, digits = digits)
       }
     )
   }
@@ -206,6 +214,7 @@ berechne_all <- function(data,
     fm <- stp25formula::make_formula(x, by)
   }
 
+  
   res <- switch (
     measure,
     factor = frq() ,
@@ -259,13 +268,23 @@ calc_median <-
   }
 
 
+#stp25rndr::default_stp25("mean.style", "mittelwert")
+#stp25output::get_my_options()$apa.style$mittelwert$mean.style
+
+
+
 #' @rdname berechne
 calc_mean <-  function(x,
-                       digits = 2,
+                       digits = stp25rndr::default_stp25("digits", "mittelwert") ,
                        n = length(x),
                        mean.style = get_my_options()$apa.style$mittelwert$mean.style) {
+  
   if (is.null(mean.style)) {
-    rndr_mean(mean(x, na.rm = TRUE), ifelse(n > 2, sd (x, na.rm = TRUE), NA), digits)
+     rndr_mean(mean(x, na.rm = TRUE), 
+                 ifelse(n > 2, sd(x, na.rm = TRUE), NA), 
+                 digits=digits)
+ 
+    
   }
   else if (mean.style == "1") {
     rndr_mean(mean(x, na.rm = TRUE), ifelse(n > 2, sd (x, na.rm = TRUE), NA), digits)
@@ -282,6 +301,8 @@ calc_mean <-  function(x,
   } else {
     rndr_mean(mean(x), ifelse(n > 2, sd (x), NA), digits)
   }
+  
+  
 }
 
 

@@ -34,5 +34,15 @@ test_that("corr formula works", {
                                dat,
                                groups = ~ g, output =FALSE)[2, 3],
                ".75")
+  
+  
+  
+  
+  x<-APA_Correlation( ~ a + b + c, dat, include.mean=TRUE, output=FALSE)
+  
+  expect_equal(x[,2],
+ c( "-0.03 (1.19)", "-0.17 (1.34)", "0.23 (1.01)" )
+  )
+  
 
 })

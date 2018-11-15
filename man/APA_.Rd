@@ -138,6 +138,8 @@ APA_Xtabs(x, ...)
 
 \item{Formula, test, order, decreasing, sig_test, na.action}{Interne Parameter}
 
+\item{include.pca, include.loading, include.test, include.plot, include.kmo}{was soll ausgegeben werden}
+
 \item{w, h, main, opene_graphic_device, save_graphic}{Fenster w=5 h=5 Ueberschrift}
 
 \item{include.ftest, include.loglik}{F-sratistik}

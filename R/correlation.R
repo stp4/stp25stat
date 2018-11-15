@@ -273,7 +273,9 @@ Hmisc_rcorr <- function(...,
             measure.name = "value"
           )
         )
-      ans <- cbind(ans[1], "M (SD)" = ans_mean, ans[2:ncol(ans)])
+      
+     
+      ans <- cbind(ans[1], "M (SD)" = ans_mean, ans[2:ncol(ans)], stringsAsFactors=FALSE)
     }
   }
   prepare_output(ans, caption=caption, note=paste(note,type), N=N)
