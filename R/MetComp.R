@@ -239,16 +239,16 @@ MetComp_BAP <-
       X <- prepare_data2(...)
     
     ba.stats <- bland.altman.stats(
-      X$data[X$measure.vars],
-      include.ci = include.ci,
-      ci.level = ci.level,
-      digits = digits
-    )
+                    X$data[X$measure.vars],
+                    include.ci = include.ci,
+                    ci.level = ci.level,
+                    digits = digits
+                  )
     ba.stats$name <-  paste(X$yname, collapse = ", ")
     ba.stats$name.diff <-  paste(X$yname[1:2], collapse = " - ")
-    ba.stats$met_A <- X$yname[1]
-    ba.stats$met_B <- X$yname[2]
-    ba.stats$groups = X$X_data
+    ba.stats$met_A <- X$measure.vars[1]
+    ba.stats$met_B <- X$measure.vars[2]
+    ba.stats$groups <-  X$X_data
     
     
     ba.stats

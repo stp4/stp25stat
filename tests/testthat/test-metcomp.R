@@ -12,6 +12,14 @@ test_that("bland-altman works", {
   )
   
   x1<- MetComp(~A+B, DF, caption = "Giavarina", output=FALSE)
+  expect_equal(
+  names(x1),
+  c("lines", "CI.lines",        
+   "lines.percent","CI.lines.percent",
+   "stat", "data",            
+   "name", "name.diff",       
+  "met_A", "met_B")
+  )
   
   expect_equal(x1$stat$Unit,
                c("29", "-27.50", "33.94", "66.52", "-94.02", "39.02"))
