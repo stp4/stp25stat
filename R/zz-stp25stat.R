@@ -34,7 +34,6 @@ dapply1 <-
 #'
 #'
 #' Convert statistical analysis objects from R into APA-Tabls.
-
 #'
 #' @import stp25rndr
 #' @import stp25output

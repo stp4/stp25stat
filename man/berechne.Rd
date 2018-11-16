@@ -36,12 +36,15 @@ berechneMean(data = NULL, measurevar, by = NULL, na.rm = TRUE,
   conf.interval = 0.95, .drop = TRUE)
 
 berechne_all(data, x, by = "1", measure, type, fun = function(x)
-  length(na.omit(x)), fm = NULL, digits = NULL, measure.name = NULL)
+  length(na.omit(x)), fm = NULL,
+  digits = stp25rndr::default_stp25("digits", "mittelwert")[1],
+  measure.name = NULL)
 
 calc_median(x, digits = 2, n = length(x),
   median.style = get_my_options()$apa.style$mittelwert$median.style)
 
-calc_mean(x, digits = 2, n = length(x),
+calc_mean(x, digits = stp25rndr::default_stp25("digits", "mittelwert"),
+  n = length(x),
   mean.style = get_my_options()$apa.style$mittelwert$mean.style)
 
 Mean2default(x, digits = 2, n = length(x),

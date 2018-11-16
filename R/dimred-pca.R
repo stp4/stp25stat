@@ -93,7 +93,7 @@ PCA <- function(x, ...) {
 
 #' @rdname APA_
 #' @description APA_PCA: Faktoranalyse wie SPSS \link{PCA}
-#' @param include.pca,include.loading,include.test,include.plot,include.kmo
+#' @param include.pca,include.loading,include.test,include.plot,include.kmo was soll ausgegeben werden
 #' @param w,h,main,opene_graphic_device,save_graphic Fenster w=5 h=5 Ueberschrift
 #' @export
 #'
@@ -774,7 +774,7 @@ extract_principal <-
             ...)
   {
     res <- NULL
- 
+    
     
     colnames(x$loadings) <-
       paste0("PC", 1:(length(colnames(x$loadings))))
@@ -804,11 +804,11 @@ extract_principal <-
                         cluster = rep(0, nitems),
                         unclass(load))
     u2.order <- 1:nitems
-  
+    
     if (sort) {
       loads$cluster <- apply(abs(load), 1, which.max)
       ord <- sort(loads$cluster, index.return = TRUE)
-      loads[1:nitems, ] <- loads[ord$ix, ]
+      loads[1:nitems,] <- loads[ord$ix,]
       rownames(loads)[1:nitems] <- rownames(loads)[ord$ix]
       items <- table(loads$cluster)
       first <- 1
@@ -821,7 +821,7 @@ extract_principal <-
                       index.return = TRUE)
           u2.order[first:last] <- item[ord$ix + first - 1]
           loads[first:last, 3:(nfactors + 2)] <-
-            load[item[ord$ix + first - 1], ]
+            load[item[ord$ix + first - 1],]
           loads[first:last, 1] <- item[ord$ix + first - 1]
           rownames(loads)[first:last] <-
             rownames(loads)[ord$ix + first - 1]
