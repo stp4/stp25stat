@@ -1,6 +1,6 @@
 Package: stp25stat
 Title: Functions for statistical computations
-Version: 0.0.2
+Version: 0.1.1
 Authors@R: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
 Description: Collection of convenient functions for common statistical computations.
 License: GPL-3
@@ -8,28 +8,8 @@ Date: 2018-10-08
 Type: Package
 Encoding: UTF-8
 Imports: stp25aggregate, 
-  stp25output,
   stp25formula,
-  stp25rndr,
-  stpvers,
-  stp25data,
-  Hmisc,
-  stats,
-  utils,
-  psych,
-  plyr,
-  effects,
-  reshape2,
-  car,
-  broom,
-  HH,
-  rms,
-  lazyeval,
-  magrittr,
-  coin,
-  sjstats,
-  lmerTest,
-  texreg
+  stp25rndr
 Suggests: 
   stats,
   lubridate, 
@@ -43,5 +23,5 @@ Suggests:
   caret,
   pscl
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr  

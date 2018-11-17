@@ -77,3 +77,31 @@ dapply1 <-
 # @export
 #car::contr.Helmert
 
+
+# 
+# 
+# stp25aggregate, 
+# stp25output,
+# stp25formula,
+# stp25rndr,
+# stpvers,
+# stp25data,
+# Hmisc,
+# stats,
+# utils,
+# psych,
+# plyr,
+# effects,
+# reshape2,
+# car,
+# broom,
+# HH,
+# rms,
+# lazyeval,
+# magrittr,
+# coin,
+# sjstats,
+# lmerTest,
+# texreg,
+# caret,
+# pscl

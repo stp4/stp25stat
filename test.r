@@ -1,5 +1,5 @@
-#
-# usethis::use_test("dimred-PCA")
+# setwd("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25stat")
+# usethis::use_test("reg-mediation")
  
 
 

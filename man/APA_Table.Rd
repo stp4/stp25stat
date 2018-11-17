@@ -23,8 +23,8 @@ regression_output(fits, caption = "", note = "",
   include.loglik = FALSE, include.CI = FALSE, ...)
 
 APA_Table(..., caption = NULL, note = NULL,
-  output = stp25output::which_output(), type = c("default", "long",
-  "long2", "broom", "texreg", "stargazer", "sjPlot", "anova"),
+  output = stp25output::which_output(), type = c("long2", "default",
+  "long", "broom", "texreg", "stargazer", "sjPlot", "anova"),
   names = NULL, custom.model.names = NULL, digits = NULL,
   include.b = TRUE, include.se = TRUE, include.t = FALSE,
   include.beta = FALSE, include.odds = FALSE, include.ci = FALSE,
