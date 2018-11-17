@@ -3,7 +3,7 @@ context("test-anova-multcomp")
 test_that("TukeyHSD works", {
   fm1 <- aov(breaks ~ wool + tension, data = warpbreaks)
   tk1 <- TukeyHSD(fm1, "tension", ordered = TRUE)
-  res <-  APA_Table(tk1, caption = "TukeyHSD" , output = FALSE)
+  res <-  APA_Table(tk1, caption = "TukeyHSD" , output = FALSE, type="default")
   
   expect_true(is.list(res))
   expect_equal(round(res[[1]]$estimate, 2),

@@ -20,7 +20,8 @@ test_that("mediation works", {
     digits = 2,
     output = FALSE
   )
-  expect_equal[names(res) , c("parameter", "sobel", "model")]
+  
+  expect_equal( names(res) , c("parameter", "sobel", "model") )
   
   
   expect_equal(res$sobel$B,

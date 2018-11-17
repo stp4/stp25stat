@@ -78,7 +78,7 @@ test_that("APA2 vs APA_Table vs Ordnen vs ectract_param", {
 
   x0 <- Ordnen(fit4)
   x1 <- APA2(fit4, output = FALSE)
-  x2 <- APA_Table(fit4, output = FALSE)
+  x2 <- APA_Table(fit4, output = FALSE, type="default")
   x3 <- APA_Table(fit4, output = FALSE, type = "long")
 
 
