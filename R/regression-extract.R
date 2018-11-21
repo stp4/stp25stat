@@ -53,8 +53,8 @@ extract_param  <- function(x,
                           test.my.fun=FALSE,
                           ...) {
   # "term","estimate", "beta","std.error" ,"statistic","p.value","stars","conf.high","conf.low","odds","odds.conf.low","odds.conf.high","df","group"
-
-
+#cat("\n in extract_param()\n")
+#print(class(x))
 #S3-Methode geht nicht
 
   if (inherits(x, "aov")) return(extract_param_aov(x,
@@ -542,6 +542,9 @@ extract_gof <- function(x,
 
 
   res <-  broom::glance(x)
+  
+  
+
   param <-  "term"
 
 

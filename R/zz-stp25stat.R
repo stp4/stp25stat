@@ -1,35 +1,3 @@
-
-
-#' @param .data an dplyr
-#'
-#' @param fun an dplyr default = as.numeric
-#' @param stringsAsFactors an data.frame default = FALSE
-#' @param ... 
-#'
-#' @noRd
-#' 
-#' 
-#' 
-#' 
-dapply1 <-
-  function (.data,
-            fun = function(x)
-              as.numeric(x),
-            stringsAsFactors = FALSE,
-            ...) {
-    if (inherits(.data, "tbl_df"))
-      dplyr::tbl_df(plyr::llply(.data, fun, ...)) 
-    else
-      data.frame(plyr::llply(.data, fun, ...),
-                 stringsAsFactors=stringsAsFactors) 
-  }
-
-
-
-
-
-
-
 #' stp25stat: Functions for Statistical Computations
 #'
 #'
@@ -39,26 +7,41 @@ dapply1 <-
 #' @import stp25output
 #' @import stp25formula
 #' @import stp25aggregate
-#' 
-#' @importFrom caret confusionMatrix
-#' @importFrom pscl pR2
-#' @importFrom stats IQR aggregate median na.omit qt quantile sd
-#' @importFrom Hmisc smean.cl.normal Cs spearman2 rcorr
-#' @importFrom psych describe alpha skew kurtosi
-#' @importFrom plyr llply
-#' @importFrom effects allEffects
-#' @importFrom reshape2 colsplit dcast
-#' @importFrom HH brewer.pal.likert
-#' @importFrom broom tidy
-#' @importFrom rms lrm
-#' @importFrom lazyeval lazy_dots
-#' @importFrom sjstats eta_sq
 #'
 "_PACKAGE"
 
-# 
-# 
 
+
+
+#' Pipe operator
+#'
+#' See \code{\link[magrittr]{\%>\%}} for more details.
+#'
+#' @name %>%
+#' @rdname pipe
+#' @keywords internal
+#' @export
+#' @importFrom magrittr %>%
+#' @usage lhs \%>\% rhs
+NULL
+
+
+
+# 
+# 
+# @importFrom caret confusionMatrix
+# @importFrom pscl pR2
+# @importFrom stats IQR aggregate median na.omit qt quantile sd
+# @importFrom Hmisc smean.cl.normal Cs spearman2 rcorr
+# @importFrom psych describe alpha skew kurtosi
+# @importFrom plyr llply
+# @importFrom effects allEffects
+# @importFrom reshape2 colsplit dcast
+# @importFrom HH brewer.pal.likert
+# @importFrom broom tidy
+# @importFrom rms lrm
+# @importFrom lazyeval lazy_dots
+# @importFrom sjstats eta_sq
 # @importFrom magrittr %>%
 # @export
 #magrittr::`%>%`
@@ -105,3 +88,32 @@ dapply1 <-
 # texreg,
 # caret,
 # pscl
+
+
+
+#' @param .data an dplyr
+#'
+#' @param fun an dplyr default = as.numeric
+#' @param stringsAsFactors an data.frame default = FALSE
+#' @param ... 
+#'
+#' @noRd
+#' 
+dapply1 <-
+  function (.data,
+            fun = function(x)
+              as.numeric(x),
+            stringsAsFactors = FALSE,
+            ...) {
+    if (inherits(.data, "tbl_df"))
+      dplyr::tbl_df(plyr::llply(.data, fun, ...)) 
+    else
+      data.frame(plyr::llply(.data, fun, ...),
+                 stringsAsFactors=stringsAsFactors) 
+  }
+
+
+
+
+
+

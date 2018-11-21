@@ -1,6 +1,6 @@
 Package: stp25stat
 Title: Functions for statistical computations
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
 Description: Collection of convenient functions for common statistical computations.
 License: GPL-3

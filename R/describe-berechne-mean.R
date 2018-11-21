@@ -22,6 +22,7 @@ berechne <- function(...) {
 #' @param na.rm NAs
 #' @param conf.interval,ci Grenzen der Konfidenzintervalle CIs
 #' @param .drop anplyr::ddply
+#' @export
 #'
 #' @examples
 #' # erlaubt:  varana %>% berechne(4, 5, by= ~geschl )

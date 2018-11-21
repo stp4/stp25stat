@@ -151,7 +151,7 @@ APA2_list <-
         conf.style.1 = TRUE,
         ...
       )
-
+ 
 
       if (include.stars) {
         model[, 2] <- paste0(unlist(model[, 2]), model$stars)
@@ -176,7 +176,7 @@ APA2_list <-
       n_param[i] <- ncol(model) - 1 #auszaehlen an parametern
     }
 
-    # colnames mit param_suffix
+    
     if (n > 1) {
       n_names <-
         stringr::str_split(names(coefs)[-1], mySep, simplify = TRUE)
@@ -187,7 +187,7 @@ APA2_list <-
       coefs <- coefs[order(match(coefs$term, coef.order)),]
     }
 
-
+   
 
     if (include.gof) {
       for (i in seq_len(n)) {
@@ -201,6 +201,8 @@ APA2_list <-
                                include.aic=include.aic,include.bic=include.bic,
                                include.nobs=include.nobs,
                                fix_format = TRUE ))
+        
+        
 
         model <- dplyr::tibble(term = rownames(model),
                                model = model[, 1])
@@ -272,7 +274,7 @@ APA2_list <-
     else{
       result <- NULL
     }
-
+ 
     if (!is.logical(output)) {
       Output(result, output=output,
 

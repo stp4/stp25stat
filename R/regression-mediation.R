@@ -28,7 +28,7 @@
 #' @param data Daten bei der Verwendendung von Formeln
 #' @param include.parameter,include.sobl was soll Ausgegeben werden
 #' @param z.transform Transformation bei der Verwendendung von Formeln
-#' @param type,...   fuer Regression APA_Tabelle()
+#' @param type,include.p,...   fuer Regression APA_Tabelle()
 #'
 #' @return list(param, sobel, methode)
 #' @export
@@ -88,6 +88,7 @@ Mediation <- function(y_x,
                       note = "",
                       output = which_output(),
                       include.parameter = TRUE,
+                      include.p=TRUE,
                       include.sobl = TRUE,
                       z.transform = TRUE,
                       treat = model_info(m_x)$x[1],
@@ -127,6 +128,7 @@ Mediation <- function(y_x,
       type = type,
       names = c("(1) Y~X", "(2) Y~X+M", "(3) Y~X*M" , "(4) M~X"),
       output = FALSE,
+      include.p=include.p,
       ...
     )
   else
@@ -138,7 +140,7 @@ Mediation <- function(y_x,
       caption = caption,
       type = type,
       names = c("(1) Y~X", "(2) Y~X+M", "(4) M~X"),
-      output = FALSE,
+      output = FALSE,include.p=include.p,
       ...
     )
   

@@ -228,7 +228,9 @@ r.squared.merMod <- function(mdl) {
     # Get residual variance
     VarResid <- attr(lme4::VarCorr(mdl), "sc") ^ 2
     # Get ML model AIC
-    mdl.aic <- AIC(update(mdl, REML = F))
+    # fehlerbei Modler   mdl.aic <- AIC(update(mdl, REML = F))
+    #daher geändert auf
+    mdl.aic <- AIC( mdl )
     # Model family for lmer is gaussian
     family <- "gaussian"
     # Model link for lmer is identity

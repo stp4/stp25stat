@@ -7,9 +7,9 @@
 \usage{
 Mediation(y_x, y_xm, m_x, y_inter_xm = NULL, data = NULL,
   caption = "", note = "", output = which_output(),
-  include.parameter = TRUE, include.sobl = TRUE, z.transform = TRUE,
-  treat = model_info(m_x)$x[1], mediator = model_info(m_x)$y,
-  type = "long2", ...)
+  include.parameter = TRUE, include.p = TRUE, include.sobl = TRUE,
+  z.transform = TRUE, treat = model_info(m_x)$x[1],
+  mediator = model_info(m_x)$y, type = "long2", ...)
 
 Sobel_Test(y_x, y_xm, m_x, treat, mediator, digits = 2)
 }
@@ -32,7 +32,7 @@ Sobel_Test(y_x, y_xm, m_x, treat, mediator, digits = 2)
 
 \item{treat, mediator}{Einflussvariable und Moderator}
 
-\item{type, ...}{fuer Regression APA_Tabelle()}
+\item{type, include.p, ...}{fuer Regression APA_Tabelle()}
 
 \item{digits}{Nachkommastellen}
 
