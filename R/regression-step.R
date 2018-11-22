@@ -4,7 +4,6 @@
 #' @export
 #'
 #' @examples
-#' # require(stpvers)
 #'
 #' summary(lm1 <- lm(Fertility ~ ., data = swiss))
 #' slm1 <- stats::step(lm1)

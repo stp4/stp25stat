@@ -688,7 +688,7 @@ PCA.default <- function(data,
                         N = nrow(data),
                         caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
                         ...) {
-  if (!stpvers::is_all_identical2(data)) {
+  if (!is_all_identical2(data)) {
     Text("Die Skalenniveaus sind gemischt daher ist die Berechnung nicht m?glich.")
     return(NULL)
   } else if (any(sapply(data, is.factor))) {

@@ -17,7 +17,6 @@
 #' @examples
 #'
 #' #require(HH)
-#' #require(stpvers)
 #'
 #' n <- 2 * 3 * 4 * 1
 #'
@@ -169,7 +168,7 @@ Rangreihe.default <- function (items,
                               # info = FALSE,
                                ...)
 {
-  if (stpvers::is_all_identical2(items))
+  if (is_all_identical2(items))
     warning("Das Skalenniveau in der Rangreihe ist unterschiedlich. Moeglicherweise stimmen die Ergebnisse nicht!")
   # if (info)
   #   Text("Rangordnungen von Objekten koennen durch eine Transformation der Rangreihen in Intervallskalierte Merkmale ueberfuehrt werden. Die Grundidee dieser Methode geht  auf Thurstone (1927) nach dem Law of Categorical Judgement zurueck. Dabei werden die kumulierten Haeufigkeiten in Normalverteilte z-Werte uebergefuehrt und aus diesen die Intervallskalierten Markmalsauspraegungen gebildet. Literatur: Bortz, J. & Doering, N. (2006). Forschungsmethoden und Evaluation fuer Human-und Sozialwissenschaftler (4. Auflage). Berlin: Springer. Seite 155")

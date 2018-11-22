@@ -264,7 +264,6 @@ etaSquared2 <-
 #'
 #' @examples
 #'
-#' #require(stpvers)
 #' set.seed(45)                        ## be reproducible
 #'  x <- rnorm(10, 10, 1)
 #'  y <- rnorm(10, 5, 5)

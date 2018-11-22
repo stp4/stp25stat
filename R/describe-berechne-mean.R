@@ -46,7 +46,7 @@ berechne.data.frame <- function(data,
     measure[meAsNum] <- names(data[as.numeric(measure[meAsNum])])
   }
 
-  if (stpvers::is_formula2(by))
+  if (is_formula2(by))
     by <- all.vars(by)
 
 

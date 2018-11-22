@@ -1,0 +1,1314 @@
+<html xmlns:mml="http://www.w3.org/1998/Math/MathML">
+<head>
+<title> R output </title>
+<link rel=stylesheet href="layout.css" type=text/css>
+<object id="mathplayer" classid="clsid:32F66A20-7614-11D4-BD11-00104BD3F987"></object>
+<?import namespace="mml" implementation="#mathplayer"?>
+<script type="text/javascript" src="ASCIIMathML.js"></script>
+<link href="./runtime/styles/xp/grid.css" rel="stylesheet" type="text/css" ></link>
+<link href="gridR2HTML.css" rel="stylesheet" type="text/css" ></link>
+
+<script src="./runtime/lib/grid.js"></script>
+
+<script src="./gridR2HTML.js"></script>
+<script>
+   nequations=0;
+</script>
+</head>
+<body onload="translate()" bgcolor= FFFFFF >
+
+<p>Test <BR> Datum:  Tue Nov 20 05:30:25 2018 , Software:  R version 3.5.1 (2018-07-02) , Link: www.R-project.org/<BR>File:  test-mediation.R</p>
+
+
+<br>
+
+<center><table class='gmisc_table' style='border-collapse: collapse; padding-left: .5em; padding-right: .2em;' >
+<thead>
+<tr><td colspan='13' style='text-align: left;'>
+Tab 1: Einfache Mediation und Moderationsanalyse mit Sobel-Test</td></tr>
+<tr>
+<th colspan='1' style='font-weight: 900; border-top: 2px solid grey; text-align: center;'></th><th style='border-top: 2px solid grey;; border-bottom: hidden;'>&nbsp;</th>
+<th colspan='2' style='font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>(1)&nbsp;Y~X</th><th style='border-top: 2px solid grey;; border-bottom: hidden;'>&nbsp;</th>
+<th colspan='2' style='font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>(2)&nbsp;Y~X+M</th><th style='border-top: 2px solid grey;; border-bottom: hidden;'>&nbsp;</th>
+<th colspan='2' style='font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>(3)&nbsp;Y~X*M</th><th style='border-top: 2px solid grey;; border-bottom: hidden;'>&nbsp;</th>
+<th colspan='2' style='font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>(4)&nbsp;M~X</th>
+</tr>
+<tr>
+<th style='border-bottom: 1px solid grey; text-align: center;'>term</th>
+<th style='border-bottom: 1px solid grey;' colspan='1'>&nbsp;</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>b</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>SE</th>
+<th style='border-bottom: 1px solid grey;' colspan='1'>&nbsp;</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>b</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>SE</th>
+<th style='border-bottom: 1px solid grey;' colspan='1'>&nbsp;</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>b</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>SE</th>
+<th style='border-bottom: 1px solid grey;' colspan='1'>&nbsp;</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>b</th>
+<th style='border-bottom: 1px solid grey; text-align: center;'>SE</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>(Intercept)</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>-0.00</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.05</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>-0.00</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.03</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>-0.01</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.03</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.00</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.05</td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>Motivation</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.55***</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.05</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.01</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.04</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.01</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.04</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.62***</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.05</td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>Lerndauer</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.87***</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.04</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.87***</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.04</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>Motivation:Lerndauer</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.02</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.02</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>r.squared</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.30</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.77</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.77</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.38</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>adj.r.squared</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.30</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.77</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.77</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.38</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>AIC</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>747.98</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>412.56</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>414.04</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>711.92</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>BIC</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>759.09</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>427.38</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>432.56</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>723.03</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>RMSE</td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.83</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.47</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.47</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+<td style='' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'>0.78</td>
+<td style='padding-left: .5em; padding-right: .2em; text-align: left;'></td>
+</tr>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>Obs</td>
+<td style='border-bottom: 2px solid grey;' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>300</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'></td>
+<td style='border-bottom: 2px solid grey;' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>300</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'></td>
+<td style='border-bottom: 2px solid grey;' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>300</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'></td>
+<td style='border-bottom: 2px solid grey;' colspan='1'>&nbsp;</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>300</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'></td>
+</tr>
+</tbody>
+<tfoot><tr><td colspan='13'>
+</td></tr></tfoot>
+</table></center>
+
+<br>
+
+<br>
+
+<center><table class='gmisc_table' style='border-collapse: collapse; padding-left: .5em; padding-right: .2em;' >
+<thead>
+<tr><td colspan='5' style='text-align: left;'>
+Tab 2: Sobel's Test for Mediation</td></tr>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Source</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>B</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>SE</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Z</th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>indir</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>0.54</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>0.05</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>11.91</td>
+<td style='padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;'>.000</td>
+</tr>
+</tbody>
+<tfoot><tr><td colspan='5'>
+treat = Motivation,  mediator = Lerndauer</td></tr></tfoot>
+</table></center>
+
+<br>
+
+<hr size=1>
+<font size=-1>
+	 Generated on: <i>Tue Nov 20 05:30:26 2018</i> - <b>R2HTML</b> 
+<hr size=1>
+	</body>
+</html><a name=Num2>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num3>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num4>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num5>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num6>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num7>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num8>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num9>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num10>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num11>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num12>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num13>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num14>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num15>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num16>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num17>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num18>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num19>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num20>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num21>&nbsp</a>
+
+<p align= center >
+<table cellspacing=0 border=1>
+<caption align=bottom class=captiondataframe></caption>
+<tr><td>
+	<table border=0 class=dataframe>
+	<tbody> 
+	<tr class= firstline > 
+		<th>&nbsp;  </th>
+		<th>Note  </th>
+		<th>Lerndauer  </th>
+		<th>Motivation  </th>
+		<th>IQ  </th>
+		<th>Sex</th> 
+	</tr> 
+<tr> 
+<td class=firstcolumn>1
+</td>
+<td class=cellinside>-3.56
+</td>
+<td class=cellinside>-1.099
+</td>
+<td class=cellinside> 1.25
+</td>
+<td class=cellinside>-0.1984
+</td>
+<td class=cellinside> 0.270
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>2
+</td>
+<td class=cellinside> 0.78
+</td>
+<td class=cellinside> 0.086
+</td>
+<td class=cellinside> 1.03
+</td>
+<td class=cellinside>-1.1569
+</td>
+<td class=cellinside>-0.656
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>3
+</td>
+<td class=cellinside> 2.49
+</td>
+<td class=cellinside> 0.713
+</td>
+<td class=cellinside> 1.69
+</td>
+<td class=cellinside> 1.6870
+</td>
+<td class=cellinside>-0.508
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>4
+</td>
+<td class=cellinside>-5.45
+</td>
+<td class=cellinside>-2.584
+</td>
+<td class=cellinside>-2.36
+</td>
+<td class=cellinside>-0.6427
+</td>
+<td class=cellinside> 0.451
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>5
+</td>
+<td class=cellinside> 1.17
+</td>
+<td class=cellinside> 0.011
+</td>
+<td class=cellinside> 0.57
+</td>
+<td class=cellinside> 0.0016
+</td>
+<td class=cellinside> 0.024
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>6
+</td>
+<td class=cellinside> 1.30
+</td>
+<td class=cellinside> 0.823
+</td>
+<td class=cellinside> 0.14
+</td>
+<td class=cellinside>-0.2933
+</td>
+<td class=cellinside>-0.784
+</td></tr>
+ 
+	</tbody>
+</table>
+ </td></table>
+ <br>
+<a name=Num22>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num23>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num24>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num25>&nbsp</a>
+<p class='character'></p>
+<a name=Num26>&nbsp</a>
+<p class='character'></p>
+<a name=Num27>&nbsp</a><a name=Num28>&nbsp</a><a name=Num29>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num30>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num31>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num32>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num33>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num34>&nbsp</a><a name=Num35>&nbsp</a><a name=Num36>&nbsp</a>
+<p class='character'> model: volunteer ~ sex + neuroticism * extraversion
+<br>
+
+<br>
+ sex effect
+<br>
+sex
+<br>
+   female      male 
+<br>
+0.4409440 0.3811939 
+<br>
+
+<br>
+ neuroticism*extraversion effect
+<br>
+           extraversion
+<br>
+neuroticism          0         6        12        18        24
+<br>
+         0  0.07714514 0.1852939 0.3822555 0.6273613 0.8208051
+<br>
+         6  0.13977939 0.2452491 0.3938629 0.5651049 0.7221029
+<br>
+         12 0.24003937 0.3170543 0.4055913 0.5007251 0.5958063
+<br>
+         18 0.38041106 0.3987751 0.4174285 0.4363211 0.4554004
+<br>
+         24 0.54409911 0.4865532 0.4293616 0.3739958 0.3217439</p>
+<a name=Num37>&nbsp</a>
+
+<p align= center >
+<table cellspacing=0 border=1>
+<caption align=bottom class=captiondataframe></caption>
+<tr><td>
+	<table border=0 class=dataframe>
+	<tbody> 
+	<tr class= firstline > 
+		<th>&nbsp;  </th>
+		<th>neuroticism  </th>
+		<th>extraversion  </th>
+		<th>fit  </th>
+		<th>se  </th>
+		<th>lower  </th>
+		<th>upper</th> 
+	</tr> 
+<tr> 
+<td class=firstcolumn>1
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>0.077
+</td>
+<td class=cellinside>0.498
+</td>
+<td class=cellinside>0.031
+</td>
+<td class=cellinside>0.18
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>2
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>0.140
+</td>
+<td class=cellinside>0.301
+</td>
+<td class=cellinside>0.083
+</td>
+<td class=cellinside>0.23
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>3
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>0.240
+</td>
+<td class=cellinside>0.188
+</td>
+<td class=cellinside>0.179
+</td>
+<td class=cellinside>0.31
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>4
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>0.380
+</td>
+<td class=cellinside>0.286
+</td>
+<td class=cellinside>0.259
+</td>
+<td class=cellinside>0.52
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>5
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>0.544
+</td>
+<td class=cellinside>0.481
+</td>
+<td class=cellinside>0.318
+</td>
+<td class=cellinside>0.75
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>6
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>0.185
+</td>
+<td class=cellinside>0.288
+</td>
+<td class=cellinside>0.114
+</td>
+<td class=cellinside>0.29
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>7
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>0.245
+</td>
+<td class=cellinside>0.175
+</td>
+<td class=cellinside>0.187
+</td>
+<td class=cellinside>0.31
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>8
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>0.317
+</td>
+<td class=cellinside>0.109
+</td>
+<td class=cellinside>0.273
+</td>
+<td class=cellinside>0.36
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>9
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>0.399
+</td>
+<td class=cellinside>0.162
+</td>
+<td class=cellinside>0.326
+</td>
+<td class=cellinside>0.48
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>10
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>0.487
+</td>
+<td class=cellinside>0.272
+</td>
+<td class=cellinside>0.357
+</td>
+<td class=cellinside>0.62
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>11
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>0.382
+</td>
+<td class=cellinside>0.144
+</td>
+<td class=cellinside>0.318
+</td>
+<td class=cellinside>0.45
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>12
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>0.394
+</td>
+<td class=cellinside>0.085
+</td>
+<td class=cellinside>0.355
+</td>
+<td class=cellinside>0.43
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>13
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>0.406
+</td>
+<td class=cellinside>0.056
+</td>
+<td class=cellinside>0.379
+</td>
+<td class=cellinside>0.43
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>14
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>0.417
+</td>
+<td class=cellinside>0.092
+</td>
+<td class=cellinside>0.374
+</td>
+<td class=cellinside>0.46
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>15
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>0.429
+</td>
+<td class=cellinside>0.153
+</td>
+<td class=cellinside>0.358
+</td>
+<td class=cellinside>0.50
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>16
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>0.627
+</td>
+<td class=cellinside>0.247
+</td>
+<td class=cellinside>0.509
+</td>
+<td class=cellinside>0.73
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>17
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>0.565
+</td>
+<td class=cellinside>0.142
+</td>
+<td class=cellinside>0.496
+</td>
+<td class=cellinside>0.63
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>18
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>0.501
+</td>
+<td class=cellinside>0.097
+</td>
+<td class=cellinside>0.453
+</td>
+<td class=cellinside>0.55
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>19
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>0.436
+</td>
+<td class=cellinside>0.170
+</td>
+<td class=cellinside>0.357
+</td>
+<td class=cellinside>0.52
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>20
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>0.374
+</td>
+<td class=cellinside>0.280
+</td>
+<td class=cellinside>0.257
+</td>
+<td class=cellinside>0.51
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>21
+</td>
+<td class=cellinside> 0
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>0.821
+</td>
+<td class=cellinside>0.451
+</td>
+<td class=cellinside>0.654
+</td>
+<td class=cellinside>0.92
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>22
+</td>
+<td class=cellinside> 6
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>0.722
+</td>
+<td class=cellinside>0.263
+</td>
+<td class=cellinside>0.608
+</td>
+<td class=cellinside>0.81
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>23
+</td>
+<td class=cellinside>12
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>0.596
+</td>
+<td class=cellinside>0.175
+</td>
+<td class=cellinside>0.511
+</td>
+<td class=cellinside>0.67
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>24
+</td>
+<td class=cellinside>18
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>0.455
+</td>
+<td class=cellinside>0.295
+</td>
+<td class=cellinside>0.319
+</td>
+<td class=cellinside>0.60
+</td></tr>
+ 
+<tr> 
+<td class=firstcolumn>25
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>24
+</td>
+<td class=cellinside>0.322
+</td>
+<td class=cellinside>0.489
+</td>
+<td class=cellinside>0.154
+</td>
+<td class=cellinside>0.55
+</td></tr>
+ 
+	</tbody>
+</table>
+ </td></table>
+ <br>
+<a name=Num38>&nbsp</a><a name=Num39>&nbsp</a><a name=Num40>&nbsp</a>
+<p class='logical'>TRUE</p>
+<a name=Num41>&nbsp</a>
+<p class='character'></p>
+<a name=Num42>&nbsp</a>
+<p class='character'></p>
+<a name=Num43>&nbsp</a>
+<p class='character'></p>
+<a name=Num44>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num45>&nbsp</a>
+<p class='character'></p>
+<a name=Num46>&nbsp</a>
+<p class='character'></p>
+<a name=Num47>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num48>&nbsp</a>
+<p class='numeric'>0&nbsp; 6&nbsp; 12&nbsp; 18&nbsp; 24</p>
+<a name=Num49>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num50>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num51>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num52>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num53>&nbsp</a>
+<p class='character'></p>
+<a name=Num54>&nbsp</a>
+<p class='character'></p>
+<a name=Num55>&nbsp</a>
+<p class='numeric'>0&nbsp; 6&nbsp; 12&nbsp; 18&nbsp; 24</p>
+<a name=Num56>&nbsp</a>
+<p class='numeric'>-1&nbsp; 0&nbsp; 1</p>
+<a name=Num57>&nbsp</a>
+<p class='character'></p>
+<a name=Num58>&nbsp</a>
+<p class='character'>
+</p>
+
+<br><li>Call:<font class='call'> lm(formula = Note ~ Motivation * IQ, data = dat)</font>
+
+<br><li>  Residuals<br>
+
+
+
+<p align= center >
+<table cellspacing=0 border=1><caption align=bottom class=captiondataframe></caption>
+<tr><td>
+	<table border=0 class=dataframe>
+	<tbody> <tr class= firstline > <th></th><th>Min</th><th>1Q</th><th>Median</th><th>3Q</th><th>Max</th> </tr>
+ <tr> 
+<tr><td class=firstcolumn></td>
+<td class=cellinside>-5.787</td>
+<td class=cellinside>-1.354</td>
+<td class=cellinside>-0.069</td>
+<td class=cellinside> 1.343</td>
+<td class=cellinside> 5.044</td> </tr>
+ 
+	</tbody>
+</table>
+ </td></table>
+ <br>
+
+<br><li>Coefficients
+
+
+
+<p align= center >
+<table cellspacing=0 border=1><caption align=bottom class=captiondataframe></caption>
+<tr><td>
+	<table border=0 class=dataframe>
+	<tbody> <tr class= firstline > <th></th><th>Estimate</th><th>Std. Error</th><th>t value</th><th>Pr(>|t|)</th><th></th> </tr>
+ <tr> 
+<tr><td class=firstcolumn>(Intercept)</td>
+<td class=cellinside>-0.06211</td>
+<td class=cellinside> 0.11494</td>
+<td class=cellinside>-0.540  </td>
+<td class=cellinside>0.589   </td>
+<td class=cellinside>        </td> </tr>
+ <tr> 
+<tr><td class=firstcolumn>Motivation</td>
+<td class=cellinside> 1.24615</td>
+<td class=cellinside> 0.11813</td>
+<td class=cellinside>10.549  </td>
+<td class=cellinside>< 2e-16 </td>
+<td class=cellinside>***     </td> </tr>
+ <tr> 
+<tr><td class=firstcolumn>IQ</td>
+<td class=cellinside> 0.72899</td>
+<td class=cellinside> 0.12071</td>
+<td class=cellinside> 6.039  </td>
+<td class=cellinside>4.64e-09</td>
+<td class=cellinside>***     </td> </tr>
+ <tr> 
+<tr><td class=firstcolumn>Motivation:IQ</td>
+<td class=cellinside>-0.02673</td>
+<td class=cellinside> 0.11695</td>
+<td class=cellinside>-0.229  </td>
+<td class=cellinside>0.819   </td>
+<td class=cellinside>        </td> </tr>
+ 
+	</tbody>
+</table>
+ </td></table>
+ <br>
+
+<p class='character'>
+<p>--- Signif. codes: 0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</p>
+</p>
+
+<br><li>Residuals standard error: 1.9838 on 296 degrees of freedom
+
+<br><li>Multiple R-Squared:<b>0.3258</b>
+<br><li>Adjusted R-Squared:<b>0.319</b>
+<br><li>F-statistics: <b>47.6765</b> on 3 and 296 DF. P-value:<b>0</b>.<a name=Num59>&nbsp</a>
+<p class='character'></p>
+<a name=Num60>&nbsp</a>
+<p class='character'></p>
+<a name=Num61>&nbsp</a>
+<p class='numeric'>-1&nbsp; 0</p>
+<a name=Num62>&nbsp</a>
+<p class='character'></p>
+<a name=Num63>&nbsp</a>
+<p class='character'></p>
+<a name=Num64>&nbsp</a>
+
+<p class='character'><hr class='hr'></p>
+<ul>
+</center><li>
+
+<p class='character'>NULL</p>
+</ul>
+<ul>
+</center><li>
+
+<p class='logical'>FALSE</p>
+</ul>
+
+<br><hr class='hr'>
+<a name=Num65>&nbsp</a>
+<p class='character'></p>
+<a name=Num66>&nbsp</a>
+<p class='character'></p>
+<a name=Num67>&nbsp</a>
+<p class='character'></p>
+<a name=Num68>&nbsp</a>
+<p class='character'></p>
+<a name=Num69>&nbsp</a><a name=Num70>&nbsp</a>
+<p class='character'></p>
+<a name=Num71>&nbsp</a>
+<p class='logical'>TRUE</p>
+<a name=Num72>&nbsp</a>
+<p class='character'>cake</p>
+<a name=Num73>&nbsp</a><a name=Num74>&nbsp</a>
+<p class='character'></p>
+<a name=Num75>&nbsp</a><a name=Num76>&nbsp</a><a name=Num77>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num78>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num79>&nbsp</a><a name=Num80>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num81>&nbsp</a><a name=Num82>&nbsp</a>
+<p class='character'></p>
+<a name=Num83>&nbsp</a>
+<p class='character'>NULL</p>
+<a name=Num84>&nbsp</a><a name=Num85>&nbsp</a><a name=Num86>&nbsp</a><a name=Num87>&nbsp</a><a name=Num88>&nbsp</a><a name=Num89>&nbsp</a><a name=Num90>&nbsp</a><a name=Num91>&nbsp</a>
+<p class='character'></p>
+<a name=Num92>&nbsp</a>
+<p class='character'></p>
+<a name=Num93>&nbsp</a>
+<p class='character'></p>

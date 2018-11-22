@@ -1,15 +1,16 @@
 Package: stp25stat
 Title: Functions for statistical computations
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
 Description: Collection of convenient functions for common statistical computations.
 License: GPL-3
-Date: 2018-10-08
+Date: 2018-11-22
 Type: Package
 Encoding: UTF-8
 Imports: stp25aggregate, 
   stp25formula,
-  stp25rndr
+  stp25rndr,
+  stp25output
 Suggests: 
   stats,
   lubridate, 

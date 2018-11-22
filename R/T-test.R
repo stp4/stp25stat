@@ -50,9 +50,9 @@ APA.ScalarIndependenceTest <- function(x, ...) {
 #'
 #' @examples
 #'
-#' #require(stpvers)
+#'  
 #'
-#' #Projekt("html")
+#'  
 #'
 #' APA_Ttest(m1+m2 ~ geschl, varana)
 #' varanax<-Melt2(m1+m2~nr,varana , key="time", value="m")
@@ -67,8 +67,7 @@ APA.ScalarIndependenceTest <- function(x, ...) {
 #' #broom::tidy(t.test(m~time, varanax, var.equal=TRUE))
 #' #broom::tidy(t.test(m~time, varanax, var.equal=FALSE))
 #'
-#' #End()
-
+#'  
 APA_Ttest <- function(x,
                       data,
                       caption="T Test", note=alternative,
