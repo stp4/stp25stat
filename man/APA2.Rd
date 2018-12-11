@@ -612,7 +612,6 @@ APA2(eff)
   APA2(house.plr, note= APA(house.plr))
 
 
-# require(stpvers)
 
 summary(lm1 <- lm(Fertility ~ ., data = swiss))
 slm1 <- stats::step(lm1)

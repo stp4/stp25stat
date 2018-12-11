@@ -41,11 +41,13 @@ berechne_all(data, x, by = "1", measure, type, fun = function(x)
   measure.name = NULL)
 
 calc_median(x, digits = 2, n = length(x),
-  median.style = get_my_options()$apa.style$mittelwert$median.style)
+  median.style = get_my_options()$apa.style$mittelwert$median.style,
+  unit = NULL)
 
 calc_mean(x, digits = stp25rndr::default_stp25("digits", "mittelwert"),
   n = length(x),
-  mean.style = get_my_options()$apa.style$mittelwert$mean.style)
+  mean.style = get_my_options()$apa.style$mittelwert$mean.style,
+  unit = NULL)
 
 Mean2default(x, digits = 2, n = length(x),
   mean.style = get_my_options()$apa.style$mittelwert$mean.style,

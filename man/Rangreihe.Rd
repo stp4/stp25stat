@@ -61,7 +61,6 @@ Literatur: Bortz, J. & Doering, N. (2006). Forschungsmethoden und Evaluation fue
 \examples{
 
 #require(HH)
-#require(stpvers)
 
 n <- 2 * 3 * 4 * 1
 

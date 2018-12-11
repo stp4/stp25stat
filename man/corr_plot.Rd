@@ -63,12 +63,8 @@ Function for making a correlation plot starting from a  formula and a data.frame
 }
 \examples{
 
-# graphics.off()
-# library(stpvers)
 
-#windows(8,8)
-corr_plot(~ m1 + m2 + m3 + m4, varana)
-#windows(8,8)
-corr_plot( m1~  m2 + m3 + m4, varana)
+# corr_plot(~ m1 + m2 + m3 + m4, varana)
+# corr_plot( m1~  m2 + m3 + m4, varana)
 
 }
