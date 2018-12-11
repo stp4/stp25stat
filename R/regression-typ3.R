@@ -129,7 +129,7 @@ APA_Table <- function(...,
                       caption = NULL,
                       note =  NULL,
                       output = stp25output::which_output(),
-                      type = c("long2","default","long", 
+                      type = c("long2", "wide", "default","long", 
                                "broom",
                                "texreg","stargazer","sjPlot",
                                "anova"),
@@ -186,31 +186,24 @@ APA_Table <- function(...,
                       conf.level = 0.95,
                       conf.method = "Wald",
                       fix_format = FALSE,
+                      
                       digits.param = 3,
                       digits.odds = 2,
                       digits.test = 2,
                       digits.beta = 2,
                       format="fg"
-
-
-
                       )
-# Parameter Goodness of fit)
 {
-  if(test.my.fun) cat("\n--------------\nAPA_Table")
-  if(include.ftest) Text("Achtung include.ftest noch nicht fertig!")
- # if(include.beta) Text("Achtung include.beta noch nicht fertig!")
 
+  if(include.ftest) Text("Achtung include.ftest noch nicht fertig!")
   result <- NULL
   type <-  match.arg(type, several.ok = TRUE)
   type<- type[1]
-  # print(include.pseudo)
+
   custom_model_names <- function() {
-    if (length(myfits) == 1) {
-       ""
+    if (length(myfits) == 1) {""
     }else{
-      if (is.null(names)) paste0("(", 1:length(myfits), ")")  else
-        names
+      if (is.null(names)) paste0("(", 1:length(myfits), ")")  else names
       }
   }
 
@@ -222,20 +215,120 @@ APA_Table <- function(...,
       names <- names(myfits)
   }
 
-
-  if(test.my.fun){
-    cat("\n Input: ")
-    for (i in myfits){
-      if (length(myfits) ==1) cat(class(i)[1])
-        else  cat(class(i)[1], " | ")
-    }
-
+  
+  
+  if (type == "long2") {
+    result <- APA2_list(
+      myfits,
+      caption = caption, note = note , output=output,
+      custom.model.names = names ,
+      include.param=include.param,  include.gof=include.gof, include.custom = include.custom,
+      include.b = include.b, include.se = include.se, include.beta = include.beta,
+      include.ci =  include.ci,
+      include.odds = include.odds, include.odds.ci=include.odds.ci,
+      include.statistic = include.statistic,
+      include.p =  include.p,
+      include.stars =  include.stars,
+      include.df = FALSE,
+      include.r = include.r, include.pseudo = include.pseudo,
+      include.test = include.test ,
+      include.loglik = include.loglik ,
+      include.aic =  include.aic,include.bic = include.bic,
+      ci.level =  ci.level,
+      rgroup = rgroup,
+      test.my.fun = test.my.fun,
+      digits=digits, digits.param = digits.param,
+      digits.odds = digits.odds,
+      digits.test = digits.test,
+      digits.beta = digits.beta,
+      format=format
+    )
   }
-
-  if (type == "default") {
-    if(test.my.fun) cat("\n type = default")
+  else if (type == "wide") {
     custom.model.names <- custom_model_names()
-    #  print(custom.model.names)
+    
+    for (i in  seq_len(length(myfits)) ) {
+      x <-  
+        APA2_list(
+          list(myfits[[i]]),
+          caption = caption, note = note , output=output,
+          custom.model.names = names ,
+          include.param=TRUE,  include.gof=FALSE, #include.custom = include.custom,
+          include.b = include.b, 
+          include.se = include.se, 
+          include.beta = include.beta,
+          include.ci =  include.ci,
+          include.odds = include.odds, include.odds.ci=include.odds.ci,
+          include.statistic = include.statistic,
+          include.p =  include.p,
+          include.stars =  include.stars,
+          include.df = FALSE,
+          include.r = include.r, include.pseudo = include.pseudo,
+          include.test = include.test ,
+          include.loglik = include.loglik ,
+          include.aic =  include.aic,include.bic = include.bic,
+          ci.level =  ci.level,
+          rgroup = rgroup,
+          test.my.fun = test.my.fun,
+          digits=digits, digits.param = digits.param,
+          digits.odds = digits.odds,
+          digits.test = digits.test,
+          digits.beta = digits.beta,
+          format=format
+        )
+      result[[i]] <- x
+    }
+  }
+  else if (type == "long") {
+    result <- APA2_list(
+      myfits,
+      caption = caption ,
+      note = note , output=output,
+      digits =  digits,
+      custom.model.names = names ,
+      include.custom = include.custom ,
+      include.b = include.b,
+      include.ci =  include.ci,
+      #Fehler abfangen mit alter schreibweise
+      include.odds = include.odds,
+      include.se = include.se,
+      include.t = include.t,
+      include.p =  include.p,
+      include.stars =  include.stars,
+      
+      include.pseudo = include.pseudo,
+      include.r = include.r,
+      include.ftest = include.ftest ,
+      
+      include.loglik = include.loglik ,
+      include.aic =  include.aic,
+      include.bic = include.bic ,
+      
+      include.gof=include.gof,
+      include.param=include.param,
+      
+      ci.level =  ci.level,
+      rgroup = rgroup,
+      test.my.fun = test.my.fun
+    )
+  }
+  else if (type == "broom") {
+    APA_Table(
+      ...,
+      caption = caption,
+      note = note, output=output,
+      type = "default",
+      names = names,
+      digits = digits,
+      single.row = single.row,
+      include.stars = include.stars,
+      include.p  = include.p ,
+      include.variance = include.variance
+    )
+  }
+  else if (type == "default") {
+    custom.model.names <- custom_model_names()
+    
     for (i in  seq_len(length(myfits)) ) {
       x <- type_default(
         myfits[[i]],
@@ -249,10 +342,10 @@ APA_Table <- function(...,
         include.eta = include.eta,
         include.odds = include.odds,
         include.ci = include.ci,
-                #Fehler abfangeb
+        #Fehler abfangeb
         include.p = include.p,
         include.stars = include.stars,
-
+        
         include.variance = include.variance,
         include.r = include.r,
         include.pseudo = include.pseudo,
@@ -264,145 +357,41 @@ APA_Table <- function(...,
         include.aic = include.aic,
         include.bic = include.bic,
         ci.level = .95,
-        test.my.fun = test.my.fun
-      )
-      result[[i]] <- x
-    }
-  }
-  else{
-    if ( type == "broom" ) {
-      if(test.my.fun) cat("\n type = broom")
-      APA_Table(
-        ...,
-        caption = caption,
-        note = note, output=output,
-        type = "default",
-        names = names,
-        digits = digits,
-        single.row = single.row,
-        include.stars = include.stars,
-        include.p  = include.p ,
-        include.variance = include.variance
-      )
-    }
-
-
-    else if ( type == "long2" ) {
-      if(test.my.fun) cat("\n type = long\n")
-     # print(output)
-
-
-      result <- APA2_list(
-        myfits,
-        caption = caption, note = note , output=output,
-        custom.model.names = names ,
-        include.param=include.param,  include.gof=include.gof, include.custom = include.custom,
-        include.b = include.b, include.se = include.se, include.beta = include.beta,
-        include.ci =  include.ci,
-        include.odds = include.odds, include.odds.ci=include.odds.ci,
-        include.statistic = include.statistic,
-        include.p =  include.p,
-        include.stars =  include.stars,
-        include.df = FALSE,
-        include.r = include.r, include.pseudo = include.pseudo,
-        include.test = include.test ,
-        include.loglik = include.loglik ,
-        include.aic =  include.aic,include.bic = include.bic,
-        ci.level =  ci.level,
-        rgroup = rgroup,
         test.my.fun = test.my.fun,
+        
         digits=digits, digits.param = digits.param,
         digits.odds = digits.odds,
         digits.test = digits.test,
         digits.beta = digits.beta,
         format=format
+        
       )
-
-
-
-
+      result[[i]] <- x
     }
-
-    else if ( type == "long" ) {
-      if(test.my.fun) cat("\n type = long")
-      result <- APA2_list(
-        myfits,
-        caption = caption ,
-        note = note , output=output,
-        digits =  digits,
-        custom.model.names = names ,
-        include.custom = include.custom ,
-        include.b = include.b,
-        include.ci =  include.ci,
-        #Fehler abfangen mit alter schreibweise
-        include.odds = include.odds,
-        include.se = include.se,
-        include.t = include.t,
-        include.p =  include.p,
-        include.stars =  include.stars,
-
-        include.pseudo = include.pseudo,
-        include.r = include.r,
-        include.ftest = include.ftest ,
-
-        include.loglik = include.loglik ,
-        include.aic =  include.aic,
-        include.bic = include.bic ,
-
-        include.gof=include.gof,
-        include.param=include.param,
-
-        ci.level =  ci.level,
-        rgroup = rgroup,
-        test.my.fun = test.my.fun
-      )
-
-      # result <- regression_output(myfits,
-      #                          caption = caption, note = note,
-      #                          custom.model.names = names,
-      #                          col_names= col_names,
-      #                          digits = digits,
-      #
-      #                          rgroup = rgroup, # Parameter Goodness of fit
-      #                          include.pseudo=include.pseudo,
-      #                          include.ftest=include.ftest,
-      #                          include.loglik=include.loglik,
-      #                          include.ci=include.ci
-      #                          )
-
-
-    }
-    else if ( type == "texreg" ) {
-      if(test.my.fun) cat("\n type = texreg")
-      result <-  type_texreg(
-        myfits,
-        caption = caption,
-        note = note, output=output,
-        digits = digits,
-        single.row = single.row,
-        include.stars = include.stars,
-        include.p = include.p ,
-        names = names,
-        include.variance = include.variance
-      )
-    }
-    else if ( type =="stargazer" ) {
-      if(test.my.fun) cat("\n type = stargazer")
-      # myfits<-list(...)
-      #if(is.list(myfits[[1]])) myfits <- myfits[[1]]
-      type_stargazer(myfits,
-                     caption = caption,
-                     digits = digits)
-    }
-    else if (type == "sjPlot" ) {
-     # if(test.my.fun) cat("\n type = sjPlot")
-      Text("sjPlot ist noch nicht implementiert")
-    }
-    else{
-      #if(test.my.fun) cat("\n type = ist nicht definiert")
-    #  cat("\n in else eventuell \n")
-      if(type=="anova")  include.anova=TRUE ## Altlast
-    }
+  }
+  else if (type == "texreg") {
+    result <-  type_texreg(
+      myfits,
+      caption = caption,
+      note = note, output=output,
+      digits = digits,
+      single.row = single.row,
+      include.stars = include.stars,
+      include.p = include.p ,
+      names = names,
+      include.variance = include.variance
+    )
+  }
+  else if (type == "stargazer") {
+    type_stargazer(myfits,
+                   caption = caption,
+                   digits = digits)
+  }
+  else if (type == "sjPlot") {
+    Text("sjPlot ist noch nicht implementiert")
+  }
+  else{
+    if(type=="anova")  include.anova=TRUE ## Altlast
   }
 
 
@@ -422,8 +411,7 @@ APA_Table <- function(...,
     )
   }
 
-  if(test.my.fun) cat("\nresult: ", class(result), "\nEnde APA_Table()")
-
+ 
 
   invisible(result)
 }
@@ -439,8 +427,8 @@ type_default <- function(x,
                          custom.model.names = NULL,
                          test.my.fun=FALSE,
                          ...) {
-  if(test.my.fun) cat("\n  -> type_default()")
- # print(list(...))
+ #  if(test.my.fun) cat("\n  -> type_default()")
+ # # print(list(...))
   res <-  Ordnen(x, test.my.fun = test.my.fun, ... ) # ist das gleiche wie broom::tidy(x)
   if(test.my.fun) cat("\n    res:", class(res))
 
@@ -458,7 +446,7 @@ type_default <- function(x,
     note = note,
     output=output )
 
-  if(test.my.fun) cat("\n  <- type_default()")
+#  if(test.my.fun) cat("\n  <- type_default()")
   res
 }
 
