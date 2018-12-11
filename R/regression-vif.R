@@ -1,13 +1,12 @@
+#' @rdname APA_Validation
+#' @description VIF
 #' variance inflation factor
+#'  values over 5 are troubling, should probably investigate anything over 2.5.
 #'
-#'  VIF  values over 5 are troubling, should probably investigate anything over 2.5.
-#'
-#' @author Wolfgang Peter
 #' @param x fit-Objekt
 #' @param caption,note Ueberschrift an Output
 #' @param ... weitere Einstellungen
 #' @export
-#' @name VIF
 #' @examples
 #'
 #' \dontrun{
@@ -20,7 +19,7 @@ VIF <- function(x, ...) {
   UseMethod("VIF")
 }
 
-#' @rdname VIF
+#' @rdname APA_Validation
 #' @description VIF.default lm Methode aus car::vif
 #' @export
 VIF.default <- function(x, ...) {
@@ -32,7 +31,7 @@ VIF.default <- function(x, ...) {
 }
 
 
-#' @rdname APA_
+#' @rdname APA_Validation
 #' @description  APA_vif:  variance inflation factor, aka VIF
 #' @export
 APA_vif <- function(...,
@@ -59,7 +58,7 @@ APA_vif <- function(...,
 }
 
 
-#' @rdname VIF
+#' @rdname APA_Validation
 #' @export
 VIF2 <- function(...,
                  caption = "VIF",
@@ -68,25 +67,26 @@ VIF2 <- function(...,
 }
 
 
-#' @rdname VIF
+#' @rdname APA_Validation
 #' @description  VIF.merModLmerTest Quelle https://hlplab.wordpress.com/2011/02/24/diagnosing-collinearity-in-lme4/
 #' @export
 VIF.merModLmerTest <- function(x, ...) {
   #print("VIF.merModLmerTest")
   round(vif.mer(x), 2)
 }
-# VIF.lmerTest <- function(fit, ...)  {
-#   print("VIF.lmerTest")
-#   vif.mer(fit)
-#   }
-#--https://hlplab.wordpress.com/2011/02/24/diagnosing-collinearity-in-lme4/
-
-## variance inflation factor, aka VIF
-## values over 5 are troubling.
-## should probably investigate anything over 2.5.
 
 
 
+
+#' VIF.lmerTest <- function(fit, ...)  {
+#'   print("VIF.lmerTest")
+#'   vif.mer(fit)
+#'   }
+#' --https://hlplab.wordpress.com/2011/02/24/diagnosing-collinearity-in-lme4/
+#' variance inflation factor, aka VIF
+#' values over 5 are troubling.
+#' should probably investigate anything over 2.5.
+#' @noRd
 vif.mer <- function (x) {
   ## adapted from rms::vif
 
@@ -106,6 +106,8 @@ vif.mer <- function (x) {
   v
 }
 
+
+ 
 kappa.mer <- function (x,
                        scale = TRUE,
                        center = FALSE,
