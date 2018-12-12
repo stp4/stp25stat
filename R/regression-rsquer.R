@@ -43,6 +43,20 @@ APA_R2 <- function(..., caption, note) {
 #'Conditional R2is interpreted as variance explained by both fixed and
 #' random factors (i.e. the entire model).
 #' 
+#' 
+#' 
+#'  \code{MuMIn::r.squaredGLMM(x, ...)} 
+#' Pseudo-R-squared for Generalized Mixed-Effect models
+#' 
+#' For mixed-effects models, R² comes in two types: marginal and conditional.
+#' 
+#' Marginal R² represents the variance explained by the fixed effects.
+#'   
+#'   
+#'   Conditional R² is interpreted as a variance explained by the entire model, 
+#'   including both fixed and random effects.
+
+#' 
 #'
 #' for R2.lme an lme model (usually fit using \code{lme}
 #' This method extracts the variance for fixed and random effects,
@@ -87,6 +101,33 @@ APA_R2 <- function(..., caption, note) {
 #' R2(fit1)
 #'
 #'
+#'
+#'require(nlme)
+# require(MuMIn)
+# #require(stpvers)
+# 
+# # r.squaredGLMM {}	R Documentation
+# # Pseudo-R-squared for Generalized Mixed-Effect models
+# # Likelihood-ratio based pseudo-R-squared
+# 
+# require(lmerTest)
+# data(Orthodont, package = "nlme")
+# fm0 <- lm(distance ~ Sex * age +   Subject , data = Orthodont)
+# fm1 <- lmer(distance ~ Sex * age + ( 1 | Subject), data = Orthodont)
+# 
+# fmnull <- lmer(distance ~ 1 + (1 | Subject), data = Orthodont)
+# 
+# 
+# APA_Table(fm0, fm1)
+# 
+# 
+# 
+# r.squaredGLMM(fm1)
+# 
+# r.squaredLR(fm0)
+# r.squaredLR(fm1) 
+# psycho::R2_nakagawa(fit)
+# rockchalk::getDeltaRsquare(fm0) 
 #'
 #' @export
 R2 <- function(x, ...) {
@@ -181,9 +222,11 @@ R2.mlm <- function(x, ...) {
 #' @rdname R2
 #' @export
 R2.merMod <- function(x, ...) {
-  rsq<- r.squared.merMod(x)
-  attr(rsq, "methode") =  "pseudo"
-  rsq[c("Marginal", "Conditional")]
+  
+  as.data.frame(MuMIn::r.squaredGLMM(x, ...))
+#  rsq<- r.squared.merMod(x)
+#  attr(rsq, "methode") =  "pseudo"
+#  rsq[c("Marginal", "Conditional")]
 }
 
 
@@ -192,10 +235,12 @@ R2.merMod <- function(x, ...) {
 #' @rdname R2
 #' @export
 R2.lme <- function(x, ...) {
-  require(nlme)
-  rsq <- r.squared.lme(x)
-  attr(rsq, "methode") =  "pseudo"
-  rsq[c("Marginal", "Conditional")]
+  
+  as.data.frame(MuMIn::r.squaredGLMM(x, ...))
+  #require(nlme)
+  # rsq <- r.squared.lme(x)
+  # attr(rsq, "methode") =  "pseudo"
+  # rsq[c("Marginal", "Conditional")]
 }
 
 

@@ -81,6 +81,19 @@ Conditional R2is interpreted as variance explained by both fixed and
 random factors (i.e. the entire model).
 
 
+
+ \code{MuMIn::r.squaredGLMM(x, ...)} 
+Pseudo-R-squared for Generalized Mixed-Effect models
+
+For mixed-effects models, R² comes in two types: marginal and conditional.
+
+Marginal R² represents the variance explained by the fixed effects.
+  
+  
+  Conditional R² is interpreted as a variance explained by the entire model, 
+  including both fixed and random effects.
+
+
 for R2.lme an lme model (usually fit using \code{lme}
 This method extracts the variance for fixed and random effects,
 as well as residuals, and calls \code{rsquared.glmm}
@@ -126,5 +139,7 @@ summary(fit1)$r.squared
 R2(fit1)
 
 
+
+require(nlme)
 
 }
