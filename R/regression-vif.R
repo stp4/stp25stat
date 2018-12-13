@@ -1,7 +1,15 @@
 #' @rdname APA_Validation
-#' @description VIF
-#' variance inflation factor
+#' @description 
+#'  multicollinearity diagnostic information 
+#' 
+#' VIF (variance inflation factor)
+#' 
 #'  values over 5 are troubling, should probably investigate anything over 2.5.
+#'  
+#'  Fuer Squareds und Correlations design matrix  \code{rockchalk::mcDiagnose(fit)}
+#'
+#'
+#'
 #'
 #' @param x fit-Objekt
 #' @param caption,note Ueberschrift an Output
@@ -41,7 +49,7 @@ APA_vif <- function(...,
   res <- list()
   i <- 1
   for (x in fits) {
-    res_vif <-  VIF(x, ...)
+    res_vif <-  VIF(x)
 
     res_vif <- prepare_output(
       data.frame(Source =  names(res_vif),
@@ -105,6 +113,14 @@ vif.mer <- function (x) {
   names(v) <- nam
   v
 }
+
+
+
+
+
+
+
+
 
 
  

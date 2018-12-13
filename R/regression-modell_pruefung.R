@@ -58,15 +58,22 @@ APA_Validation<- function(...,
                           include.ftest = TRUE,include.loglik = FALSE,include.minus.LL = include.loglik,
                           include.pseudo = TRUE, include.r = include.pseudo,  
                           include.heteroskedasticity = TRUE,
+                          
                           include.durbin = TRUE,
                           include.levene = FALSE,
                           include.bartlett = FALSE,
+                          
+                          
+                          include.multicollin = FALSE,
                           include.vif = FALSE,
+                          
+                         # include.autocorrelation =FALSE
+                          
                           include.sigma = FALSE,
                           include.rmse = FALSE,
                           include.aic = TRUE, include.bic=include.aic,include.residual = TRUE,
                           include.normality = TRUE,
-                          include.multicollin = include.vif,
+                          
                           
                           include.deviance = TRUE,
                           
@@ -375,6 +382,64 @@ test_normality <- function(x) {
   APA( stats::shapiro.test(stats::resid(x)) )
 }
 
+
+
+
+
+#' @rdname APA_Validation
+#' @description 
+#' Multi-collinearity diagnostics
+#'
+#' Conducts a series of checks for multicollinearity.
+#' 
+#' 
+#' Bei perfekter Multikollinearität lässt sich das Modell nicht lösen. 
+#' 
+#' @param include.cor Bivariate Correlations
+#' @export
+APA_Multicollinearity <-
+  function(x,
+           caption = "Test for Multicollinearity ",
+           note = "",
+           include.vif = TRUE,
+           include.cor = TRUE,
+           output = which_output()) {
+    # from package 'rockchalk' mcDiagnose
+    # cat("Bivariate Correlations for design matrix \n")
+    mm <- model.matrix(x)[,-1] ## data, omit intercept
+    res_cor <-
+      prepare_output(
+        Format2(cor(mm[, ]), digits=2),
+        caption = paste(caption, "Bivariate Correlations for design matrix"),
+        notes = notes
+      )
+    
+    res_vif <-  VIF(x)
+    
+    res_vif <- prepare_output(
+      data.frame(Source =  names(res_vif),
+                 VIF = Format2(as.vector(res_vif), 2)),
+      caption = paste(caption, "VIF"),
+      notes = notes
+    )
+    
+    
+    
+    if (include.vif)
+      Output(res_vif,
+             output = output)
+    
+    if (include.cor)
+      Output(res_cor,
+             output = output)
+    
+    invisible(list(vif = res_vif,
+                   cor = res_cor))
+  }
+
+
+
+
 #' Kopien von require(sjstats)
 #' @noRd
 test_multicollin <- function(x) {
@@ -412,6 +477,107 @@ test_nonconstvar <- function(model) {
   
   stats::pchisq(Chisq, df = 1, lower.tail = FALSE)
 }
+
+
+
+#' APA_Autocorrelation
+#' 
+#' 
+#' @description 
+#' Durbin–Watson d Test Der Durbin–Watson (DW) 
+#' Test verwendet die geschaetzten Residuen um auf 
+#' Autokorrelation erster Ordnung zu testen
+#' 
+#' Der DW d Test weist folgendes Intervall auf: 0<d<4
+#' 0:  Extrem positive Autokorrelation 
+#' 4:   Extrem negative Autokorrelation. 
+#' 2:   Keine Autokorrelation
+#' 
+#' 
+#' Der Breusch–Godfrey (BG) Test ist flexibler,
+#'  da er auf Autokorrelation höherer Ordnung testet und auf 
+ 
+#' @export
+ 
+APA_Autocorrelation <- function(x,  order = 1, ...) {
+  list(
+    bg = list(name = "Breusch-Godfrey" ,
+              stat = lmtest::bgtest(x,  order = order)),
+    dw = list(name = "Durbin-Watson", car::durbinWatsonTest(x, ...))
+  )
+}
+
+
+#' Title
+#'
+#' @param x 
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+APA_Heteroscedasticity <- function(x,...){
+  
+  lmtest::bptest(x)
+  
+  
+}
+
+#' @rdname APA_
+#' @description  APA_Durbin_Watson(fit, max.lag=1, simulate=TRUE, reps=1000,
+#' method=c("resample","normal"),
+#' alternative=c("two.sided", "positive", "negative")): Durbin-Watson Test for Autocorrelated Errors. 
+#'   Kopie der Funktion car::durbinWatsonTest
+#'   
+#' @export
+#'
+#' @examples
+#' x<-lm(score ~ grade + treatment + stdTest, schools)
+#' APA2(car::durbinWatsonTest(x))
+#' DW_Test2(x)
+#' 
+#' lmtest::dwtest(x)
+#' car::durbinWatsonTest(x)
+#' 
+APA_Durbin_Watson<- function(x,
+                             caption = "Durbin-Watson Test for Autocorrelated Errors",
+                             note =NULL, ...){
+  dw<-car::durbinWatsonTest(x,...) 
+  APA2.durbinWatsonTest(dw, caption=caption, note=note)
+}
+
+
+#' @rdname APA2
+#' @description Methode für car::durbinWatsonTest Kopie von car:::print.durbinWatsonTest
+#' @export
+
+APA2.durbinWatsonTest <-
+  function(x,
+           caption = "Durbin-Watson Test for Autocorrelated Errors",
+           note =NULL,
+           ...) {
+    max.lag <- length(x$dw)
+    result <- if (is.null(x$p))
+      cbind(
+        lag = 1:max.lag,
+        Autocorrelation = x$r,
+        `D-W Statistic` = x$dw
+      )
+    else cbind(lag = 1:max.lag, Autocorrelation = x$r, `D-W Statistic` = x$dw, 
+               `p-value` = x$p)
+    rownames(result) <- rep("", max.lag)
+    
+    note <- paste(" Alternative hypothesis: rho", 
+                  if (max.lag > 1) "[lag]"
+                  else "", 
+                  c(" != ", " > ", " < ")[which(x$alternative == c("two.sided", "positive", "negative"))], "0", sep = "")
+    
+    result <- prepare_output(fix_format(data.frame(result)),
+                             caption = caption, note = note)
+    Output(result, ...)
+    invisible(result)
+  }
 
 
 
