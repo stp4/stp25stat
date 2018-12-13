@@ -152,18 +152,21 @@ extract_param  <- function(x,
 
     if (include.beta & inherits(x, "lm") & !inherits(x, "glm")) {
       param <- c(param, "beta")
-      b <- res$estimate[-1]
+      # b <- res$estimate[-1]
+      # 
+      # sx <- sapply(x$model[-1], function(z) {
+      #   if (!is.numeric(z)) {
+      #     cat("\nBeta macht bei ", class(z), "keinen Sinn!\n")
+      #     z <- as.numeric(z)
+      #   }
+      #   sd(z, na.rm = TRUE)
+      # })
+      # sy <- sd(x$model[[1]], na.rm = TRUE)
+      # coefs$beta <- c(NA, b * sx / sy)
+      # Die obere Funktion rechnet die Interaktionen falsch!
 
-      sx <- sapply(x$model[-1], function(z) {
-        if (!is.numeric(z)) {
-          cat("\nBeta macht bei ", class(z), "keinen Sinn!\n")
-          z <- as.numeric(z)
-        }
-        sd(z, na.rm = TRUE)
-      })
-      sy <- sd(x$model[[1]], na.rm = TRUE)
-      coefs$beta <- c(NA, b * sx / sy)
-
+      coefs$beta <- as.vector(c(NA, coef(rockchalk::standardize(x))))
+      
       if (fix_format)
         coefs$beta <-
         stp25rndr::Format2(coefs$beta,
