@@ -46,8 +46,14 @@
 #' #SaveData(caption="plot: mkarz")
 #'
 #'
-#'
-#'
+#' APA2(summary(res0, times= c(5, 10,12,17, 20, 60)),
+#' percent=TRUE,
+#' #Statistik Anfordern und ander Schreibweise
+#' include=c( time ="time", n.risk ="n.risk", 
+#'            n.event ="n.event", surv = "survival",
+#'            lower = "lower 95% CI",upper ="upper 95% CI"),
+#' caption="Kaplan-Meier" )
+#' #'
 #' m1 <- Surv(survive, status) ~ lkb
 #' res1<- survfit(m1, mkarz)
 #' fit1<- coxph(m1, mkarz)
@@ -214,7 +220,7 @@ APA2.coxph<- function(x,
                       caption="",
                       note="",
                       ...){
-  sfit<- summary(x)
+  sfit<- summary(x)  #survival:::summary.coxph
   res<- rbind(
     "Wald test"=  fix_format_p(sfit$waldtest) ,
     "Score (logrank) test"= fix_format_p(sfit$sctest),
@@ -226,6 +232,8 @@ APA2.coxph<- function(x,
     "AIC"= c(Format2(AIC(x),2), NA, NA),
     "BIC"= c(Format2(BIC(x),2), NA, NA)
   )
+  
+  
   Output(fix_to_data_frame(res), caption, note)
 }
 
@@ -242,11 +250,13 @@ fix_format_p <- function(x,
                          df1 = NULL,
                          df2 = null,
                          p = NULL) {
+ ## stp25rndr::rndr_P( p.value, symbol.leading = c("", "<"))
+  
   if (is.vector(x)) {
     if (length(x == 3))
-      c(Format2(x[1], 2), x[2], rndr_P(x[3]))
+      c(Format2(x[1], 2), x[2], stp25rndr::rndr_P(x[3], symbol.leading = c("", "<")))
     else if (length(x == 4))
-      c(Format2(x[1], 2), paste(x[2], ", ", x[3]), rndr_P(x[4]))
+      c(Format2(x[1], 2), paste(x[2], ", ", x[3]), stp25rndr::rndr_P(x[4], symbol.leading = c("", "<")))
   }
   else  {NULL}
 }

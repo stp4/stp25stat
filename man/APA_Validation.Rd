@@ -3,6 +3,7 @@
 %   R/regression-vif.R
 \name{APA_Validation}
 \alias{APA_Validation}
+\alias{APA_Multicollinearity}
 \alias{VIF}
 \alias{VIF.default}
 \alias{APA_vif}
@@ -17,12 +18,16 @@ APA_Validation(..., include.ftest = TRUE, include.loglik = FALSE,
   include.minus.LL = include.loglik, include.pseudo = TRUE,
   include.r = include.pseudo, include.heteroskedasticity = TRUE,
   include.durbin = TRUE, include.levene = FALSE,
-  include.bartlett = FALSE, include.vif = FALSE,
-  include.sigma = FALSE, include.rmse = FALSE, include.aic = TRUE,
-  include.bic = include.aic, include.residual = TRUE,
-  include.normality = TRUE, include.multicollin = include.vif,
+  include.bartlett = FALSE, include.multicollin = FALSE,
+  include.vif = FALSE, include.sigma = FALSE, include.rmse = FALSE,
+  include.aic = TRUE, include.bic = include.aic,
+  include.residual = TRUE, include.normality = TRUE,
   include.deviance = TRUE, caption = "Testing Regression Models",
   note = "", names = NULL)
+
+APA_Multicollinearity(x, caption = "Test for Multicollinearity ",
+  note = "", include.vif = TRUE, include.cor = TRUE,
+  output = which_output())
 
 VIF(x, ...)
 
@@ -57,6 +62,8 @@ VIF2(..., caption = "VIF", notes = "")
 
 \item{x}{model- fit}
 
+\item{include.cor}{Bivariate Correlations}
+
 \item{x}{fit-Objekt}
 }
 \description{
@@ -68,9 +75,20 @@ Die Zahl der Beobachtungen muss größer sein als die Zahl der zu schätzenden P
 Validation of Linear Models Assumptions
 (Testing Linear Regression Models)
 
-VIF
-variance inflation factor
+Multi-collinearity diagnostics
+
+Conducts a series of checks for multicollinearity.
+
+
+Bei perfekter Multikollinearität lässt sich das Modell nicht lösen.
+
+multicollinearity diagnostic information 
+
+VIF (variance inflation factor)
+
  values over 5 are troubling, should probably investigate anything over 2.5.
+ 
+ Fuer Squareds und Correlations design matrix  \code{rockchalk::mcDiagnose(fit)}
 
 VIF.default lm Methode aus car::vif
 

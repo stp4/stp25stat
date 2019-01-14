@@ -19,31 +19,9 @@ set_my_options(prozent = list(
 ))
 
 vars <- c(
-  "o1",
-  "o2",
-  "o3",
-  "o4",
-  "o5",
-  "c1",
-  "c2",
-  "c3",
-  "c4",
-  "c5",
-  "e1",
-  "e2",
-  "e3",
-  "e4",
-  "e5" ,
-  "n1",
-  "n2",
-  "n3",
-  "n4",
-  "n5",
-  "a1",
-  "a2",
-  "a3",
-  "a4" ,
-  "a5"
+  "o1",  "o2",  "o3",  "o4",  "o5",  "c1",  "c2",  "c3",
+  "c4",  "c5",  "e1",  "e2",  "e3",  "e4",  "e5",  "n1",
+  "n2",  "n3",  "n4",  "n5",  "a1",  "a2",  "a3",  "a4",  "a5"
 )
 
 
@@ -57,9 +35,9 @@ Conscientiousness-->personality
 Extraversion-->personality
 Neuroticism-->personality
 Agreeableness-->personality
-personality-->Gesundheit
-Alter-->Gesundheit
-Geschlecht-->Gesundheit
+personality-->Einkommen
+Alter-->Einkommen
+Geschlecht-->Einkommen
  
  ")
 
@@ -83,14 +61,7 @@ Extraversion =~ e1+e2+e3+e4+e5
 Neuroticism =~  n1+n2+n3+n4+n5
 Agreeableness =~ a1+a2+a3+a4+a5
 
- 
-
-
-
-
-
-Gesundheit ~ 1.25*Sex +  0.31*Age  + 1.32*Openness + 1.23*Conscientiousness + 0.51*Extraversion + 2.3*Neuroticism + 0.41*Agreeableness
-
+Einkommen ~ 1.25*Sex +  (-0.31)*Age  + .12*Openness + .23*Conscientiousness + (-0.91)*Extraversion + 2.3*Neuroticism + (-0.541)*Agreeableness
 
 '
  
@@ -110,14 +81,17 @@ DF<- transform(DF, sex=cut(sex, 2, c("m", "f")),
                single =cut(single, 2, c("yes", "no"))
                
                )
-DF[, -c(1:4)] <- stp25aggregate::dapply2(DF[, -c(1:4)], 
+DF$Einkommen <- (4-log( DF$Einkommen  - min(DF$Einkommen ) +1 ) )*1000
+
+
+DF[, -c(1:4, ncol(DF))] <- stp25aggregate::dapply2(DF[, -c(1:4)], 
 function(x) {
   if(is.numeric(x)) cut(x, 5, 1:5) else x})
- names(DF)
+
 
 
 ## ----default-table, results='asis'---------------------------------------
-
+ names(DF)
 DF %>% Tabelle2(sex, age, edu, beruf,single, APA = TRUE, caption= "Characteristics")
 
 ## ----pca-table, results='asis'-------------------------------------------
@@ -143,9 +117,26 @@ DF$A<- Agreeableness$index
 Alpha2(Openness,Conscientiousness,Extraversion,Neuroticism,Agreeableness)
 
 
-## ---- fig.show='hold'----------------------------------------------------
-plot(1:10)
-plot(10:1)
+## ------------------------------------------------------------------------
+
+
+DF %>% Tabelle2(Einkommen , sex, age , O , C , E , N , A)
+fit<- lm(Einkommen ~ sex + age + O + C + E + N + A, DF)
+
+APA_Table(fit)
+
+
+## ------------------------------------------------------------------------
+ 
+
+hist(DF$Einkommen)
+
+## ---- fig.cap = "Your figure caption.", fig.width=8, fig.height=8--------
+ 
+# MySet()
+require(effects)
+ plot(allEffects(fit), main="")
+
 
 ## ---- echo=FALSE, results='asis'-----------------------------------------
 knitr::kable(head(mtcars, 10))

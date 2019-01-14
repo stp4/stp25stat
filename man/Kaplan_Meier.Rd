@@ -51,8 +51,14 @@ APA2(res0)
 #SaveData(caption="plot: mkarz")
 
 
-
-
+APA2(summary(res0, times= c(5, 10,12,17, 20, 60)),
+percent=TRUE,
+#Statistik Anfordern und ander Schreibweise
+include=c( time ="time", n.risk ="n.risk", 
+           n.event ="n.event", surv = "survival",
+           lower = "lower 95\% CI",upper ="upper 95\% CI"),
+caption="Kaplan-Meier" )
+#'
 m1 <- Surv(survive, status) ~ lkb
 res1<- survfit(m1, mkarz)
 fit1<- coxph(m1, mkarz)

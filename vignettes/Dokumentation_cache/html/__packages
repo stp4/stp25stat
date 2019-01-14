@@ -1,0 +1,10 @@
+base
+stp25stat
+stpvers
+stp25output
+stp25aggregate
+stp25plot
+stp25data
+broom
+nlme
+pROC

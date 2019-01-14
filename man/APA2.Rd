@@ -2,9 +2,9 @@
 % Please edit documentation in R/ICC2.R, R/MetComp.R, R/T-test.R,
 %   R/anova-manova.R, R/anova-multcomp.R, R/anova.R, R/correlation.R,
 %   R/describe-APA2.R, R/describe-likert.R, R/describe-z-auto-test.R,
-%   R/dimred-pca.R, R/dimred-reliability.R, R/kano.R, R/regression-effsize.R,
-%   R/regression-polr.R, R/regression-step.R, R/regression-surv.R,
-%   R/regression-typ1.R, R/regression-typ2.R, R/xtable.R
+%   R/dimred-pca.R, R/dimred-reliability.R, R/kano.R, R/meta-analysis.R,
+%   R/regression-effsize.R, R/regression-modell_pruefung.R, R/regression-polr.R,
+%   R/regression-step.R, R/regression-surv.R, R/regression-typ2.R, R/xtable.R
 \name{APA2.ICC}
 \alias{APA2.ICC}
 \alias{APA2.bland_altman}
@@ -34,15 +34,16 @@
 \alias{APA2.stp25_reliability}
 \alias{APA2.Kano}
 \alias{print.Kano}
+\alias{APA2.meta}
 \alias{APA2.eff}
 \alias{APA2.efflist}
+\alias{APA2.durbinWatsonTest}
 \alias{APA2.polr}
 \alias{APA2.step}
 \alias{APA2.summary.survfit}
 \alias{APA2.survfit}
 \alias{APA2.survdiff}
 \alias{APA2.coxph}
-\alias{APA2.durbinWatsonTest}
 \alias{APA2.list}
 \alias{APA2.lm}
 \alias{APA2.glm}
@@ -156,12 +157,22 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
 
 \method{print}{Kano}(x, ...)
 
+\method{APA2}{meta}(x, caption = "Meta-analysis",
+  note = paste("estimate:", x$sm, x$method.smd), include.table = TRUE,
+  include.fixed = FALSE, include.random = TRUE, include.sub = TRUE,
+  include.total = TRUE, include.heterogeneity = TRUE, digits = 2,
+  output = which_output(), ...)
+
 \method{APA2}{eff}(x, ...)
 
 \method{APA2}{efflist}(x, caption = "Effekte: ", type = NULL,
   note = "", output = stp25output::which_output(), digits = 2,
   include.fit = TRUE, include.n = FALSE, include.ci = TRUE,
   include.se = FALSE, ...)
+
+\method{APA2}{durbinWatsonTest}(x,
+  caption = "Durbin-Watson Test for Autocorrelated Errors",
+  note = NULL, ...)
 
 \method{APA2}{polr}(x, caption = NULL, note = NULL, include.b = TRUE,
   include.se = TRUE, include.ci = FALSE, include.odds = TRUE, ...)
@@ -182,10 +193,6 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
   note = "")
 
 \method{APA2}{coxph}(x, caption = "", note = "", ...)
-
-\method{APA2}{durbinWatsonTest}(x,
-  caption = "Durbin-Watson Test for Autocorrelated Errors",
-  note = NULL, ...)
 
 \method{APA2}{list}(...)
 
@@ -268,7 +275,7 @@ corr_test-ddefault ist  "pearson" c("pearson","spearman")}
 
 \item{include.n, include.all.n, include.header.n, include.total}{N mit ausgeben}
 
-\item{include.total, include.total.columns, include.total.sub, include.total.rows}{Zeilen Prozenz usw}
+\item{include.total}{Zusammenfassung als Gesamtwert}
 
 \item{include.names, include.labels}{Beschriftung der zeilen}
 
@@ -285,6 +292,10 @@ labels = c("low", "neutral", "high")
 \item{all}{APA2.principal if all=TRUE, then the object is declassed and all output from the function is printed}
 
 \item{suppress.warnings}{APA2.principal Fehlermeldung unterdruecken}
+
+\item{include.fixed, include.random}{Fixed effect and random effects model:}
+
+\item{include.sub}{Subgruppen-Analyse}
 
 \item{include.se, include.ci, include.odds}{SE, 95-Ci, OR noch nicht fertig}
 
@@ -317,6 +328,8 @@ labels = c("low", "neutral", "high")
 \item{digits}{Nachkommastellen}
 
 \item{test, type}{fischer chi usw}
+
+\item{include.total, include.total.columns, include.total.sub, include.total.rows}{Zeilen Prozenz usw}
 }
 \value{
 dataframe mit p.werte
@@ -361,10 +374,12 @@ Errate korekte Auswertung und Extrahieren der Variablen aus Formula.
 
 Kano: von Kano-Fragebogen.
 
-Ordered Logistic or Probit Regression
-https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/
+APA-Methode fuer meta
 
 Methode für car::durbinWatsonTest Kopie von car:::print.durbinWatsonTest
+
+Ordered Logistic or Probit Regression
+https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/
 
 Ausgabe von Regressions Tabelle nach der APA-Style vorgabe. Die Funktion
 ist eine Kopie von  texreg aggregate.matrix.
