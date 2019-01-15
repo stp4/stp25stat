@@ -25,7 +25,7 @@ Proportion Correlation
 }
 \examples{
 
- library(meta)
+# library(meta)
 # require(stpvers)
 data2<- GetData("
                 Nr            author  Ne    Me    Se Nc    Mc    Sc
@@ -47,7 +47,7 @@ data2<- GetData("
                 16 Tetreault(50-100)  11 51.90 18.50 11 74.30 18.50
                 17      Thompson(75)  11  8.00  8.10 18 10.00  9.70")
 
-print(metacont(
+print(meta::metacont(
   Ne,  Me,  Se,  Nc,  Mc,  Sc,
   sm = "SMD",
   data = data2,
@@ -56,11 +56,27 @@ print(metacont(
 digits = 2)
 
 
-mc1 <- metacont(Ne, Me, Se, Nc, Mc, Sc,
+mc1 <- meta::metacont(Ne, Me, Se, Nc, Mc, Sc,
                 data=data1,
                 studlab=author)
-#round(c(mc1$TE.fixed, mc1$seTE.fixed^2), 4)
-#forest(mc1)
+# round(c(mc1$TE.fixed, mc1$seTE.fixed^2), 4)
+ #meta::forest(mc1)
 
 APA2(mc1)
+
+
+#Power calculations for the general linear model
+#?pwr.f2.test
+x <- pwr::pwr.f2.test(
+  u = 6,
+  f2 = .4,
+  sig.level = 0.05,
+  power = 0.80
+)
+res<- APA(x)
+
+meta::metacont(n.e=10, mean.e=2.34, sd.e=1.14, 
+n.c=20, mean.c=3.43, sd.c=1.01,  sm="SMD")
+meta::metabin(10, 20, 15, 20, sm = "OR")
+
 }

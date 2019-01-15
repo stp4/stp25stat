@@ -1,12 +1,10 @@
-
-
 #' Metaanalysis
 #'
-#'Types Of Effects
-#'An effect"could be almost any aggregate statistic of interest:
-#'Mean, Mean difference, Mean change
-#'Risk ratio, Odds ratio, Risk difference Incidence rate, Prevalence,
-#'Proportion Correlation
+#' Types Of Effects
+#' An effect"could be almost any aggregate statistic of interest:
+#' Mean, Mean difference, Mean change
+#' Risk ratio, Odds ratio, Risk difference Incidence rate, Prevalence,
+#' Proportion Correlation
 #'
 #'
 #' @param x meta-Objekt
@@ -18,7 +16,7 @@
 #'
 #' @examples
 #'
-#'  library(meta)
+#' # library(meta)
 #' # require(stpvers)
 #' data2<- GetData("
 #'                 Nr            author  Ne    Me    Se Nc    Mc    Sc
@@ -40,7 +38,7 @@
 #'                 16 Tetreault(50-100)  11 51.90 18.50 11 74.30 18.50
 #'                 17      Thompson(75)  11  8.00  8.10 18 10.00  9.70")
 #'
-#' print(metacont(
+#' print(meta::metacont(
 #'   Ne,  Me,  Se,  Nc,  Mc,  Sc,
 #'   sm = "SMD",
 #'   data = data2,
@@ -49,19 +47,57 @@
 #' digits = 2)
 #'
 #'
-#' mc1 <- metacont(Ne, Me, Se, Nc, Mc, Sc,
+#' mc1 <- meta::metacont(Ne, Me, Se, Nc, Mc, Sc,
 #'                 data=data1,
 #'                 studlab=author)
-#' #round(c(mc1$TE.fixed, mc1$seTE.fixed^2), 4)
-#' #forest(mc1)
+#' # round(c(mc1$TE.fixed, mc1$seTE.fixed^2), 4)
+#'  #meta::forest(mc1)
 #'
 #' APA2(mc1)
-Metaanalysis <- function(x,  output = which_output(), ...) {
-  APA2(x, output = output, ...)
-  
-  
+#' 
+#' 
+#' #Power calculations for the general linear model
+#' #?pwr.f2.test
+#' x <- pwr::pwr.f2.test(
+#'   u = 6,
+#'   f2 = .4,
+#'   sig.level = 0.05,
+#'   power = 0.80
+#' )
+#' res<- APA(x)
+#' 
+#' meta::metacont(n.e=10, mean.e=2.34, sd.e=1.14, 
+#' n.c=20, mean.c=3.43, sd.c=1.01,  sm="SMD")
+#' meta::metabin(10, 20, 15, 20, sm = "OR")
+#' 
+Metaanalysis <- function(x,
+                         output = which_output(),
+                         ...) {
+  if (inherits(x, "meta")) {
+    APA2(x, output = output, ...)
+  }
+  else {
+    cat("\nBis jetzt nur fuer meta implemeniert!\n")
+  }
 }
 
+
+#' @rdname APA2
+#' @description APA-Methode fuer pwr::pwr.f2.test
+#' @export
+APA.power.htest <- function(x, ... , output = which_output()) {
+  res <-  c(
+    df = x$u,
+    n = round(x$v + 0.5, 0),
+    effect.size = round(x$f2, 2),
+    sig.lev = round(x$sig.level, 3),
+    power = round(x$power, 2)
+  )
+  if (!is.logical(output))
+    paste(paste(names(res), "=", res), collapse = "; ")
+  else
+    invisible(res)
+}
 
 
 #' extract_meta
@@ -72,21 +108,44 @@ Metaanalysis <- function(x,  output = which_output(), ...) {
 #' @param caption,note,digits an Output
 #'
 #' @return data.frame
-
 extract_meta <- function(x,
                          ...) {
   UseMethod("extract_meta")
 }
 
-#' @rdname extract_meta
 
-APA2.default <- function(x,
+extract_meta.default <- function(x,
                          ...) {
-  data.frame(dummy =  class(x)[1])
+  data.frame(class =  class(x)[1])
 }
 
 
+#' @rdname extract_meta
+#' @description Meta-regression Meta-Analysis via Linear (Mixed-Effects) Models rma.uni {metafor}
 
+extract_meta.metareg <- function(x,
+                                 ...) {
+  data.frame(class =  class(x)[1])
+}
+
+#' @rdname extract_meta
+#' @description Meta-analysis of binary outcome data
+#' Risk ratio (sm="RR")
+#' Odds ratio (sm="OR")
+#' Risk difference (sm="RD")
+#' Arcsine difference (sm="ASD")
+
+extract_meta.metabin <- function(x,
+                                 ...) {
+  data.frame(class =  class(x)[1])
+}
+
+
+#' @rdname extract_meta
+#' @description Meta-analysis of continuous outcome data
+#' mean difference (argument sm="MD")
+#' standardised mean difference (sm="SMD")
+#' ratio of means (sm="ROM")
 extract_meta.metacont <- function(x,
                                   digits = 2) {
   data.frame(
@@ -97,6 +156,9 @@ extract_meta.metacont <- function(x,
     stringsAsFactors = FALSE
   )
 }
+
+
+
 
 #' @rdname APA2
 #' @description APA-Methode fuer meta
