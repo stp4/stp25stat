@@ -3,8 +3,8 @@
 %   R/anova-manova.R, R/anova-multcomp.R, R/anova.R, R/correlation.R,
 %   R/describe-APA2.R, R/describe-likert.R, R/describe-z-auto-test.R,
 %   R/dimred-pca.R, R/dimred-reliability.R, R/kano.R, R/meta-analysis.R,
-%   R/regression-effsize.R, R/regression-modell_pruefung.R, R/regression-polr.R,
-%   R/regression-step.R, R/regression-surv.R, R/regression-typ2.R, R/xtable.R
+%   R/regression-effsize.R, R/regression-polr.R, R/regression-step.R,
+%   R/regression-surv.R, R/regression-typ2.R, R/xtable.R
 \name{APA2.ICC}
 \alias{APA2.ICC}
 \alias{APA2.bland_altman}
@@ -34,10 +34,10 @@
 \alias{APA2.stp25_reliability}
 \alias{APA2.Kano}
 \alias{print.Kano}
+\alias{APA.power.htest}
 \alias{APA2.meta}
 \alias{APA2.eff}
 \alias{APA2.efflist}
-\alias{APA2.durbinWatsonTest}
 \alias{APA2.polr}
 \alias{APA2.step}
 \alias{APA2.summary.survfit}
@@ -157,6 +157,8 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
 
 \method{print}{Kano}(x, ...)
 
+\method{APA}{power.htest}(x, ..., output = which_output())
+
 \method{APA2}{meta}(x, caption = "Meta-analysis",
   note = paste("estimate:", x$sm, x$method.smd), include.table = TRUE,
   include.fixed = FALSE, include.random = TRUE, include.sub = TRUE,
@@ -169,10 +171,6 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
   note = "", output = stp25output::which_output(), digits = 2,
   include.fit = TRUE, include.n = FALSE, include.ci = TRUE,
   include.se = FALSE, ...)
-
-\method{APA2}{durbinWatsonTest}(x,
-  caption = "Durbin-Watson Test for Autocorrelated Errors",
-  note = NULL, ...)
 
 \method{APA2}{polr}(x, caption = NULL, note = NULL, include.b = TRUE,
   include.se = TRUE, include.ci = FALSE, include.odds = TRUE, ...)
@@ -374,9 +372,9 @@ Errate korekte Auswertung und Extrahieren der Variablen aus Formula.
 
 Kano: von Kano-Fragebogen.
 
-APA-Methode fuer meta
+APA-Methode fuer pwr::pwr.f2.test
 
-Methode für car::durbinWatsonTest Kopie von car:::print.durbinWatsonTest
+APA-Methode fuer meta
 
 Ordered Logistic or Probit Regression
 https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/

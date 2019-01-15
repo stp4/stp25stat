@@ -4,6 +4,10 @@
 \name{APA_Validation}
 \alias{APA_Validation}
 \alias{APA_Multicollinearity}
+\alias{APA_Autocorrelation}
+\alias{APA_Heteroscedasticity}
+\alias{APA_Durbin_Watson}
+\alias{APA2.durbinWatsonTest}
 \alias{VIF}
 \alias{VIF.default}
 \alias{APA_vif}
@@ -28,6 +32,18 @@ APA_Validation(..., include.ftest = TRUE, include.loglik = FALSE,
 APA_Multicollinearity(x, caption = "Test for Multicollinearity ",
   note = "", include.vif = TRUE, include.cor = TRUE,
   output = which_output())
+
+APA_Autocorrelation(x, order = 1, ...)
+
+APA_Heteroscedasticity(x...)
+
+APA_Durbin_Watson(x,
+  caption = "Durbin-Watson Test for Autocorrelated Errors",
+  note = NULL, ...)
+
+\method{APA2}{durbinWatsonTest}(x,
+  caption = "Durbin-Watson Test for Autocorrelated Errors",
+  note = NULL, ...)
 
 VIF(x, ...)
 
@@ -82,6 +98,29 @@ Conducts a series of checks for multicollinearity.
 
 Bei perfekter Multikollinearität lässt sich das Modell nicht lösen.
 
+APA_Autocorrelation: 
+Der Durbin–Watson (DW) 
+Test verwendet die geschaetzten Residuen um auf 
+Autokorrelation erster Ordnung zu testen.
+
+Der DW d Test weist folgendes Intervall auf: 0<d<4
+0:  Extrem positive Autokorrelation 
+4:   Extrem negative Autokorrelation. 
+2:   Keine Autokorrelation
+
+
+Der Breusch–Godfrey (BG) Test ist flexibler,
+da er auf Autokorrelation höherer Ordnung testet und auf
+
+APA_Heteroscedasticity: mit (lmtest::bptest) Breusch-Pagan test against heteroskedasticity
+
+APA_Durbin_Watson:  APA_Durbin_Watson(fit, max.lag=1, simulate=TRUE, reps=1000,
+method=c("resample","normal"),
+alternative=c("two.sided", "positive", "negative")): Durbin-Watson Test for Autocorrelated Errors. 
+  Kopie der Funktion car::durbinWatsonTest
+
+APA2.durbinWatsonTest: Methode für car::durbinWatsonTest Kopie von car:::print.durbinWatsonTest
+
 multicollinearity diagnostic information 
 
 VIF (variance inflation factor)
@@ -129,6 +168,15 @@ APA_Validation(fit1,fit2, include.pseudo = TRUE, include.r = TRUE, include.logli
                include.rmse = TRUE)
                
                
+
+# APA_Durbin_Watson
+x<-lm(score ~ grade + treatment + stdTest, schools)
+APA2(car::durbinWatsonTest(x))
+DW_Test2(x)
+
+lmtest::dwtest(x)
+car::durbinWatsonTest(x)
+
 
 \dontrun{
  fit<-lm(prestige ~ income + education, data=Duncan)

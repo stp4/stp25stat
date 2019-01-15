@@ -2,12 +2,18 @@
 % Please edit documentation in R/meta-analysis.R
 \name{extract_meta}
 \alias{extract_meta}
-\alias{APA2.default}
+\alias{extract_meta.metareg}
+\alias{extract_meta.metabin}
+\alias{extract_meta.metacont}
 \title{extract_meta}
 \usage{
 extract_meta(x, ...)
 
-\method{APA2}{default}(x, ...)
+\method{extract_meta}{metareg}(x, ...)
+
+\method{extract_meta}{metabin}(x, ...)
+
+\method{extract_meta}{metacont}(x, digits = 2)
 }
 \arguments{
 \item{x}{meta-Objekt}
@@ -19,4 +25,17 @@ data.frame
 }
 \description{
 Extract results from  R package meta.
+
+Meta-regression Meta-Analysis via Linear (Mixed-Effects) Models rma.uni {metafor}
+
+Meta-analysis of binary outcome data
+Risk ratio (sm="RR")
+Odds ratio (sm="OR")
+Risk difference (sm="RD")
+Arcsine difference (sm="ASD")
+
+Meta-analysis of continuous outcome data
+mean difference (argument sm="MD")
+standardised mean difference (sm="SMD")
+ratio of means (sm="ROM")
 }

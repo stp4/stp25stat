@@ -397,6 +397,7 @@ test_normality <- function(x) {
 #' 
 #' @param include.cor Bivariate Correlations
 #' @export
+#' 
 APA_Multicollinearity <-
   function(x,
            caption = "Test for Multicollinearity ",
@@ -480,13 +481,11 @@ test_nonconstvar <- function(model) {
 
 
 
-#' APA_Autocorrelation
-#' 
-#' 
-#' @description 
-#' Durbin–Watson d Test Der Durbin–Watson (DW) 
+#' @rdname APA_Validation
+#' @description APA_Autocorrelation: 
+#' Der Durbin–Watson (DW) 
 #' Test verwendet die geschaetzten Residuen um auf 
-#' Autokorrelation erster Ordnung zu testen
+#' Autokorrelation erster Ordnung zu testen.
 #' 
 #' Der DW d Test weist folgendes Intervall auf: 0<d<4
 #' 0:  Extrem positive Autokorrelation 
@@ -495,8 +494,7 @@ test_nonconstvar <- function(model) {
 #' 
 #' 
 #' Der Breusch–Godfrey (BG) Test ist flexibler,
-#'  da er auf Autokorrelation höherer Ordnung testet und auf 
- 
+#' da er auf Autokorrelation höherer Ordnung testet und auf 
 #' @export
  
 APA_Autocorrelation <- function(x,  order = 1, ...) {
@@ -508,24 +506,16 @@ APA_Autocorrelation <- function(x,  order = 1, ...) {
 }
 
 
-#' Title
-#'
-#' @param x 
-#' @param ... 
-#'
-#' @return
+#' @rdname APA_Validation
+#' @description APA_Heteroscedasticity: mit (lmtest::bptest) Breusch-Pagan test against heteroskedasticity
 #' @export
-#'
-#' @examples
-APA_Heteroscedasticity <- function(x,...){
-  
+
+APA_Heteroscedasticity <- function(x...) {
   lmtest::bptest(x)
-  
-  
 }
 
-#' @rdname APA_
-#' @description  APA_Durbin_Watson(fit, max.lag=1, simulate=TRUE, reps=1000,
+#' @rdname APA_Validation
+#' @description  APA_Durbin_Watson:  APA_Durbin_Watson(fit, max.lag=1, simulate=TRUE, reps=1000,
 #' method=c("resample","normal"),
 #' alternative=c("two.sided", "positive", "negative")): Durbin-Watson Test for Autocorrelated Errors. 
 #'   Kopie der Funktion car::durbinWatsonTest
@@ -533,6 +523,8 @@ APA_Heteroscedasticity <- function(x,...){
 #' @export
 #'
 #' @examples
+#' 
+#' # APA_Durbin_Watson
 #' x<-lm(score ~ grade + treatment + stdTest, schools)
 #' APA2(car::durbinWatsonTest(x))
 #' DW_Test2(x)
@@ -548,8 +540,8 @@ APA_Durbin_Watson<- function(x,
 }
 
 
-#' @rdname APA2
-#' @description Methode für car::durbinWatsonTest Kopie von car:::print.durbinWatsonTest
+#' @rdname APA_Validation
+#' @description APA2.durbinWatsonTest: Methode für car::durbinWatsonTest Kopie von car:::print.durbinWatsonTest
 #' @export
 
 APA2.durbinWatsonTest <-
