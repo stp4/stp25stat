@@ -209,6 +209,8 @@ APA2 formatiert Tabellen erstellen.  2x2 Tabellen werden mit Häufigkeit und wah
 Berechnet werden mittels **fisher.test()** die Odds-Ratio mit 95%-CI (vcd:: oddsratio). Weiteres lässt sich mit der Option type = 2 eine Sensitivitätsanalyse erstellen. Bei NxM-Tabellen wird als Test-Statistik Pearson und der Kontingentkoeffizient berechnet, alternativ steht auch der Phi-Coefficient zur Verfügung (auch hier mit type = 2).  Die Berechnung erfolgt hier mit der Funktion **vcd ::assocstat**.
 
 
+
+
 ```{r, results='asis'}
 
 
@@ -390,6 +392,11 @@ $$\eta ^{2}={\frac  {QS_{{{\rm {Effekt}}}}}{QS_{{{\rm {Effekt}}}}+QS_{{{{\rm {Re
 1+1
 
 ```
+
+
+Kreuztabelle: Cohen's w, $\phi$, Cramer's V, C
+ANOVA/Regression: f, $\eta$, $\eta_part$ und d, $\Delta$, Hedge's g (bei Vergleich der Stichproben) sowie Odds Ratio, Risk Ratio, r, R
+
 
 ### Korrelation
 
@@ -620,7 +627,7 @@ MetComp(~A+B, Botulinum)
 ```
 
 
-```{r}
+```{r tab-icc2, results='asis'}
 Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
                 D = round( A + rnorm(30,0,10) + A/10 ),
                 E = round( A + rnorm(30,5,10) + (100-A/10) ))
@@ -647,12 +654,8 @@ x <- MetComp_BAP(~A+E+B, Giavarina)
 plot(x)
 
 ```
-
-```
-x <- BlandAltman(A+E+B~group, DF)
-plot(x)
-```
-
+ 
+ 
  
 #### Verschiedene Situationen
 
@@ -742,8 +745,7 @@ Anmerkung zur Effektstärke das APA-Manual schreibt:
 Frei interpretiert heißt das; unstandardisierte Effektgrößen (Regressionskoeffizienten mit 95%-CI) müssen angeben werden, andere können angegeben werden. Die "magnitude of the observed effect" ist am besten über die Effectplots darzustellen (Fox [6]).
 Es gibt zwei Arten von (standardisierten) Effektstärken die d-Familie, die Unterschiede zwischen Gruppen betrachtet, und die r-Familie, welche ein Maß für Zusammenhänge zwischen Daten ist [@Hemmerich].
 **Unstandardisierte Effektgrößen** sind Differenzen von Gruppenmittelwerten (raw mean difference) und unstandardisierte Regressionskoeffizienten. Der p-Wert ist keine Effektstärke.
-Kreuztabelle: Cohen’s w, φ, Cramer’s V, C
-ANOVA/Regression: f, η², η²part und d, Δ, Hedge’s g (bei Vergleich der Stichproben) sowie Odds Ratio, Risk Ratio, r, R²
+
 
 
 
@@ -761,8 +763,8 @@ Die  ANOVA kann als Erweiterung des t-Tests betrachtet werden und ist fast das g
 
 R bietet die o.a. Standard-Kontraste, die über die folgenden Funktionen erreichbar sind: contr.treatment(k,base=j) (j=Nummer der Vergleichsgruppe)contr.sum(k), contr.helmert(k), contr.poly(k)
 
-#### α-Adjustierungen
-R bietet α-Adjustierungen sowohl unabhängig von irgendwelchen Vergleichsverfahren an:
+#### $\alpha$-Adjustierungen
+R bietet $\alpha$-Adjustierungen sowohl unabhängig von irgendwelchen Vergleichsverfahren an:
 p.adjust die Standard-Adjustierungen (Bonferroni, Holm, Hochberg und Bejamini),
 multcomp die Verfahren von Westfall und Shaffer,
 
@@ -982,14 +984,14 @@ Whereas R-squared is a relative measure of fit, RMSE is an absolute measure of f
 Die library(psycho) kann ueber analyze() Betas recht einfach ausgeben. Das geht sowohl bei lm als auch bei lmer.
 Aber die Ergebnisse sind *anderst* als bei PSPP und bei meiner Funktion?? - Gehoert also noch ueberprueft.
 
-```{r}
+```{r tab-psycho, results='asis'}
 
  library(psycho)
  df <- psycho::affective  # Load a dataset from the psycho package
   #df <- standardize(df)  # Standardize all numeric variables
  fit <- lm(Age ~ Salary, data=df)  # Fit a Bayesian linear model
  results <- analyze(fit)  # Format the output
- APA2(results )
+ APA2(results)
    
 #  library(lmerTest)
 #  fit <- lmerTest::lmer(Sepal.Length ~ Sepal.Width + (1|Species), data=iris)
@@ -1481,10 +1483,11 @@ Homogeneity of Variances Levene Computes Levene's test for homogeneity of varian
 
 Residual RMSE values should be low (<0.5 and <0.3, respectively). SigmaResidual standard error When the residual standard error is exactly 0 then the model fits the data perfectly (likely due to overfitting) R-Quadrats Cox und Snell R2: [ 0.2 = akzeptabel, 0.4 = gut ] Nagelkerke R2: [ 0.2 = akzeptabel, 0.4 = gut, 0.5 = sehr gut] McFaddens R2: [ 0.2 = akzeptabel, 0.4 = gut ] (see pR2)
 
+
 #### Heteroskedastizität 
 
-Heteroskedastizität beschreibt einen  Sachverhalt, in dem die Varianz der Residuen variiert.
-Konsequenzen: Trotz Heteroskedastizität sind die Parameter – Schätzer weiterhin unverzerrt, jedoch ineffizient (keine Minimum Varianz mehr), also die Hypothesentests werden unzuverlässig.
+Heteroskedastizität beschreibt einen Sachverhalt, in dem die Varianz der Residuen variiert.
+Konsequenzen: Trotz Heteroskedastizität sind die Parameter - Schätzer weiterhin unverzerrt, jedoch ineffizient (keine Minimum Varianz mehr), also die Hypothesentests werden unzuverlässig.
 Abhielfe: robuste Standardfehler.
 
 Heteroskedasticity Breusch-Pagan test against heteroskedasticity.
@@ -1496,7 +1499,7 @@ Heteroskedasticity Breusch-Pagan test against heteroskedasticity.
 *Durbin-Watson* Test for Autocorrelated Errors. car::durbinWatsonTest (Autokorrelation erster Ordnung)
 Autocorrelation Durbin-Watson test for autocorrelation of disturbances. Ist nur bei Zeitreihendaten sinnvoll.
 
-Erkennen on Autokorrelation   Der DW d Test weist folgendes Intervall auf:
+Erkennen von Autokorrelation, der DW d Test weist folgendes Intervall auf:
 
 0<d<4
 
@@ -1505,7 +1508,7 @@ Erkennen on Autokorrelation   Der DW d Test weist folgendes Intervall auf:
  2:  Keine Autokorrelation
 
 
-*Breusch–Godfrey* Test der  BG  Test ist flexibler, da er auf Autokorrelation höherer Ordnung testet und auf  autoregressive Modelle angewendet werden kann. (In der Literatur wird dieser Test auch LM-Test auf Autokorrelation genannt.)
+*Breusch-Godfrey* Test der  BG  Test ist flexibler, da er auf Autokorrelation höherer Ordnung testet und auf  autoregressive Modelle angewendet werden kann. (In der Literatur wird dieser Test auch LM-Test auf Autokorrelation genannt.)
 
 Abhielfe: Da die Schätzer nicht verzerrt sind, besteht kein grundsätzlicher Handlungsbedarf.
 
@@ -1515,16 +1518,15 @@ Abhielfe: Da die Schätzer nicht verzerrt sind, besteht kein grundsätzlicher Ha
 
 #### Multikollinearität
 
-Multikollinearität beschreibt einen Sachverhalt, i d i kläd Vibl i in dem eine erklärende Variable eine Linearkombination einer anderen oder mehrerer anderer erklärender Variablen ist.
+Multikollinearität beschreibt einen Sachverhalt, in dem eine erklärende Variable eine Linearkombination einer anderen oder mehrerer anderer erklärender Variablen ist.
 
 Erkennen von Multikollinearität  
 Hohes R2 und geringe t-Werte.  
-Der einfache Korrelationskoeffizient zwischen zwei erklärenden Variablen ist sehr hoch. 
+Der einfache Korrelationskoeffizient zwischen zwei erklärenden Variablen ist sehr hoch.
 
 Abhilfemaßnahmen  Entweder nichts unternehmen oder Überflüssig(st)e Variablen entfernen. 
 VIF variance inflation factor. VIF values over 5 are troubling, should probably investigate anything over 2.5.
  
-
 
 
 
@@ -1639,8 +1641,8 @@ Es wurde eine Hauptkomponentenanalyse durchgeführt, um die wichtigsten,
 unabhängigen Faktoren zu extrahieren. Das Kaiser-Meyer-Olkin-Kriterium war 0.71 und 
 der Bartlett-Test hoch signifikant (p < .001), was eine ausreichend hohe Korrelation 
 zwischen Items darstellt, um eine Hauptkomponentenanalyse durchzuführen. Nur Faktoren 
-mit Eigenwerten ≥ 1 wurden in Betracht gezogen (Guttman, 1954; Kaiser, 1960).
-Eine Überprüfung des Kaiser–Kriteriums und Scree-Plots rechtfertigte
+mit Eigenwerten $\geq$ 1 wurden in Betracht gezogen (Guttman, 1954; Kaiser, 1960).
+Eine Überprüfung des Kaiser-Kriteriums und Scree-Plots rechtfertigte
 die Extraktion von zwei Faktoren, jeweils mit Eigenwerten über 1,
 die eine Gesamtvarianz von 43% aufklären. Unter den Lösungen lieferte die Varimax rotierte zweifaktor-Lösung die Lösung, die am besten zu interpretieren war, bei der die meisten Items nur auf einen der beiden Faktoren hohe Ladungen zeigten. Die Faktoren konnten den theoretischen Begriffen
 Verarbeitung, Coping, Vertrauen, Religion, Distanz und Verarbeitung zugeordnet werden

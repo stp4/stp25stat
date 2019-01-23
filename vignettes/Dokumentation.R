@@ -56,8 +56,10 @@ APA2(tzell[1]+Lai~gruppe, hkarz,
  APA(aov( m1 ~ geschl, varana ))
 
 APA2(m1+m2 ~ geschl, varana, test="t.test")
-APA_Ttest(m1+m2 ~ geschl, varana)
-
+APA_Ttest(m1+m2 ~ geschl, varana )
+ 
+   
+ 
 #varanax<-Melt2(m1+m2~nr,varana , key="time", value="m")
 # broom::tidy(with(varana, t.test(m1,m2 ) ))
 # broom::tidy(  t.test(m~time, varanax, var.equal=FALSE)) )
@@ -316,7 +318,7 @@ MetComp(~A+B, Botulinum)
  xt <-xtabs(~A+B, Botulinum)
  Klassifikation(xt)$statistic[c(1,3,4), ]
 
-## ------------------------------------------------------------------------
+## ----tab-icc2, results='asis'--------------------------------------------
 Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
                 D = round( A + rnorm(30,0,10) + A/10 ),
                 E = round( A + rnorm(30,5,10) + (100-A/10) ))
@@ -485,14 +487,14 @@ fit3 <- lm(tzell ~ gruppe * Lai, hkarz)
 
 APA_Table(fit1, fit2, fit3, type = "long2", caption = "Regression")
 
-## ------------------------------------------------------------------------
+## ----tab-psycho, results='asis'------------------------------------------
 
  library(psycho)
  df <- psycho::affective  # Load a dataset from the psycho package
   #df <- standardize(df)  # Standardize all numeric variables
  fit <- lm(Age ~ Salary, data=df)  # Fit a Bayesian linear model
  results <- analyze(fit)  # Format the output
- APA2(results )
+ APA2(results)
    
 #  library(lmerTest)
 #  fit <- lmerTest::lmer(Sepal.Length ~ Sepal.Width + (1|Species), data=iris)
@@ -549,7 +551,7 @@ txt_log_reg <-  paste("Eine logistische Regressionsanalyse zeigt, dass sowohl da
  "Steigen die T-Zelltypisierung  um jeweils eine Einheit, 
  so nimmt die relative Wahrscheinlichkeit eines Krank/Gesund um OR =",  x$odds[2], 
  "zu. Ist die  T-Zelltypisierung positiv so nimmt die  relative Wahrscheinlichkeit um OR= ", x$odds[2],
- "Das R-Quadrat nach Nagelkerke beträgt",round(Nagelkerke,2), 
+ "Das R-Quadrat nach Nagelkerke betr?gt",round(Nagelkerke,2), 
 " was nach Cohen (1992) einem starken Effekt entspricht."  )
 # 
 
