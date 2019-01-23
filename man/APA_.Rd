@@ -141,6 +141,8 @@ APA_ICC:Intra-Klassen-Korrelation (mit psych).
 \strong{APA_Correlation}: Korrelationstabelle (Interkorrelationen mit der Hilfe
 der Funktion  Hmisc::rcorr. Erlaubt ist die getrennte Auswertung ueber by=~b
 
+Wird in APA2 verwendet Tabelle Arbeitet mit Multi2default()
+
 APA_PCA: Faktoranalyse wie SPSS \link{PCA}
 
 APA_R2: R2-Tabelle (noch nicht fretig)

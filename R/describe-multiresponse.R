@@ -1,4 +1,5 @@
 #' @rdname APA_
+#' @description  Wird in APA2 verwendet Tabelle Arbeitet mit Multi2default()
 #' @export
 APA2_multiresponse<- function(Formula,
                               data,
