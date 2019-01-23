@@ -113,7 +113,9 @@ APA_Ttest <- function(x,
           ans <- cbind(ans, res_mean[2:3])
         if (include.mean.diff) {
           res_diff <- paste(Format2(res_t$estimate, digits = digits),
-                            rndr_CI(res_t[c("conf.low", "conf.high")]))
+                            rndr_CI(as.matrix(res_t[c("conf.low", "conf.high")]), digits = digits))
+          
+       
           ans <- cbind(ans, Differenz = res_diff)
         }
         if (include.d) {
