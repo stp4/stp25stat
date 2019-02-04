@@ -4,11 +4,14 @@
 \name{Tabelle}
 \alias{Tabelle}
 \alias{Tabelle2}
+\alias{Tabelle.NULL}
 \alias{Tabelle.default}
 \alias{Tabelle.lmerModLmerTest}
 \alias{Tabelle.glm}
 \alias{Tabelle.lm}
 \alias{Describe2}
+\alias{Describe2.data.frame}
+\alias{Describe2.formula}
 \alias{errate_statistik3}
 \alias{conTest}
 \alias{catTest}
@@ -17,6 +20,8 @@
 Tabelle(..., output = FALSE)
 
 Tabelle2(..., output = TRUE)
+
+\method{Tabelle}{NULL}()
 
 \method{Tabelle}{default}(..., formula = NULL, fun = NULL,
   type = c("2", "1", "freq", "freq.ci", "mean", "median", "ci",
@@ -37,8 +42,13 @@ Tabelle2(..., output = TRUE)
 \method{Tabelle}{lm}(x, digits = 2, fun = function(x) {     c(n =
   length(x), M = mean(x, na.rm = TRUE), SD = sd(x, na.rm = TRUE)) }, ...)
 
-Describe2(fml, data, caption = "", note = "", stat = c("n", "mean",
-  "sd", "min", "max"), ...)
+Describe2(..., output = FALSE)
+
+\method{Describe2}{data.frame}(...)
+
+\method{Describe2}{formula}(x, data, by = NULL, caption = "",
+  note = "", stat = c("n", "mean", "sd", "min", "max"),
+  output = which_output(), digits = 2, ...)
 
 errate_statistik3(..., type = NULL, caption = "", note = "",
   na.action = na.pass, exclude = NA, include.n = TRUE,
@@ -75,6 +85,10 @@ catTest(fml, data, include.test = "chisq.test")
 \item{include.n, include.nr, include.total}{Anzahl ausgeben}
 
 \item{max_factor_length}{Fehler bei langen Faktoren abfangen}
+
+\item{stat}{result von psych kann "n", "mean", "sd",
+"median", "trimmed", "mad", "min" ,
+"max", "range", "skew", "kurtosis" ,"se"}
 }
 \value{
 Tabelle: data.frame oder list mit data.frame
@@ -87,6 +101,8 @@ Die Funktion arbeitet Intern mit \code{aggregate} bzw. mit  berechne_default()
 also aggregate(formula, data,FUN).
 
 Tabelle2:  html-Output Tabelle(...) %>% Output()
+
+Describe2: workaraond fuer  psych::describe()
 
 Hilfsfunctionen
 Correlation in Dokument APA2_Correlation.R
@@ -112,7 +128,7 @@ Tabelle(Merkfgk ~ Zeit, varana2)
 varana2 \%>\% Tabelle(Merkfgk, by =  ~ Zeit)
 varana \%>\% Tabelle(m1, m2, m3 , m4)
 
-#- Achtung hier wird eine Liste Ausgegeben
+
 #varana \%>\% Tabelle(
 #  4:7,
 #  by =  ~ geschl,

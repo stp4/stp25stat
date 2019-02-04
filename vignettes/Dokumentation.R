@@ -9,6 +9,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ## ----setup2, include=FALSE-----------------------------------------------
  #getwd()
 library(stpvers)
+require(broom)
+#require(nlme)
+
 set.seed(1)
 Projekt("", "Introduction" )
 #set_my_options(output="html")
@@ -38,7 +41,7 @@ Prop_Test2(data$g)
 #  APA2(~g+g2, data, type="freq.ci")
 #  APA2(g~g2, data, type="freq.ci")
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tzel-median, results='asis', warning=FALSE--------------------------
 hkarz %>% Tabelle2(tzell="median", Lai, gruppe) 
 
 set_my_options(median=list(style="IQR"))
@@ -48,18 +51,25 @@ APA2(tzell[1]+Lai~gruppe, hkarz,
      caption="Einfache Auswertung",
      test=TRUE, include.n = TRUE)
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----ttest-1, results='asis', warning=FALSE------------------------------
 # T-Test
  APA( t.test(m1 ~ geschl, varana, var.equal=TRUE))
+
+
+## ----ttest-2, results='asis', warning=FALSE------------------------------
  APA( t.test(m1 ~ geschl, varana))
-# ANOVA 
+
+## ----ttest-3-aov, results='asis', warning=FALSE--------------------------
  APA(aov( m1 ~ geschl, varana ))
 
-APA2(m1+m2 ~ geschl, varana, test="t.test")
-APA_Ttest(m1+m2 ~ geschl, varana )
- 
-   
- 
+## ----ttest-4, results='asis', warning=FALSE------------------------------
+APA2(m1 + m2 ~ geschl, varana, test = "t.test")
+
+
+## ----ttest-5, results='asis', warning=FALSE------------------------------
+APA_Ttest(m1 + m2 ~ geschl, varana)
+
+## ----ttest-6, results='asis', warning=FALSE------------------------------
 #varanax<-Melt2(m1+m2~nr,varana , key="time", value="m")
 # broom::tidy(with(varana, t.test(m1,m2 ) ))
 # broom::tidy(  t.test(m~time, varanax, var.equal=FALSE)) )
@@ -74,16 +84,15 @@ APA_Ttest(m1+m2 ~ geschl, varana )
 
 #exakt das selbe wie t.test(m1 ~ geschl, varana, var.equal=TRUE))
 #t.test(m1 ~ geschl, varana, var.equal=TRUE))
- 
-require(broom)
-require(nlme)
-res <- summary(gls(m1 ~ geschl, varana,  weights=varIdent(form = ~ 1 | geschl)))
-res$tTable %>% fix_format() %>% Output(caption="Generalized Least Squares")
- 
+
+res <-
+summary(nlme::gls(m1 ~ geschl, varana,  weights = nlme::varIdent(form = ~ 1 |
+geschl)))
+res$tTable %>% fix_format() %>% Output(caption = "Generalized Least Squares")
 
 
 
-## ---- results='asis'-----------------------------------------------------
+## ----xtab, results='asis'------------------------------------------------
 
 
 hkarz$LAI<- factor(hkarz$lai, 0:1, c("pos", "neg"))
@@ -109,14 +118,14 @@ APA2(xtab, test=FALSE, caption="APA2: 2x3 Tabelle")
 APA_Xtabs(xtab, caption="APA_Xtabs: 2x3 Tabelle")
 
 
-## ---- results='asis'-----------------------------------------------------
+## ----xtab-klass, results='asis'------------------------------------------
 xtab <- xtabs(~ gruppe+LAI, hkarz)
 fit1<- glm(gruppe~lai, hkarz, family = binomial)
  
 Klassifikation(fit1)$statistic[c(1,7,8),]
 Klassifikation(xtab)$statistic[c(1,7,8),]
 
-## ----setup3, include=FALSE-----------------------------------------------
+## ----roc-data, include=FALSE---------------------------------------------
 require(pROC)
 
  blz.diab <- round(rnorm(100, mean=115, sd=20), 1)
@@ -127,13 +136,15 @@ require(pROC)
    Blutzucker=c(blz.diab, blz.cntr))
 
 
-## ----fig-roc1, fig.cap = "ROC-Kurve zu den Blutzuckerwerten",  fig.width=4, fig.height=4, cache=TRUE----
+## ----fig-roc1, fig.cap = "ROC-Kurve zu den Blutzuckerwerten", fig.width=4, fig.height=4, cache=TRUE----
 # require(pROC)
 # data %>% Tabelle(Blutzucker, by=~Gruppe) 
 
-roc_curve <- roc(data$Gruppe, data$Blutzucker)
+roc_curve <-  roc(data$Gruppe, data$Blutzucker)
 plot(roc_curve, print.thres = "best",
      print.auc=TRUE)
+
+ 
 
 # das selbe aber mit Regression daher sind die cut off -Werte nur indirekt interpretierbar
 # fit1  <- glm(Gruppe~Blutzucker, data, family = binomial)
@@ -146,7 +157,7 @@ plot(roc_curve, print.thres = "best",
 # abline(h = 1, lty = 2)
 
 
-## ----roc2----------------------------------------------------------------
+## ----roc2, warning=FALSE-------------------------------------------------
 fit1<- glm(gruppe~lai, hkarz, family = binomial)
 x1 <- Klassifikation(fit1)
 x1$statistic[c(1,7,8),]
@@ -186,13 +197,13 @@ roc.test(roc1, roc2)
 #ciobj <- ci.se(roc2)
 #plot(ciobj, type = "shape", col="#D3D3D3", alpha = .5) 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----effsize-cohen, results='asis', warning=FALSE------------------------
 # APA2(tzell~gruppe,hkarz, type="cohen.d")  # APA_Effsize ist das gleiche
 
 1+1
 
 
-## ----include=FALSE-------------------------------------------------------
+## ----corr, include=FALSE-------------------------------------------------
  n<- 2*8
  e<- rnorm(n)*10
  DF<- data.frame(a=rnorm(n) + e,
@@ -200,10 +211,13 @@ roc.test(roc1, roc2)
                     g=gl(2, 8, labels = c("Control", "Treat")))
   
 
-## ---- results='asis', warning=FALSE--------------------------------------
- APA_Correlation(~a+b+c, DF, caption="~a+b+c")
+## ----cor-apa-formula, results='asis', warning=FALSE----------------------
+   APA_Correlation(~a+b+c, DF, caption="Formula a+b+c", output= "text")
+#   in der Tabelle gibt es seltsame sonerzeichen ist nicht in caption
+ 
 
-## ----include=FALSE-------------------------------------------------------
+
+## ----likert-data, include=FALSE------------------------------------------
  set.seed(1)
 n<-100
 lvs<-c("--","-","o","+","++")
@@ -223,13 +237,13 @@ DF2<- transform(DF2, Geschlecht= cut( rnorm(n), 2, Cs(m, f)))
 Res1 <- Likert(~., DF2 )
 APA2(Res1)
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----likert-apa, results='asis', warning=FALSE---------------------------
 APA2(Res2 <- Likert(.~ Geschlecht, DF2 ))
 APA2(Res2, ReferenceZero=3, na.exclude=TRUE, type="freq")
 
   
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----likert-plot, results='asis', warning=FALSE--------------------------
 #require(HH)
 # ?likertplot
 #
@@ -249,7 +263,7 @@ APA2(Res2, ReferenceZero=3, na.exclude=TRUE, type="freq")
 #        groups=Geschlecht, xlim=c(.085, 5.15),
 #        type=c("p", "l"))  
 
-## ----include=FALSE-------------------------------------------------------
+## ----rank-data, include=FALSE--------------------------------------------
 DF <-structure(list(
         Geschlecht = structure(c(1L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L),
                                .Label = c("Maennlich", "Weiblich"), class = "factor"),
@@ -271,11 +285,7 @@ DF <-structure(list(
 
  
 
-## ---- results='asis', warning=FALSE--------------------------------------
-ans <- Rangreihe(~FavA+FavB+FavC+FavD, DF )
-APA2(ans, caption="Alle") 
-
-## ---- Giavarina-data, include=FALSE--------------------------------------
+## ----met-comp-data, Giavarina-data, include=FALSE------------------------
 set.seed(0815)
 Giavarina <- data.frame(
 A=c(1,5,10,20,50,
@@ -327,7 +337,7 @@ Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
 ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
  
 
-## ----fig-BlandAltman3, fig.cap = "Bland Altman",  fig.width=8, fig.height=3, cache=TRUE----
+## ----fig-BlandAltman3, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
 # A - Goldstandart
 
 x <- MetComp_BAP(~A+B+E, Giavarina)
@@ -335,13 +345,13 @@ x <- MetComp_BAP(~A+B+E, Giavarina)
 plot(x)
 
 
-## ----fig-BlandAltman4, fig.cap = "Bland Altman",  fig.width=8, fig.height=3, cache=TRUE----
+## ----fig-BlandAltman4, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
 x <- MetComp_BAP(~A+E+B, Giavarina)
 # x %>% Output("BA-Analyse der Messwertreihe")
 plot(x)
 
 
-## ------------------------------------------------------------------------
+## ----met-comp-data2, include=FALSE---------------------------------------
 set.seed(0815)
 
 n<-100
@@ -359,27 +369,27 @@ DF <- transform(DF, C = round( A + rnorm(n, -5, 20)),
                 E = A + ifelse(A<cutA, A/5, -A/5 )+ rnorm(n, 0, 10)
 )
 
-## ----fig-BAx1, fig.cap = "A und C Messen das gleiche mit SD=20",  fig.width=8, fig.height=3, cache=TRUE----
+## ----fig-BAx1, fig.cap = "A und C Messen das gleiche mit SD=20", fig.width=8, fig.height=3, cache=TRUE----
 x<- MetComp_BAP(~A+C, DF)
 plot(x)
 
 
-## ----fig-BAx2, fig.cap = "A und B Messen unterschiedliche Parameter",  fig.width=8, fig.height=3, cache=TRUE----
+## ----fig-BAx2, fig.cap = "A und B Messen unterschiedliche Parameter", fig.width=8, fig.height=3, cache=TRUE----
 x<- MetComp_BAP(~A+B, DF)
 plot(x)
 
 
-## ----fig-BAx3, fig.cap = "A und D Messen das unterschiedlich D hat im unteren Wertevereich deutlich geringere Werte",  fig.width=8, fig.height=3, cache=TRUE----
+## ----fig-BAx3, fig.cap = "A und D Messen das unterschiedlich D hat im unteren Wertevereich deutlich geringere Werte", fig.width=8, fig.height=3, cache=TRUE----
 x<- MetComp_BAP(~A+D, DF)
 plot(x)
 
 
-## ----fig-BAx4, fig.cap = "A und E Messen das unterschiedlich es esistiert ein Knick im Wertebereich 100",  fig.width=8, fig.height=3, cache=TRUE----
+## ----fig-BAx4, fig.cap = "A und E Messen das unterschiedlich es esistiert ein Knick im Wertebereich 100", fig.width=8, fig.height=3, cache=TRUE----
 x<- MetComp_BAP(~A+E, DF)
 plot(x)
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-anova-1, results='asis', warning=FALSE--------------------------
 #-- breaks ~ wool + tension ----------------------
 #warpbreaks %>% Tabelle2(breaks, by= ~ wool + tension)
 fm1 <- aov(breaks ~ wool + tension, data = warpbreaks)
@@ -387,29 +397,25 @@ fm1 <- aov(breaks ~ wool + tension, data = warpbreaks)
 #  ANOVA
 APA2(fm1, caption="ANOVA")
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-anova-2, results='asis', warning=FALSE--------------------------
 # a. R Squared = .43 (Adjusted R Squared = .43)
 # Levene's Test of Equality of Error Variances F=1.8, df1=3,df2=486, p=.146
 # 
-
-
-
-
-
-
-schools2<-  transform(schools,
-                     
-                     classroom=factor(classroom),
-                     grade=factor(grade),
-                     treatment=factor(treatment),
-                     score10=score>10,
-                     score2 =  round((log( (score + 20))- 1.78)/.023 )
-                     
-                     )
-
-fit<- aov(score ~ grade + treatment + stdTest, schools2)
- 
-APA2(fit, include.eta=TRUE)
+schools2 <-  transform(
+  schools,
+  classroom = factor(classroom),
+  grade = factor(grade),
+  treatment = factor(treatment),
+  score10 = score > 10,
+  score2 =  round((log((
+  score + 20
+  )) - 1.78) / .023)
+  
+  )
+  
+  fit <- aov(score ~ grade + treatment + stdTest, schools2)
+  
+  APA2(fit, include.eta = TRUE)
 
 #APA_Validation(fit, include.levene = TRUE,
 #               include.aic = FALSE, include.ftest = FALSE,include.deviance = FALSE,
@@ -417,7 +423,7 @@ APA2(fit, include.eta=TRUE)
 #               include.durbin = FALSE, include.normality = FALSE)
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-anova-tukey, results='asis', warning=FALSE----------------------
 TukeyHSD(fm1, "tension", ordered = TRUE) %>%
   APA2(caption="TukeyHSD" )
 
@@ -431,32 +437,31 @@ fm1_split <-  summary(fm1,
 APA2(fm1_split)
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-anova-tukey2, results='asis', warning=FALSE---------------------
 
 require(multcomp)
 
-fit_Tukey <-glht(fm1,
-                 linfct=mcp(tension="Tukey"),
-                 alternative = "less"
-)
+fit_Tukey <- glht(fm1,
+linfct = mcp(tension = "Tukey"),
+alternative = "less")
+
+APA2(fit_Tukey, caption = "APA2: multcomp mcp Tukey")
 
 
-
-APA2(fit_Tukey, caption="APA2: multcomp mcp Tukey")
-
-
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-anova-contrast, results='asis', warning=FALSE-------------------
 
 ### contrasts for `tension'
-K <- rbind("L - M" = c( 1, -1,  0),
-           "M - L" = c(-1,  1,  0),
-           "L - H" = c( 1,  0, -1),
-           "M - H" = c( 0,  1, -1))
-
-warpbreaks.mc <- glht(fm1,
-                      linfct = mcp(tension = K),
-                      alternative = "less")
-APA2(warpbreaks.mc, caption="APA2: multcomp mcp mit Contrasten")
+K <- rbind(
+  "L - M" = c(1,-1,  0),
+  "M - L" = c(-1,  1,  0),
+  "L - H" = c(1,  0,-1),
+  "M - H" = c(0,  1,-1)
+  )
+  
+  warpbreaks.mc <- glht(fm1,
+  linfct = mcp(tension = K),
+  alternative = "less")
+  APA2(warpbreaks.mc, caption = "APA2: multcomp mcp mit Contrasten")
 ### correlation of first two tests is -1
 #cov2cor(vcov(fm1))
 
@@ -465,7 +470,7 @@ APA2(warpbreaks.mc, caption="APA2: multcomp mcp mit Contrasten")
 #summary(fm1)
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-anova-tukey3, results='asis', warning=FALSE---------------------
 
 fm2 <- aov(breaks ~ wool * tension, data = warpbreaks)
 APA_Table(fm2)
@@ -478,14 +483,14 @@ mod2<-aov(breaks~WW, warpbreaks)
 APA2(mod2, caption="ANOVA interaction haendich zu den Daten hinzugefuehgt")
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
-
+## ----tab-lm-1, results='asis', warning=FALSE-----------------------------
 
 fit1 <- lm(tzell ~ gruppe, hkarz)
 fit2 <- lm(tzell ~ gruppe + Lai, hkarz)
 fit3 <- lm(tzell ~ gruppe * Lai, hkarz)
 
 APA_Table(fit1, fit2, fit3, type = "long2", caption = "Regression")
+
 
 ## ----tab-psycho, results='asis'------------------------------------------
 
@@ -503,24 +508,27 @@ APA_Table(fit1, fit2, fit3, type = "long2", caption = "Regression")
 
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----reg-glm-fit1, results='asis', warning=FALSE-------------------------
+
 fit1 <- glm(gruppe~tzell, hkarz, family = binomial)
 APA_Table(fit1, type="long2")
 
-## ---- results='asis', warning=FALSE--------------------------------------
+
+## ----tab-broom, results='asis', warning=FALSE----------------------------
+
 res <- broom::tidy(fit1) 
 cbind(res[1:2], 
       confint(fit1),
       res[5]) %>% 
-  fix_format %>% Output("Odds Ratios")
+  fix_format %>% Output("broom::tidy(fit1): Odds Ratios")
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
-#--Omnibus Test
- lmtest::lrtest(fit1) %>% fix_format() %>% Output("LR-Test")
-# Fuer F-Test :  lmtest::waldtest(fit1)
+## ----tab-lm-lrtest, results='asis', warning=FALSE------------------------
+#--Omnibus Test  Fuer F-Test :  lmtest::waldtest(fit1)
+ lmtest::lrtest(fit1) %>% fix_format() %>% Output("lmtest::lrtest(fit1): LR-Test")
 
-## ---- results='asis', warning=FALSE--------------------------------------
+
+## ----tab-lm-gof, results='asis', warning=FALSE---------------------------
 Goodness <- function(x) {
   cbind(round(broom::glance(x)[, c(6,  3, 4, 5)], 1),
   round(R2(x), 2),
@@ -528,20 +536,18 @@ Goodness <- function(x) {
 }
 fit1 %>% Goodness %>% Output()
 
-## ---- results='asis', warning=FALSE--------------------------------------
+
+## ----tab-lm-class, results='asis', warning=FALSE-------------------------
+
 Klassifikation2(fit1)
 
-## ----results='hide', warning=FALSE---------------------------------------
+
+## ----tab-glm-1, results='hide', warning=FALSE----------------------------
 
 
 fit1 <- glm(gruppe~tzell+factor(lai), hkarz, family = binomial)
-
 x<- APA2(fit1, include.odds=TRUE )
-
 Nagelkerke<- R2(fit1)[3]
- 
-
-
 
 # Interpretation
 
@@ -551,19 +557,14 @@ txt_log_reg <-  paste("Eine logistische Regressionsanalyse zeigt, dass sowohl da
  "Steigen die T-Zelltypisierung  um jeweils eine Einheit, 
  so nimmt die relative Wahrscheinlichkeit eines Krank/Gesund um OR =",  x$odds[2], 
  "zu. Ist die  T-Zelltypisierung positiv so nimmt die  relative Wahrscheinlichkeit um OR= ", x$odds[2],
- "Das R-Quadrat nach Nagelkerke betr?gt",round(Nagelkerke,2), 
+ "Das R-Quadrat nach Nagelkerke beträgt",round(Nagelkerke,2), 
 " was nach Cohen (1992) einem starken Effekt entspricht."  )
 # 
 
 #  Quelle Text: http://www.methodenberatung.uzh.ch/de/datenanalyse/zusammenhaenge/lreg.html
 
 
-
-
-
-
-
-## ------------------------------------------------------------------------
+## ----tab-glm-exp, warning=FALSE------------------------------------------
 
 # Wahrscheinlichkeiten T-Zell
 fit1 <- glm(gruppe ~ tzell , hkarz, family = binomial)
@@ -576,38 +577,38 @@ z <- i + b*t.zell
 p<- 1/(1+exp(z)) 
 
 cbind(t.zell, p=round(p,2))
-
  
-#xyplot(p~t.zell)
 
-
-
-
-## ---- warning=FALSE------------------------------------------------------
+## ---- results='asis', warning=FALSE--------------------------------------
 #-- SPSS kodiert die Gruppe 3 als Referenz
 poisson_sim$prog <-
   factor(poisson_sim$prog, c("vocation", "general",  "academic"))
-  fit5 <- glm(num_awards ~ prog + math, 
-              poisson_sim, family =  poisson())
+  fit5 <- glm(num_awards ~ prog + math,
+  poisson_sim, family =  poisson())
+  
+  poisson_sim %>% Tabelle2(num_awards, prog, math)
+  
+  APA_Table(fit5)
 
-## ---- results='asis', warning=FALSE--------------------------------------
-poisson_sim %>% Tabelle2(num_awards, prog, math)
 
-APA_Table(fit5)
-
-## ---- results='asis', warning=FALSE--------------------------------------
-APA2(xtabs(~gruppe+lai, hkarz), test=TRUE, type="fischer")
-fit1<- glm(gruppe~lai, hkarz, family = binomial)
-thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
-fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())
+## ----tab-glm-2, results='asis', warning=FALSE----------------------------
+APA2(xtabs(~ gruppe + lai, hkarz), test = TRUE, type = "fischer")
+fit1 <- glm(gruppe ~ lai, hkarz, family = binomial)
+thkarz <- as.data.frame(xtabs(~ gruppe + lai, hkarz))
+fit2 <- glm(Freq ~ gruppe * lai, thkarz, family = poisson())
 
 APA_Table(fit1, include.odds = TRUE)
-APA_Table(fit1, fit2, include.odds = TRUE, 
-          include.b=FALSE,
-          include.se = FALSE,
-          type="long2")
+APA_Table(
+fit1,
+fit2,
+include.odds = TRUE,
+include.b = FALSE,
+include.se = FALSE,
+type = "long2"
+)
 
-## ---- results='asis', warning=FALSE--------------------------------------
+
+## ----tab-lmer-1, results='asis', warning=FALSE---------------------------
 lmer_fit1<-lmerTest::lmer(score ~ agegrp+trial + (1|id), MMvideo)
 
 lmer_fit2<-lmerTest::lmer(score ~ agegrp*trial + (1|id), MMvideo)
@@ -629,29 +630,37 @@ APA_Table(lmer_fit1, lmer_fit2, type="long2")
 #    windows(4,3)
 #   multiplot(lmer_fit1, lmer_fit2, intercept=F, xlab="b (SE)")
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----surv-data, results='asis', warning=FALSE----------------------------
 library(survival)
 mkarz <- GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Buehl/MKARZ.SAV")
 mkarz$status<- ifelse(mkarz$status=="tot", 1, 0)
 mkarz %>% Tabelle2(survive="median", status, lkb)
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-surv-summary, results='asis', warning=FALSE---------------------
 # Kaplan-Meier estimator without grouping
 
+
 m0 <- Surv(survive, status) ~ 1
-res0<- survfit(m0, mkarz)
+res0 <- survfit(m0, mkarz)
 APA2(res0)
 
-APA2(summary(res0, times= c(5, 10, 20, 60)),
-     percent=TRUE,
-     #Statistik Anfordern und ander Schreibweise
-     include=c( time ="time", n.risk ="n.risk", 
-                n.event ="n.event", surv = "survival",
-                lower = "lower 95% CI",upper ="upper 95% CI"),
-     caption="Kaplan-Meier" )
+APA2(
+summary(res0, times = c(5, 10, 20, 60)),
+percent = TRUE,
+#Statistik Anfordern und ander Schreibweise
+include = c(
+time = "time",
+n.risk = "n.risk",
+n.event = "n.event",
+surv = "survival",
+lower = "lower 95% CI",
+upper = "upper 95% CI"
+),
+caption = "Kaplan-Meier"
+)
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-surv-fit, results='asis', warning=FALSE-------------------------
 m1 <- Surv(survive, status) ~ lkb
 res1<- survfit(m1, mkarz)
 fit1<- coxph(m1, mkarz)
@@ -660,14 +669,14 @@ APA2(res1, caption="Kaplan-Meier")
 APA2(logrank1)
 APA2(coxph(m1,mkarz))
 
-## ---- include=FALSE------------------------------------------------------
+## ----manova-data, include=FALSE------------------------------------------
 m_data<-GetData("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/manova.sav")
 m_data$GROUP<- factor(m_data$GROUP, 1:3, c("website", "nurse ", "video tape" ))
 
 z<- as.matrix(m_data[,-1])
 
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-manova-apa, results='asis', warning=FALSE-----------------------
  
 fit1<- manova(z ~ m_data$GROUP)
 APA2(fit1)
@@ -677,15 +686,7 @@ APA2(fit1)
 #APA2(fit2)
 #plot(fit2)
 
-## ---- results='asis', warning=FALSE--------------------------------------
-# Kopie der \link{car::vif} funktion
-#library(car)
- #fit<-lm(prestige ~ income + education, data=Duncan)
- #car::vif(fit)
-# VIF2(fit)
- 
-
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-alpha, results='asis', warning=FALSE----------------------------
 Verarbeitung <- Reliability(~ F5+F16+F22+F9+F26+F6+F35+F33+F12+F34+F4, fkv, check.keys =TRUE)
 Coping <- Reliability(~ F7+F8+F17+F14+F15+F18+F19+F1+F13+F20, fkv, check.keys =TRUE)
 Vertrauen <- Reliability(~ F28+F27+F31+F29, fkv, check.keys =TRUE)
@@ -695,7 +696,7 @@ Distanz <- Reliability(~F3+F2+F10+F11, fkv, check.keys =TRUE)
 
 Alpha(Verarbeitung, Coping, Vertrauen, Religion, Distanz) %>% Output()
 
-## ---- include=FALSE------------------------------------------------------
+## ----tab-icc, include=FALSE----------------------------------------------
  sf <- GetData("
                J1 J2 J3 J4 J5 J6
                1  1  6  2  3  6
@@ -705,11 +706,11 @@ Alpha(Verarbeitung, Coping, Vertrauen, Religion, Distanz) %>% Output()
                5  5 10 10  6 12
                6  6 11 12  4  8")
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-icc-2, results='asis', warning=FALSE----------------------------
 # #Quelle  http://www.personality-project.org/r/book/Chapter7.pdf
 ICC2(sf)
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-pca-1, results='asis', warning=FALSE----------------------------
   # APA2( ~., fkv, test=TRUE)
   # library(arm)
   # windows(5,5)
@@ -723,11 +724,11 @@ ICC2(sf)
  fit1$Eigenvalue %>% Output()
  fit1$Test %>% Output()
 
-## ---- results='asis', warning=FALSE--------------------------------------
+## ----tab-pca-kmo, results='asis', warning=FALSE--------------------------
  fit1$KMO %>% Output()
  
 
-## ------------------------------------------------------------------------
+## ----data-multi-split, warning=FALSE-------------------------------------
 x <- c(123, 23, 456,3)
 separate_multiple_choice(x,
                           label = c("Allgemein", "Paro", 
@@ -737,9 +738,7 @@ separate_multiple_choice(x,
 
 
 
-## ---- fig.width=8, fig.height=4------------------------------------------
-
-
+## ----data-weibull, include=FALSE, warning=FALSE--------------------------
 
 #Beispiel: Sachs Seite 337
 #Scheuerfestigkeit eines Garns
@@ -757,6 +756,10 @@ x <- sort(x); n <- length(x); i <- rank(x)
       y =log(log(1/(1-F_t))))
 }
 
+
+
+## ----res-weibull, warning=FALSE------------------------------------------
+
 data<-Weibull(garn) 
 z <- lm(y ~ x, data)
   res<-round(cbind(shape=coef(z)[2],             
@@ -765,6 +768,14 @@ res
 
  
 m<-(-(coef(z)[1]/coef(z)[2]))
+
+
+## ----fig-weibull, fig.width=8, fig.height=4------------------------------
+#library(MASS)
+fit <- MASS::fitdistr(garn, densfun="weibull", lower = 0)
+ 
+library(car)
+
 par(mfrow=c(1,2), lwd=2, font.axis=2, bty="n", ps=11,
     bg="white", las=1, cex=1.1)
 
@@ -785,11 +796,17 @@ abline(h=0, lty=3)
 abline(v=m, lty=3)
 points(m, 0, cex=5, col="red")
 
-
-library(MASS)
-(fit <- fitdistr(garn, densfun="weibull", lower = 0))
  
-library(car)
+
 qqPlot(garn, distribution="weibull", main="qqPlot",
        scale=coef(fit)[1], shape=coef(fit)[2], las=1, pch=19)
+
+
+
+## ------------------------------------------------------------------------
+
+1+1
+
+# End()
+
 
