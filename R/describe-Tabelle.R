@@ -27,7 +27,7 @@
 #' varana2 %>% Tabelle(Merkfgk, by =  ~ Zeit)
 #' varana %>% Tabelle(m1, m2, m3 , m4)
 #'
-#' #- Achtung hier wird eine Liste Ausgegeben
+#' 
 #' #varana %>% Tabelle(
 #' #  4:7,
 #' #  by =  ~ geschl,
@@ -57,6 +57,26 @@ Tabelle2 <- function(...,
   invisible(x)
 }
 
+#' @rdname Tabelle
+#' @export
+Tabelle.NULL <- function(){
+  Info_Statistic(
+    c("catTest", "conTest", "Wilkox", "Kruskal",
+      "ANOVA",
+      "T Test"),
+    c("stats", "Hmisc", "stats", "stats",
+      "car",
+      "stats"),
+    c(
+      "chisq.test",
+      "spearman2",
+      "wilcox.test",
+      "kruskal.test",
+      "Anova, type = 3",
+      "t.test"
+    ), paste(methods("Tabelle"), collapse=", ")
+  )
+}
 
 #' @rdname Tabelle
 #'
@@ -362,22 +382,95 @@ aggregate_effect <- function(eff,
 
 
 #' @rdname Tabelle
+#' @description Describe2: workaraond fuer  psych::describe()
+#' @param stat result von psych kann "n", "mean", "sd",
+#' "median", "trimmed", "mad", "min" ,
+#' "max", "range", "skew", "kurtosis" ,"se"
 #' @export
+Describe2 <- function(...,
+                    output = FALSE) {
+  UseMethod("Describe2")
+}
 
-Describe2 <- function(fml,
-                      data,
-                      caption = "",
-                      note = "",
-                      stat = c("n", "mean", "sd", "min", "max"),
-                      ...) {
-  vars <- which(names(data) %in% all.vars(fml))
-  data <- data[vars]
-  result <-  as.data.frame(
-                    psych::describe(data),
-                        stringsAsFactors=FALSE)[stat]
- result[-1] <- Format2(result[-1])
-  prepare_output(cbind(Item = GetLabelOrName(data), result),
-                 caption,
-                 note,
-                 nrow(data))
+#' @rdname Tabelle
+#' @export
+Describe2.data.frame<-function(...){
+  
+  cat("\n Noch nicht implementiert!\n")
+  data.frame(NULL)
+}
+
+#' @rdname Tabelle
+#' @export
+Describe2.formula <- function(x,
+                              data,
+                              by = NULL,
+                              caption = "",
+                              note = "",
+                              stat = c("n", "mean", "sd", "min", "max"),
+                              output = which_output(),
+                              digits = 2,
+                              ...) {
+  vars <- which(names(data) %in% all.vars(x))
+  stat <- c(
+    "vars",
+    "n",
+    "mean",
+    "sd" ,
+    "median",
+    "trimmed",
+    "mad",
+    "min",
+    "max",
+    "range",
+    "skew",
+    "kurtosis",
+    "se" ,
+    stat
+  )
+  stat <- unique(stat[duplicated(stat)])
+  
+  if (is.null(by)) {
+    data <- data[vars]
+    result <-  as.data.frame(psych::describe(data),
+                             stringsAsFactors = FALSE)
+    # stat <- c(names(result), stat)
+    # stat <- unique(stat[duplicated(stat)])
+    result <- cbind(Item = GetLabelOrName(data), result)
+    
+    res <- result[c("Item", stat)]
+    res[-1] <- Format2(res[-1], digits = digits)
+    } else{
+    names_groups <- which(names(data) %in% all.vars(by))
+    groups <- data[names_groups]
+    if(ncol(groups)>1){
+      groups<- interaction(groups,  sep = " / ")
+    }
+    
+    data <- data[vars]
+    results_list <- psych::describeBy(data, groups)
+    result <- res <- NULL
+    
+    for (i in   names(results_list)) {
+      r1 <- as.data.frame(results_list[[i]],
+                          stringsAsFactors = FALSE)
+      
+      r1 <- cbind(Item = GetLabelOrName(data), Group = i, r1)
+      result <- rbind(result, r1)
+    }
+        res <- result[c("Item", "Group", stat)]
+    res[-c(1:3)] <- Format2(res[-c(1:3)], digits = digits)
+  }
+  
+  
+  
+  res  <-
+    prepare_output(res,
+                   caption,
+                   note,
+                   nrow(data))
+  
+  Output(res, output = output)
+  
+  invisible(result)
 }
