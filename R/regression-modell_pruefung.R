@@ -483,18 +483,18 @@ test_nonconstvar <- function(model) {
 
 #' @rdname APA_Validation
 #' @description APA_Autocorrelation: 
-#' Der Durbin–Watson (DW) 
+#' Der Durbi-Watson (DW) 
 #' Test verwendet die geschaetzten Residuen um auf 
 #' Autokorrelation erster Ordnung zu testen.
 #' 
 #' Der DW d Test weist folgendes Intervall auf: 0<d<4
 #' 0:  Extrem positive Autokorrelation 
-#' 4:   Extrem negative Autokorrelation. 
-#' 2:   Keine Autokorrelation
+#' 4:  Extrem negative Autokorrelation. 
+#' 2:  Keine Autokorrelation
 #' 
 #' 
-#' Der Breusch–Godfrey (BG) Test ist flexibler,
-#' da er auf Autokorrelation höherer Ordnung testet und auf 
+#' Der Breusch-Godfrey (BG) Test ist flexibler,
+#' da er auf Autokorrelation hoeherer Ordnung testet.
 #' @export
  
 APA_Autocorrelation <- function(x,  order = 1, ...) {

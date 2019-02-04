@@ -272,3 +272,39 @@ is_vars_in_data<- function(x, data=NULL){
   else return(TRUE)
 }
 
+#' Information uere die verwendeten Methoden
+#'
+#' @param methode,library,fun  Text
+#'
+#' @return data.frame()
+
+Info_Statistic <-
+  function(methode = "describe",
+           library = "base",
+           fun = "summary") {
+    data.frame(
+      methode = methode,
+      library = library,
+      fun = fun,
+      stringsAsFactors = FALSE
+    )
+  }
+#' Information uere die verwendeten Methoden
+#'
+#' @param methode,library,fun  Text
+#'
+#' @return data.frame()
+
+Info_Statistic <-
+  function(methode = "describe",
+           library = "base",
+           fun = "summary",
+           my_methodes = "") {
+    Text("Methodes: ",  my_methodes)
+    data.frame(
+      Methode = methode,
+      Library = library,
+      Function = fun,
+      stringsAsFactors = FALSE
+    )
+  }

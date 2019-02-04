@@ -139,7 +139,7 @@ return(res)
 #' hkarz$LAI<- factor(hkarz$lai, 0:1, c("pos", "neg"))
 #' APA2(xtabs(~gruppe+LAI, hkarz), test=TRUE, type="fischer")
 Klassifikation.xtabs<- function(x,
-                                lvs = c("+", "-"),
+                                lvs = c("positiv", "negativ"),
                                 digits = 2,
                                # caption="Klassifikation",
                                # note="",

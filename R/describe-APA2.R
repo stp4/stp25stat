@@ -17,8 +17,27 @@ APA2 <- function(x,
 #' @export
 APA2.NULL <- function(x,
                       ...) {
-  Text("no input")
-  invisible(data.frame())
+ 
+  
+  res<- Info_Statistic(
+    c("catTest", "conTest", "Wilkox", "Kruskal",
+      "ANOVA",
+      "T Test"),
+    c("stats", "Hmisc", "stats", "stats",
+      "car",
+      "stats"),
+    c(
+      "chisq.test",
+      "spearman2",
+      "wilcox.test",
+      "kruskal.test",
+      "Anova, type = 3",
+      "t.test"
+    ), paste(methods("APA2"), collapse=", ")
+  )
+  
+  Output(res)
+  invisible( res)
 }
 
 #' @rdname APA2

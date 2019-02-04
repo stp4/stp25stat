@@ -97,8 +97,12 @@ APA_Correlation <-
       note = note
     )
     Output(res, output = output)
+    
     invisible(res)
   }
+
+
+
 
 
 
@@ -122,6 +126,10 @@ Hmisc_rcorr <- function(...,
                      caption="",
                      note="") {
   X <- prepare_data2(...)
+  
+  if( is.null(X$data) ) return(Info_Statistic("Correlation","Hmisc", "rcorr"))
+  
+  
   type <-  match.arg(type)
   condition <- X$condition.vars
   measure.vars <- X$measure.vars
@@ -278,7 +286,9 @@ Hmisc_rcorr <- function(...,
       ans <- cbind(ans[1], "M (SD)" = ans_mean, ans[2:ncol(ans)], stringsAsFactors=FALSE)
     }
   }
-  prepare_output(ans, caption=caption, note=paste(note,type), N=N)
+  prepare_output(ans, 
+                 caption=caption, 
+                 note=paste(note,type), N=N)
 }
 
 

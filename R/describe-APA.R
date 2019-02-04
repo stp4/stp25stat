@@ -24,8 +24,25 @@ APA <-   function(x,
 #' @export
 APA.NULL <- function(x,
                      ...) {
-  "no input"
- }
+    res<- Info_Statistic(
+      c("catTest", "conTest", "Wilkox", "Kruskal",
+        "ANOVA",
+        "T Test"),
+      c("stats", "Hmisc", "stats", "stats",
+        "car",
+        "stats"),
+      c(
+        "chisq.test",
+        "spearman2",
+        "wilcox.test",
+        "kruskal.test",
+        "Anova, type = 3",
+        "t.test"
+      ), paste(methods("APA"), collapse=", ")
+    )
+    
+"Tests siehe APA2"
+}
 
 #' @rdname APA
 #' @export
