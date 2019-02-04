@@ -572,6 +572,7 @@ extract_gof <- function(x,
   if (include.rmse) {
     param <- c(param, "RMSE")
     res <- cbind(res, RMSE(x)[2])
+    res <- cbind(res, , (x)[2])
   }
 
   if (include.loglik)
