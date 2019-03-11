@@ -365,7 +365,7 @@ kano_plot <- function(x,
       )
     }
 
-    print(Labels)
+ #   print(Labels)
     # color <- ifelse(data$Total.Strengt <60, 'gray40', 'black' )
     if (use.categorie)
       #das ist noch Falsch
