@@ -93,7 +93,7 @@ APA_Table_Anova(myfits, caption = "Anova", note = NULL,
 invisible data.frame und Output mit html/knit oder Text.
 }
 \description{
-Erstellt APA-Style Tabellen aus R-Objekten (lm, glm,lmer, usw).
+APA_Table: Erstellt APA-Style Tabellen aus R-Objekten (lm, glm,lmer, usw).
 
 \code{type="default"}  Formatierung als breite Tabelle
 

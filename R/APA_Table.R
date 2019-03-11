@@ -1,6 +1,8 @@
 #' Regressions Tabelle
 #'
-#' Erstellt APA-Style Tabellen aus R-Objekten (lm, glm,lmer, usw).
+#' APA_Table: Erstellt APA-Style Tabellen aus R-Objekten (lm, glm,lmer, usw).
+#' 
+#' 
 #' @rdname APA_Table
 #' @param ... Modelle
 #' @param caption,note,names,custom.model.names,rgroup rgroup:ype="long" long die Zwischenueberschrift  Beschriftung

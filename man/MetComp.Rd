@@ -3,6 +3,7 @@
 \name{MetComp}
 \alias{MetComp}
 \alias{MetComp_Kappa}
+\alias{APA2.Kappa}
 \alias{MetComp_BAP}
 \title{MetComp:  Uebereinstimmung und Praezision von Messwerten}
 \usage{
@@ -11,17 +12,24 @@ MetComp(..., include.ci = TRUE, ci.level = 0.95, caption = NULL,
 
 MetComp_Kappa(x, include.ci = TRUE, ci.level = 0.95)
 
+\method{APA2}{Kappa}(x, caption = "Kappa", note = "",
+  include.ci = TRUE, level = 0.95, ...)
+
 MetComp_BAP(..., X = NULL, include.ci = TRUE, ci.level = 0.95,
   digits = 2)
 }
 \arguments{
 \item{...}{an Formula_Data}
 
+\item{include.ci, level}{CI Ausgeben plus level}
+
 \item{x}{Formula Objekt}
 
 \item{X}{Aufbereitete Daten aus prepare_data2}
 
 \item{data}{Daten}
+
+\item{x}{Objekt Kappa aus VCD}
 }
 \value{
 Ein bland_altman-Objekt mit den Daten (data) und der Statistik (stat).
@@ -133,6 +141,17 @@ vcd::Kappa(xtabs(~A+B, Botulinum))
 
 
 
+
+
+require(vcd)
+data("SexualFun")
+K <- Kappa(SexualFun)
+APA2(K)
+# K
+# confint(K)
+# summary(K)
+# print(K, CI = TRUE)
+# agreementplot(SexualFun)
 
 
 
