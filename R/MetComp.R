@@ -166,8 +166,10 @@ MetComp <- function(...,
 #'
 MetComp_Kappa <- function(x,
                           include.ci = TRUE,
-                          ci.level = .95) {
-  x_kapa <- vcd::Kappa(x)
+                          ci.level = .95,
+                          x_kapa = vcd::Kappa(x)
+                          ) {
+  
   
   tab <-
     rbind(Unweighted = x_kapa$Unweighted,
@@ -184,7 +186,7 @@ MetComp_Kappa <- function(x,
   
   res <- data.frame(
     Source = c("Unweighted", "Weighted"),
-    Kapa = stp25rndr::Format2(tab[, 1]),
+    Kappa = stp25rndr::Format2(tab[, 1]),
     CI = stp25rndr::rndr_CI(ci),
     ASE = stp25rndr::Format2(tab[, 2]),
     
@@ -199,6 +201,36 @@ MetComp_Kappa <- function(x,
 }
 
 
+
+#' @rdname MetComp
+#' 
+#' @param x Objekt Kappa aus VCD
+#' @export
+#'
+#' @examples
+#' 
+#' require(vcd)
+#' data("SexualFun")
+#' K <- Kappa(SexualFun)
+#' APA2(K)
+#' # K
+#' # confint(K)
+#' # summary(K)
+#' # print(K, CI = TRUE)
+#' # agreementplot(SexualFun)
+#' 
+APA2.Kappa <- function(x, caption = "Kappa",
+                       note = "",
+                       include.ci = TRUE,
+                       ci.level = 0.95,
+                       ...)
+{
+
+  tab <- MetComp_Kappa(NULL, include.ci, ci.level, x_kapa = x)
+  res <- prepare_output(tab, caption = caption, note = note)
+  Output(res, ...)
+  invisible(tab)
+}
 
 
 
