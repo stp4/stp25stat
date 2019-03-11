@@ -292,7 +292,6 @@ calc_median <-
 #stp25output::get_my_options()$apa.style$mittelwert$mean.style
 
 
-
 #' @rdname berechne
 calc_mean <-  function(x,
                        digits = stp25rndr::default_stp25("digits", "mittelwert") ,
@@ -345,10 +344,6 @@ calc_mean <-  function(x,
 }
 
 
-
-
-
-
 #' @rdname berechne
 #' @export
 Mean2default <- function(x,
@@ -379,13 +374,7 @@ Mean2default <- function(x,
 }
 
 
-
-
-
-
-
 #' @rdname berechne
-
 Median2default <- function(x,
                            digits = 2,
                            n = length(x),
@@ -414,8 +403,6 @@ Median2default <- function(x,
 }
 
 
-
-
 #' @rdname berechne
 Multi2default <- function(x,
                           digits = 0,
@@ -442,7 +429,6 @@ Multi2default <- function(x,
 
   Prozent2default(x, digits, n)[1,]
 }
-
 
 
 #' @rdname berechne
@@ -536,7 +522,8 @@ CI <- function (x, ci = 0.95, na.rm=TRUE, ...) {
 
 #' @rdname berechne
 #' @export
-length2 <- function (x, na.rm=FALSE) {
+length2 <- function(x, 
+                     na.rm=FALSE) {
   if (na.rm) sum(!is.na(x))
   else       length(x)
 }
@@ -548,11 +535,15 @@ length2 <- function (x, na.rm=FALSE) {
 
 #' @rdname berechne
 #' @export
-Mean2 <- function(x, ...){UseMethod("Mean2")}
+Mean2 <- function(x, 
+                  ...){UseMethod("Mean2")}
+
 
 #' @rdname berechne
 #' @export
-Mean2.formula <-  function(x, data, ...) {
+Mean2.formula <-  function(x, 
+                           data, 
+                           ...) {
   if (length(x) == 2) {
     strg <- c(NULL)
     for (i in all.vars(x)) {
@@ -597,6 +588,7 @@ Median2 <- function(x, ...) {
   UseMethod("Median2")
 }
 
+
 #' @rdname berechne
 #' @export
 Median2.formula<-  function(x, data, ...){
@@ -613,6 +605,8 @@ Median2.formula<-  function(x, data, ...){
 
   strg
 }
+
+
 
 #' @rdname berechne
 #' @export
@@ -668,6 +662,7 @@ Median2.default<- function(x, digits = NULL,
   
 }
 
+
 #' @rdname berechne
 #' @export
 #' @examples
@@ -691,9 +686,6 @@ Meanci2<- function(x, digits=NULL, ...){
 
 }
 
-
-
-# Prozent -----------------------------------------------------------------
 
 
 #' @rdname berechne

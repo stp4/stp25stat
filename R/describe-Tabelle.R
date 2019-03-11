@@ -185,7 +185,7 @@ Tabelle.default <- function(...,
   else
   {
     if (is.null(formula)) {
-      calculate_tabelle2(
+    res <-  calculate_tabelle2(
         prepare_data2(...),
         type = type,
         # nur ein Type erlaubt
@@ -195,6 +195,10 @@ Tabelle.default <- function(...,
         digits = digits,
         measure.name = measure.name
       )
+    if(names(res)[1] == ".id")
+      names(res)[1] <- "Item"
+    res
+    
     }
     else {
       res <- calculate_tabelle2(
@@ -206,11 +210,15 @@ Tabelle.default <- function(...,
         digits = digits,
         measure.name = measure.name
       )
-      prepare_output(reshape2::dcast(res,
-                                     formula, function(x) {
-                                       paste(x, collapse = "|")
-                                     }),
-                     caption, note)
+      
+      res <- reshape2::dcast(res,
+                             formula, function(x) {
+                               paste(x, collapse = "|")
+                             })
+      if(names(res)[1] == ".id")
+        names(res)[1] <- "Item"
+   
+      prepare_output(res, caption, note)
     }
   }
 }
@@ -281,97 +289,7 @@ calculate_tabelle2 <- function(X,
 
 
 
-# Mittelwerte -------------------------------------------------------------
 
-#' @rdname Tabelle
-#' @export
-Tabelle.lmerModLmerTest <- function(x,
-                                    digits = 2,
-                                    fun = function(x) {
-                                      c(
-                                        n = length(x),
-                                        M = mean(x, na.rm = TRUE),
-                                        SD = sd(x, na.rm = TRUE)
-                                      )
-                                    },
-                                    ...) {
-  Tabelle.lm(x, digits, fun)
-}
-
-
-
-#' @rdname Tabelle
-#' @export
-Tabelle.glm <- function(x,
-                        digits = 2,
-                        fun = function(x) {
-                          c(n = length(x),
-                            M = mean(x, na.rm = TRUE))
-                        },
-                        ...)
-{
-  Tabelle.lm(x, digits, fun)
-}
-
-
-
-#' @rdname Tabelle
-#' @export
-Tabelle.lm <- function(x,
-                       digits = 2,
-                       fun = function(x) {
-                         c(
-                           n = length(x),
-                           M = mean(x, na.rm = TRUE),
-                           SD = sd(x, na.rm = TRUE)
-                         )
-                       },
-                       ...) {
-  res_list <- NULL
-  myeff <- effects::allEffects(x)
-
-  for (i in names(myeff)) {
-    info <- model_info(myeff[[i]])
-    ans <- aggregate_effect(myeff[[i]], info$y, info$x, fun)
-
-    AV <- ifelse(is.na(info$labels[info$y]),
-                 info$y, info$labels[info$y])
-
-    ans <-
-      data.frame(plyr::llply(ans, function(x)
-        if (is.numeric(x))
-          round(x, digits)
-        else
-          x),
-        stringsAsFactors = FALSE)
-
-    res_list[[i]] <- prepare_output(ans,
-                                    paste0("AV: ", AV), "",
-                                    info$N,  info$labels)
-  }
-  res_list
-}
-
-
-aggregate_effect <- function(eff,
-                             y,
-                             x,
-                             fun = function(x)
-                               length(x)) {
-  fm <- formula(paste(y, "~", paste(x, collapse = "+")))
-  df <- eff$data
-  #-- Faktoren fuer N berechnung vorbereiten
-  for (j in names(eff$variables)) {
-    if (!eff$variables[[j]]$is.factor)
-      df[, j] <- cut(df[, j], length(eff$variables[[j]]$levels))
-  }
-
-  res <- try(aggregate(fm, df, fun, drop = FALSE))
-  if (class(res) == "try-error")
-    data.frame(NULL)  #  wegen ncol im weiteren progammverlauf
-  else
-    do.call(data.frame, res)
-}
 
 
 
@@ -394,10 +312,35 @@ Describe2 <- function(...,
 
 #' @rdname Tabelle
 #' @export
-Describe2.data.frame<-function(...){
+Describe2.data.frame <- function(data,
+                                 ...,
+                                 by = NULL,
+                                 caption = "",
+                                 note = "",
+                                 stat = c("n", "mean", "sd", "min", "max"),
+                                 output = which_output(),
+                                 digits = 2) {
   
-  cat("\n Noch nicht implementiert!\n")
-  data.frame(NULL)
+  measure <-
+    sapply(lazyeval::lazy_dots(...), function(x)
+      as.character(x[1]))
+   cat("\n Noch nicht getestet!\n")
+  
+  Describe2.formula(
+    formula(paste("~",
+                  paste(
+                    measure, collapse = "+"
+                  ))),
+    data = data,
+    by = by,
+    caption = caption,
+    note = note,
+    stat = stat,
+    output = output,
+    digits = digits
+  )
+  
+ 
 }
 
 #' @rdname Tabelle

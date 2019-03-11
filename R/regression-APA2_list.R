@@ -281,7 +281,7 @@ APA2_list <-
       result <- NULL
     }
  
-    cat(" --> Output ", output)
+   # cat(" --> Output ", output)
     
     if (!is.logical(output)) {
       Output(result, output=output,
