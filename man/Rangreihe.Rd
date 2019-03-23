@@ -2,46 +2,48 @@
 % Please edit documentation in R/describe-rank.R
 \name{Rangreihe}
 \alias{Rangreihe}
-\alias{APA2.rangreihe}
 \alias{Rangreihe.formula}
 \alias{Rangreihe.default}
 \title{Rangreihe}
 \usage{
 Rangreihe(...)
 
-\method{APA2}{rangreihe}(x, caption = "", note = "",
-  output = which_output(), ...)
+\method{Rangreihe}{formula}(x, data = NULL, caption = "Rangreihe",
+  note = "Law of Categorical Judgement",
+  output = stp25output::which_output(), exclude = NA, subset,
+  na.action = na.pass, ...)
 
-\method{Rangreihe}{formula}(x, data = NULL, order = TRUE, digits = 2,
-  decreasing = TRUE, exclude = NA, subset, na.action = na.pass, ...)
-
-\method{Rangreihe}{default}(items, grouping = NULL, order = TRUE,
-  decreasing = TRUE, labels = NULL, RankByRow = if (is.factor(items[,
-  1]) | is.character(items[, 1])) FALSE else TRUE, N = if
-  (is.null(grouping)) nrow(items) else nrow(na.omit(grouping)), ...)
+\method{Rangreihe}{default}(items, caption = "Rangreihe",
+  note = "Law of Categorical Judgement",
+  output = stp25output::which_output(), include.percent = TRUE,
+  include.freq = TRUE, include.mean = TRUE, include.z = TRUE,
+  include.na = TRUE, groups = NULL, order = TRUE,
+  decreasing = TRUE, digits.mean = 2, input = NULL, ...)
 }
 \arguments{
 \item{...}{Weitere Argumente}
 
-\item{x}{Objekt Vector oder auch Formel}
+\item{x}{formula}
 
-\item{caption, note, output}{an Output}
+\item{data}{Data.frame Objekt}
 
-\item{data}{Objekt}
-
-\item{order, decreasing}{sortieren}
-
-\item{digits}{Nachkommastellen}
+\item{output}{an stp25output}
 
 \item{exclude, subset, na.action}{an Formula_Data}
 
-\item{items, grouping}{intern Rangreihe.default}
+\item{items}{data.frame}
 
-\item{labels}{intern Rangreihe.default}
+\item{include.percent, include.freq, include.mean, include.z, include.na}{was soll ausgewertet werden}
 
-\item{RankByRow}{Methode wie aufdroeseln}
+\item{groups}{gruppen}
 
-\item{N}{Rangreihe.default}
+\item{order, decreasing}{sortieren}
+
+\item{digits.mean}{digits}
+
+\item{input}{Format der Items c("ranking", "ordering"),}
+
+\item{order, decreasing}{sortierung}
 }
 \value{
 Vector
@@ -56,58 +58,81 @@ Dabei werden
 die kumulierten Haeufigkeiten in Normalverteilte z-Werte uebergefuehrt und aus diesen
 die Intervallskalierten Markmalsauspraegungen gebildet.
 
-Literatur: Bortz, J. & Doering, N. (2006). Forschungsmethoden und Evaluation fuer Human-und Sozialwissenschaftler (4. Auflage). Berlin: Springer. Seite 155
+Literatur: Bortz, J. & Doering, N. (2006). Forschungsmethoden und
+ Evaluation fuer Human-und Sozialwissenschaftler (4. Auflage). Berlin: Springer. Seite 155
 }
 \examples{
 
-#require(HH)
 
-n <- 2 * 3 * 4 * 1
+require(stpvers)
+library(PlackettLuce)
 
+nlv <- 5
+n <- 2 * 3 * nlv * 1
 set.seed(n)
-kaffee <- c(
-  "Cubanischer Arabica Filter",
-  "Cubanischer Arabica Kaltextrakt",
-  "Dallmayr Prodomo Kaltextrakt",
-  "Dallmayr Prodomo Filter"
-)
-
-
 
 DF <-
   data.frame(
     Geschlecht = gl(2, n / 2, labels = c("Maennlich", "Weiblich")),
     Alter = gl(4, n / 4,   labels = c("20-29", "30-39", "40-49", "50-59")),
-    Konsum = gl(3, n / 3,   labels = c("weniger als 3 T.", "3 bis 6 T.", "mehr als 6 T.")),
-    Kaffeeform = gl(3, n / 3, labels = c(
-      "Espresso", "Filterkaffee", "Milchkaffee"
-    )),
-    FavA = gl(4, n / 4,  labels = kaffee)[sample.int(n)],
-    FavB = gl(4, n / 4,  labels = kaffee)[sample.int(n)],
-    FavC = gl(4, n / 4,  labels = kaffee)[sample.int(n)],
-    FavD = gl(4, n / 4,  labels = kaffee)[sample.int(n)]
+    Landwirtschaft = gl(2, n / 2, labels = c("konventionell", "biologisch"))
   )
 
+Attribute <-
+  as.data.frame(t(apply(matrix(NA, ncol = n, nrow = 5), 2,
+                        function(x)
+                          sample.int(5))))
 
-#some(DF)
-# Beispieldaten.Borz <-
-#   matrix(c(
-#      2,8,10,13,17,
-#      5,10,15,18,2,
-#      10,12,20,5,3,
-#       15,20,10,3,2,
-#       22,18,7,2,1)
-#            , nrow = 5, ncol=5, byrow=TRUE,
-#            dimnames = list(c("A", "B", "C", "D", "E"),1:5))
-ans <- Rangreihe(~ FavA + FavB + FavC + FavD, DF)
-APA2(ans, caption = "Alle")
+Attribute[1, ] <- c(5, 1, 4, 2, 3)
+Attribute[2, ] <- c(5, 1, 4, 2, 3)
+Attribute[3, ] <- c(5, 2, 4, 3, 1)
+Attribute[4, ] <- c(5, 1, 4, 3, 2)
+Attribute[5, ] <- c(5, 1, 4, 3, 2)
 
-ans <-
-  Rangreihe(FavA + FavB + FavC + FavD ~ Geschlecht + Kaffeeform, DF)
-APA2(ans, caption = "Alle")
+Attribute[21, ] <- c(1, 2, 5, 4, 3)
+Attribute[22, ] <- c(1, 4, 5, 3, 2)
+Attribute[23, ] <- c(2, 5, 1, 4, 3)
+Attribute[24, ] <- c(1, 4, 2, 5, 3)
+Attribute[25, ] <- c(1, 4, 3, 5, 2)
+
+attribute  <- c("Verfuegbarkeit",
+                "Vielfalt",
+                "Qualitaet",
+                "Geschmack",
+                "Preis")
+
+Attribute<- dapply2(Attribute, function(x) factor(x, 1:5, attribute))
+
+DF <- cbind(DF, Attribute)
+
+head(DF)
+
+res <-
+  Rangreihe( ~ V1+V2+V3+V4+V5,
+             DF, include.percent=FALSE, order=FALSE, include.na=FALSE,
+             caption="Produkte aus konventioneller und biologischer  Landwirtschaft")
+
+res$input
+names(res)
+x<- res$res
 
 
-#-- DF1 und DF2 sind identisc
+
+
+
+R <- as.rankings(res$items, res$input)
+
+mod <- PlackettLuce( R )
+coef(mod)
+
+
+summary(mod)
+x$pc <-  round(coef(mod, log = FALSE) ,2)
+x$log.pc <- round(coef(mod, log = TRUE) ,2)
+x[order(x$pc,decreasing=TRUE),] 
+
+
+
 DF1 <-  data.frame(
   A = c(1, 1, 1, 2, 3, 1),
   B = c(2, 2, 2, 3, 2, 3),
@@ -115,15 +140,84 @@ DF1 <-  data.frame(
   D = c(NA, NA, NA, NA, NA, 2)
 )
 DF2 <-   data.frame(
-  R1 = factor(Hmisc::Cs(A, A, A, C, C, A)),
-  R2 = factor(Hmisc::Cs(B, B, B, A, B, D)),
-  R3 = factor(Hmisc::Cs(C, C, C, B, A, B))
+  R1 = factor(c("A", "A", "A", "C", "C", "A"),   c("A", "B", "C", "D")),
+  R2 = factor(c("B", "B", "B", "A", "B", "D"),   c("A", "B", "C", "D")),
+  R3 = factor(c("C", "C", "C", "B", "A", "B"),   c("A", "B", "C", "D"))
 )
-Rangreihe(DF1)
-Rangreihe(~ R1 + R2 + R3, DF2)
-#windows(6,3)
-#dotplot( reorder(Items, Skalenwert)~ Skalenwert|"Kaffeeform", ans$result, groups=Kaffeeform , xlab="",
-#        xlim=range( ans$result$Skalenwert)*1.10 , auto.key=list(), cex=1)
-#         SaveData("Kaffeeform")
 
+
+Rangreihe(DF1)$mean
+Rangreihe(DF2)$mean
+
+dat_bortz<-
+  as.table(matrix(c(
+    2,8,10,13,17,
+    5,10,15,18,2,
+    10,12,20,5,3,
+    15,20,10,3,2,
+    22,18,7,2,1)
+    , nrow = 5, ncol=5, byrow=TRUE,
+    dimnames = list(c("A", "B", "C", "D", "E"),1:5)))  
+
+Rangreihe(dat_bortz)
+
+
+
+# dat_table <-
+#   as.table(matrix(c(
+#     50,0,0,0,0,
+#     0,50,0,0,0,
+#     0,0,50,0,0,
+#     0,0,0,50,0,
+#     0,0,0,0,50
+#      )
+#     , nrow = 5, ncol=5, byrow=TRUE,
+#     dimnames = list(c("A", "B", "C", "D", "E"),1:5)))
+#  # Calc_Rank(dat_table)
+
+
+
+n <- 2 * 3 * 4 * 1
+
+set.seed(n)
+kaffee <- c("Guatemala", "Vietnam", "Honduras", "Äthiopien")
+sex<- c("male", "female")
+age<- c("20-29", "30-39", "40-49", "50-59")
+kaffe<- c("Espresso", "Filterkaffee", "Milchkaffee")
+
+DF <-
+  data.frame(
+    sex = factor("male",sex),
+    Alter = factor("20-29",age ),
+    Kaffeeform = factor("Espresso", kaffe),
+    R1 = factor(kaffee[1], kaffee),
+    R2 = factor(kaffee[2], kaffee),
+    R3 = factor(kaffee[3], kaffee),
+    R4 = factor(kaffee[4], kaffee)
+  )
+
+DF<- rbind(DF,DF,DF,DF,DF,DF,DF,DF,DF,DF,DF,DF,DF,DF,DF,DF,DF)
+
+for(i in 1:n){
+  DF<- rbind(DF,
+             c(sample(sex)[1],
+               sample(age)[1],
+               sample(kaffe)[1],
+               sample(kaffee)
+             ))
+}
+
+x <- DF[4:7]
+Rangreihe(x, include.percent=FALSE, groups=DF$sex)
+x<-Rangreihe(R1 + R2 +R3 ~sex, DF, include.percent=FALSE, output=FALSE)
+
+
+names( x)
+x$mean
+
+#' 
+#lattice::dotplot( reorder(Items, mean)~ mean|"Kaffee", 
+                  x$mean, groups=group , xlab="",
+#                  xlim=range(x$mean$mean)*1.10 , auto.key=list(), cex=1)
+ 
 }

@@ -526,34 +526,91 @@ Likert-Plots
 Rangordnungen von Objekten können durch eine Transformation der Rangreihen in  Intervallskalierte Merkmale überführt werden. Die Grundidee dieser Methode geht auf Thurstone (1927) nach dem "Law of Categorical Judgement" zurück. Dabei werden die kumulierten Häufigkeiten in Normalverteilte z-Werte übergeführt und aus diesen die Intervallskalierten Merkmalsauspraegungen gebildet [@Bortz2006] Seite 155.
 
 ```{r rank-data, include=FALSE}
-DF <-structure(list(
-        Geschlecht = structure(c(1L, 2L, 2L, 1L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 1L, 1L, 1L, 1L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 2L, 1L, 2L),
-                               .Label = c("Maennlich", "Weiblich"), class = "factor"),
-        Alter = structure(c(2L, 4L, 2L, 4L, 2L, 2L, 2L, 3L, 3L, 2L, 1L, 1L, 3L, 4L, 4L, 4L, 2L, 1L, 2L, 1L, 4L, 4L, 3L, 4L, 2L, 2L, 1L, 4L, 4L, 3L, 3L, 3L, 3L, 2L, 3L, 4L, 3L, 3L, 1L, 3L, 1L, 1L, 2L, 1L, 1L, 4L, 3L, 1L, 4L, 2L, 2L, 1L, 3L, 3L, 2L, 3L, 4L, 4L, 1L, 2L, 3L, 2L, 1L, 2L, 1L, 2L, 3L),
-                          .Label = c("20 - 29", "30 - 39", "40 - 49", "50 - 59"), class = "factor"),
-        Konsum = structure(c(1L, 1L, 1L, 2L, 1L, 1L, 1L, 2L, 1L, 1L, 2L, 1L, 2L, 1L, 2L, 2L, 2L, 1L, 1L, 3L, 1L, 1L, 1L, 2L, 3L, 2L, 1L, 2L, 2L, 1L, 2L, 2L, 1L, 2L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 1L, 2L, 2L, 1L, 1L, 1L, 2L, 2L, 1L, 1L, 2L, 1L, 1L, 2L, 3L, 1L, 2L, 2L, 3L, 2L),
-                                .Label = c("weniger als 3 T.", "3 bis 6 T.", "mehr als 6 T."), class = "factor"),
-        Kaffeeform = structure(c(3L, 1L, 3L, 2L, 3L, 3L, 3L, 1L, 3L, 1L, 3L, 3L, 1L, 2L, 3L, 3L, 3L, 3L, 1L, 3L, 3L, 2L, 2L, 3L, 3L, 3L, 3L, 2L, 3L, 1L, 2L, 2L, 2L, 1L, 3L, 3L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 2L, 3L, 3L, 3L, 2L, 3L, 3L, 2L, 3L, 3L, 3L, 3L, 3L, 2L, 3L, 3L, 2L, 1L, 3L, 3L, 3L, 2L, 2L),
-                               .Label = c("Espresso", "Filterkaffee", "Milchkaffee"), class = "factor"),
-        FavA = structure(c(3L, 1L, 2L, 1L, 3L, 3L, 4L, 1L, 2L, 2L, 1L, 1L, 1L, 4L, 3L, 4L, 3L, 1L, 2L, 2L, 2L, 2L, 1L, 1L, 3L, 4L, 1L, 1L, 4L, 4L, 1L, 1L, 1L, 2L, 1L, 2L, 4L, 3L, 2L, 4L, 1L, 1L, 2L, 2L, 2L, 4L, 2L, 2L, 2L, 1L, 3L, 2L, 4L, 2L, 4L, 1L, 4L, 4L, 2L, 1L, 1L, 4L, 2L, 1L, 3L, 2L, 3L),
-                         .Label = c("Cubanischer Arabica Filter", "Cubanischer Arabica Kaltextrakt", "Dallmayr Prodomo Kaltextrakt", "Dallmayr Prodomo Filter"), class = "factor"),
-        FavB = structure(c(4L, 2L, 1L, 3L, 2L, 1L, 3L, 2L, 1L, 1L, 4L, 4L, 2L, 2L, 2L, 2L, 4L, 3L, 1L, 1L, 1L, 1L, 2L, 2L, 2L, 2L, 2L, 4L, 2L, 2L, 3L, 4L, 4L, 1L, 3L, 1L, 2L, 4L, 4L, 1L, 3L, 3L, 1L, 3L, 1L, 1L, 1L, 3L, 1L, 2L, 2L, 1L, 3L, 3L, 3L, 2L, 2L, 3L, 3L, 2L, 4L, 1L, 1L, 2L, 2L, 1L, 2L),
-                         .Label = c("Cubanischer Arabica Filter", "Cubanischer Arabica Kaltextrakt", "Dallmayr Prodomo Kaltextrakt", "Dallmayr Prodomo Filter"), class = "factor"),
-        FavC = structure(c(2L, 3L, 3L, 4L, 1L, 2L, 1L, 4L, 4L, 3L, 2L, 3L, 3L, 3L, 4L, 3L, 2L, 2L, 3L, 3L, 3L, 3L, 3L, 3L, 4L, 3L, 3L, 3L, 3L, 1L, 4L, 3L, 2L, 3L, 2L, 3L, 1L, 2L, 3L, 2L, 4L, 4L, 4L, 4L, 3L, 2L, 3L, 1L, 3L, 4L, 4L, 3L, 2L, 1L, 1L, 3L, 3L, 2L, 1L, 4L, 2L, 3L, 3L, 4L, 1L, 3L, 1L),
-                         .Label = c("Cubanischer Arabica Filter", "Cubanischer Arabica Kaltextrakt", "Dallmayr Prodomo Kaltextrakt", "Dallmayr Prodomo Filter"), class = "factor"),
-        FavD = structure(c(1L, 4L, 4L, 2L, 4L, 4L, 2L, 3L, 3L, 4L, 3L, 2L, 4L, 1L, 1L, 1L, 1L, 4L, 4L, 4L, 4L, 4L, 4L, 4L, 1L, 1L, 4L, 2L, 1L, 3L, 2L, 2L, 3L, 4L, 4L, 4L, 3L, 1L, 1L, 3L, 2L, 2L, 3L, 1L, 4L, 3L, 4L, 4L, 4L, 3L, 1L, 4L, 1L, 4L, 2L, 4L, 1L, 1L, 4L, 3L, 3L, 2L, 4L, 3L, 4L, 4L, 4L),
-                         .Label = c("Cubanischer Arabica Filter", "Cubanischer Arabica Kaltextrakt", "Dallmayr Prodomo Kaltextrakt", "Dallmayr Prodomo Filter"), class = "factor")),
-        .Names = c("Geschlecht", "Alter", "Konsum", "Kaffeeform", "FavA", "FavB", "FavC", "FavD"), row.names = c(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L, 9L, 10L, 12L, 13L, 14L, 15L, 16L, 17L, 18L, 19L, 20L, 21L, 22L, 23L, 24L, 25L, 26L, 27L, 28L, 29L, 30L, 31L, 32L, 33L, 34L, 35L, 36L, 37L, 38L, 39L, 40L, 41L, 42L, 43L, 44L, 45L, 46L, 47L, 48L, 49L, 50L, 51L, 52L, 53L, 54L, 55L, 56L, 57L, 58L, 59L, 60L, 61L, 62L, 63L, 64L, 65L, 66L, 67L, 68L), class = "data.frame")
 
+library(PlackettLuce)
+
+nlv <- 5
+n <- 2 * 3 * nlv * 1
+set.seed(n)
+
+DF <-
+  data.frame(
+    Geschlecht = gl(2, n / 2, labels = c("Maennlich", "Weiblich")),
+    Alter = gl(4, n / 4,   labels = c("20-29", "30-39", "40-49", "50-59")),
+    Landwirtschaft = gl(2, n / 2, labels = c("konventionell", "biologisch"))
+  )
+
+Attribute <-
+  as.data.frame(t(apply(matrix(NA, ncol = n, nrow = 5), 2,
+                        function(x)
+                          sample.int(5))))
+
+Attribute[1, ] <- c(5, 1, 4, 2, 3)
+Attribute[2, ] <- c(5, 1, 4, 2, 3)
+Attribute[3, ] <- c(5, 2, 4, 3, 1)
+Attribute[4, ] <- c(5, 1, 4, 3, 2)
+Attribute[5, ] <- c(5, 1, 4, 3, 2)
+
+Attribute[21, ] <- c(1, 2, 5, 4, 3)
+Attribute[22, ] <- c(1, 4, 5, 3, 2)
+Attribute[23, ] <- c(2, 5, 1, 4, 3)
+Attribute[24, ] <- c(1, 4, 2, 5, 3)
+Attribute[25, ] <- c(1, 4, 3, 5, 2)
+
+attribute  <- c("Verfuegbarkeit",
+                "Vielfalt",
+                "Qualitaet",
+                "Geschmack",
+                "Preis")
+
+Attribute<- dapply2(Attribute, function(x) factor(x, 1:5, attribute))
+
+DF <- cbind(DF, Attribute)
+
+```
+
+```{r rank-apa, echo=TRUE, results='asis', warning=FALSE}
+ res <-
+  Rangreihe( ~ V1+V2+V3+V4+V5,
+             DF, 
+             include.percent=FALSE, 
+             order=FALSE, 
+             include.na=FALSE,
+             caption="Produkte aus konventioneller und biologischer  Landwirtschaft")
+
+
+```
+
+
+```{r rank-pcl}
  
+names(res)
+ 
+
+R <- as.rankings(res$items)
+
+mod <- PlackettLuce( R )
+coef(mod)
+
+summary(mod)
+
+
+summary(mod, ref = "Verfuegbarkeit")
+round(coef(mod, log = TRUE, ref = "Verfuegbarkeit") ,2)
+round(coef(mod, log = TRUE ) ,2)
+
+
+res$res$pc <-  round(coef(mod, log = FALSE) ,2)
+res$res$log.pc <- round(coef(mod, log = TRUE) ,2)
+res$res[order(res$res$pc,decreasing=TRUE),] 
+
+
+
+
+
+
+
 ```
-
-```{rrank-apa, results='asis', warning=FALSE}
-ans <- Rangreihe(~FavA+FavB+FavC+FavD, DF )
-APA2(ans, caption="Alle") 
-```
-
-
  
 
 
