@@ -6,22 +6,13 @@
 \usage{
 Info_Statistic(methode = "describe", library = "base",
   fun = "summary", my_methodes = "")
-
-Info_Statistic(methode = "describe", library = "base",
-  fun = "summary", my_methodes = "")
 }
 \arguments{
-\item{methode, library, fun}{Text}
-
 \item{methode, library, fun}{Text}
 }
 \value{
 data.frame()
-
-data.frame()
 }
 \description{
-Information uere die verwendeten Methoden
-
 Information uere die verwendeten Methoden
 }
