@@ -92,6 +92,8 @@
 MetComp <- function(...,
                     include.ci = TRUE,
                     ci.level = .95,
+                    include.weighted=TRUE,
+                    include.unweighted =TRUE,
                     caption = NULL,
                     note = "",
                     digits = 2,
@@ -122,7 +124,12 @@ MetComp <- function(...,
     
     xtb <- xtabs(X$formula, X$data[X$measure.vars])
     res <-
-      MetComp_Kappa(xtb, include.ci = include.ci, ci.level = ci.level)
+      MetComp_Kappa(xtb, 
+                    include.ci = include.ci, 
+                    ci.level = ci.level,
+                    include.weighted=include.weighted,
+                    include.unweighted =include.unweighted
+                    )
     
     stp25output::Output(res,
                         caption = caption,
@@ -141,6 +148,8 @@ MetComp <- function(...,
 
 
 #' @rdname MetComp
+#' @param weights an vcd::Kappa   c("Equal-Spacing", "Fleiss-Cohen")
+#' @param include.weighted,include.unweighted  kappa statistic
 #' @export
 #' @examples
 #'
@@ -167,7 +176,11 @@ MetComp <- function(...,
 MetComp_Kappa <- function(x,
                           include.ci = TRUE,
                           ci.level = .95,
-                          x_kapa = vcd::Kappa(x)
+                          include.weighted=TRUE,
+                          include.unweighted=TRUE,
+                          weights = "Equal-Spacing",# c("Equal-Spacing", "Fleiss-Cohen")
+                            
+                          x_kapa = vcd::Kappa(x, weights=weights)
                           ) {
   
   
@@ -194,10 +207,16 @@ MetComp_Kappa <- function(x,
     p.value = stp25rndr::rndr_P(p, FALSE),
     stringsAsFactors = FALSE
   )
-  if (all(dim(x) == c(2, 2)))
-    res[1, ]
-  else
-    res
+  
+  
+  
+  if (all(dim(x) == c(2, 2))) res[1,]
+  else if (include.weighted & include.unweighted ) res
+  else if(include.unweighted) res[1,]
+  else if(include.weighted)   res[2,]
+  else  res
+  
+  
 }
 
 
@@ -223,10 +242,15 @@ APA2.Kappa <- function(x, caption = "Kappa",
                        note = "",
                        include.ci = TRUE,
                        ci.level = 0.95,
+                       include.weighted=TRUE,
+                       include.unweighted=TRUE,
                        ...)
 {
 
-  tab <- MetComp_Kappa(NULL, include.ci, ci.level, x_kapa = x)
+  tab <- MetComp_Kappa(NULL, include.ci, ci.level, 
+                       include.weighted=include.weighted,
+                       include.unweighted=include.unweighted,
+                       x_kapa = x)
   res <- prepare_output(tab, caption = caption, note = note)
   Output(res, ...)
   invisible(tab)
