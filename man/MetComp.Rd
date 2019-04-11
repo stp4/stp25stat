@@ -7,13 +7,17 @@
 \alias{MetComp_BAP}
 \title{MetComp:  Uebereinstimmung und Praezision von Messwerten}
 \usage{
-MetComp(..., include.ci = TRUE, ci.level = 0.95, caption = NULL,
+MetComp(..., include.ci = TRUE, ci.level = 0.95,
+  include.weighted = TRUE, include.unweighted = TRUE, caption = NULL,
   note = "", digits = 2, output = stp25output::which_output())
 
-MetComp_Kappa(x, include.ci = TRUE, ci.level = 0.95)
+MetComp_Kappa(x, include.ci = TRUE, ci.level = 0.95,
+  include.weighted = TRUE, include.unweighted = TRUE,
+  weights = "Equal-Spacing", x_kapa = vcd::Kappa(x, weights = weights))
 
 \method{APA2}{Kappa}(x, caption = "Kappa", note = "",
-  include.ci = TRUE, level = 0.95, ...)
+  include.ci = TRUE, ci.level = 0.95, include.weighted = TRUE,
+  include.unweighted = TRUE, ...)
 
 MetComp_BAP(..., X = NULL, include.ci = TRUE, ci.level = 0.95,
   digits = 2)
@@ -21,9 +25,11 @@ MetComp_BAP(..., X = NULL, include.ci = TRUE, ci.level = 0.95,
 \arguments{
 \item{...}{an Formula_Data}
 
-\item{include.ci, level}{CI Ausgeben plus level}
+\item{include.weighted, include.unweighted}{kappa statistic}
 
 \item{x}{Formula Objekt}
+
+\item{weights}{an vcd::Kappa   c("Equal-Spacing", "Fleiss-Cohen")}
 
 \item{X}{Aufbereitete Daten aus prepare_data2}
 

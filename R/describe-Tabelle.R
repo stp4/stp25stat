@@ -48,6 +48,8 @@ Tabelle <- function(...,
 #' @export
 #' @examples
 #'
+#'  get_my_options()$apa.style$mittelwert$include_name
+#'
 #' varana2 %>% Tabelle2(Merkfgk, by=~ Zeit)
 #'
 Tabelle2 <- function(...,
