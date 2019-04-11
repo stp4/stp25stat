@@ -71,28 +71,64 @@
 #' # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 #'
 #'
+#'
+#'
+
 APA2.manova <-
   function(x,
            test = "Wilks",
            caption = "MANOVA",
            note = "",
            type = c("anova", "manova"),
+           include.eta = TRUE,
+           #   include.summary=TRUE,
            output = which_output()) {
     aov_result <- NULL
     res <- summary.aov(x)
+    
     for (i in names(res)) {
       rs <- res[[i]]
+      
+      resp_name <- data.frame(
+        Source = i,
+        F = NA,
+        df = NA,
+        p.value = NA,
+        stringsAsFactors = FALSE
+      )
       rs <- cbind(Source = gsub(".*\\$", "", rownames(rs)),
-                  rs[, c("F value", "Df", "Pr(>F)")])
+                  rs[, c("F value", "Df", "Pr(>F)")],
+                  stringsAsFactors = FALSE)
+      names(rs) <- c("Source", "F", "df", "p.value")
       
-      
+      if (include.eta) {
+        # Eta-quadrat Ueberprueft und soweit ist es korrekt
+        ss <- res[[i]][, 2]
+        ss1 <- ss[-length(ss)]
+        sst <- ss[length(ss)]
+        eta_ss <- ss1 / sst
+        #   cat("\neta^2=\n")
+        #
+        #   print(ss)
+        #   print(eta_ss)
+        # df2<- rs$df[nrow(rs)]
+        # dfF<- rs$df*rs$F
+        # eta<- (dfF)/(dfF+ df2)
+        rs <- cbind(rs[1:3], part.eta2 =  c(eta_ss, NA),
+                    rs[4])
+        resp_name <- cbind(resp_name[1:3],
+                           part.eta2 = NA,
+                           resp_name[4])
+        
+      }
+      rs <- rbind(resp_name, rs)
       
       if (is.null(aov_result))
         aov_result <- rs
       else
         aov_result <- rbind(aov_result, rs)
     }
-    names(aov_result)[length(names(aov_result))] <-   "p.value"
+    # names(aov_result)[length(names(aov_result))] <-   "p.value"
     aov_result <- prepare_output(fix_format(aov_result),
                                  caption = caption,
                                  note = note)
@@ -103,11 +139,20 @@ APA2.manova <-
         n.rgroup = rep(nrow(res[[1]]), (length(res) - 1)),
         output = output
       )
-    
+    #
     maov_result <- summary(x, test = test)
     maov_result <- fix_to_data_frame(maov_result$stats)
+    
     maov_result$Source <- gsub(".*\\$", "", maov_result$Source)
     
+    if (include.eta) {
+      ## OK und Korrekt
+      eta <-  heplots::etasq(x, test = test)
+      n <- ncol(maov_result)
+      maov_result <-
+        cbind(maov_result[1:(n - 1)],  part.eta2 = c(eta[, 1], NA),  maov_result[n])
+      
+    }
     maov_result <- prepare_output(fix_format(maov_result),
                                   caption = paste(test, "Test"))
     names(maov_result)[length(names(maov_result))] <-   "p.value"
@@ -118,6 +163,56 @@ APA2.manova <-
     invisible(list(manova = aov_result, test = maov_result))
   }
 
+
+
+
+# APA2.manova <-
+#   function(x,
+#            test = "Wilks",
+#            caption = "MANOVA",
+#            note = "",
+#            type = c("anova", "manova"),
+#            output = which_output()) {
+#     aov_result <- NULL
+#     res <- summary.aov(x)
+#     for (i in names(res)) {
+#       rs <- res[[i]]
+#       rs <- cbind(Source = gsub(".*\\$", "", rownames(rs)),
+#                   rs[, c("F value", "Df", "Pr(>F)")])
+#       
+#       
+#       
+#       if (is.null(aov_result))
+#         aov_result <- rs
+#       else
+#         aov_result <- rbind(aov_result, rs)
+#     }
+#     names(aov_result)[length(names(aov_result))] <-   "p.value"
+#     aov_result <- prepare_output(fix_format(aov_result),
+#                                  caption = caption,
+#                                  note = note)
+#     if ("anova"  %in%  type)
+#       Output(
+#         aov_result,
+#         rgroup = names(res),
+#         n.rgroup = rep(nrow(res[[1]]), (length(res) - 1)),
+#         output = output
+#       )
+#     
+#     maov_result <- summary(x, test = test)
+#     maov_result <- fix_to_data_frame(maov_result$stats)
+#     maov_result$Source <- gsub(".*\\$", "", maov_result$Source)
+#     
+#     maov_result <- prepare_output(fix_format(maov_result),
+#                                   caption = paste(test, "Test"))
+#     names(maov_result)[length(names(maov_result))] <-   "p.value"
+#     if ("manova" %in% type)
+#       Output(maov_result,
+#              output = output)
+#     
+#     invisible(list(manova = aov_result, test = maov_result))
+#   }
+# 
 
 
 
