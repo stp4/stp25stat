@@ -404,22 +404,22 @@ errate_statistik3 <-
          )
   {
 
-    mySep<- ' '
-    mySep2  <- '  '
-      if(which_output() == "hlml"){
-        mySep <- '&nbsp;'
-        mySep2 <- '&nbsp;&nbsp;'
-        }
-    Emty_res <- function(...) { data.frame(lev="", n="", m="", stringsAsFactors = FALSE)}
-
+    mySep<-  stp25rndr::symbol_nbsp()
+    mySep2  <-  paste0(mySep,mySep)
+ 
+    
+    
+    Emty_res <- function(...) { data.frame(lev="", 
+                                           n="", 
+                                           m="", 
+                                           stringsAsFactors = FALSE)}
 
     Mittelwert_Einzel <- function(i, x) {
 
-   #   x_NA <- x
-   #   N    <- length(x)
       x    <- na.omit(x)
       n    <- length(x)
-      rr <- NULL #Result
+      # Result
+      rr <- NULL 
 
       if(n==0 &  X$measure[i]=="logical")  X$measure[i] <- "header"
 
@@ -436,8 +436,6 @@ errate_statistik3 <-
         header =  Emty_res(),
         Emty_res()
       )
-    #  cat("\nin Mittelwert_Einzel")
-    #  print(res)
 
       if (X$measure[i] == "factor") {
         x0 <- data.frame(
