@@ -39,8 +39,8 @@ test_that("auto sig test", {
   expect_equal(
     res[[1]]$statistics,
     c(
-      "F<sub>(1, 52)</sub>=1.33, p=.253",
-      "X2<sub>(2)</sub>=0.00, p=1.000",
+      "F(1, 52)=1.33, p=.253",
+      "X2(2)=0.00, p=1.000",
       "",
       "",
       ""
@@ -70,7 +70,7 @@ test_that("eigene sig test", {
       APA = TRUE,
       test = "t.test"
     )[[1]]$statistics,
-    "T<sub>(42)</sub>=1.63, p=.110"
+    "T(42)=1.63, p=.110"
   )
 
 
@@ -82,7 +82,7 @@ test_that("eigene sig test", {
       APA = TRUE,
       test = "anova"
     )[[1]]$statistics,
-    "F<sub>(1, 52)</sub>=2.67, p=.108"
+    "F(1, 52)=2.67, p=.108"
   )
 
   # https://stats.stackexchange.com/questions/231738/clarification-on-mann-whitney-wilcoxon-test
@@ -128,7 +128,7 @@ test_that("eigene sig test", {
       APA = TRUE,
       test = "kruskal.test"
     )[[1]]$statistics,
-    "H<sub>(1)</sub>=1.33, p=.250"
+    "H(1)=1.33, p=.250"
   )
 
 
@@ -142,7 +142,7 @@ test_that("eigene sig test", {
       APA = TRUE,
       test = "h.test"
     )[[1]]$statistics,
-    "H<sub>(1)</sub>=1.33, p=.250"
+    "H(1)=1.33, p=.250"
   )
 
 
@@ -169,7 +169,7 @@ test_that("eigene sig test", {
       APA = TRUE,
       test = "Hmisc"
     )[[1]]$statistics,
-    "F<sub>(1, 52)</sub>=1.33, p=.253"
+    "F(1, 52)=1.33, p=.253"
   )
 
 
@@ -184,7 +184,7 @@ test_that("eigene sig test", {
   #     APA = TRUE,
   #     test = "SPSS"
   #   )[[1]]$statistics,
-  #   "H<sub>(1)</sub>=1.33, p=.250"
+  #   "H(1)=1.33, p=.250"
   # )
   #
   #

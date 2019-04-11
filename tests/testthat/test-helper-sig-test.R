@@ -3,7 +3,7 @@ context("test-helper-sig-test.R")
 test_that("catTest chi-test", {
   expect_equal(
     stp25stat:::catTest(~ tension + wool, warpbreaks),
-    "X2<sub>(2)</sub>=0.00, p=1.000"
+    "X2(2)=0.00, p=1.000"
     
   )
   
@@ -11,7 +11,7 @@ test_that("catTest chi-test", {
     stp25stat:::conTest(breaks ~ wool,
                         warpbreaks,
                         "h.test") ,
-    "H<sub>(1)</sub>=1.33, p=.250"
+    "H(1)=1.33, p=.250"
   )
   
   

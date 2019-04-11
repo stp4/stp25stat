@@ -72,10 +72,10 @@ test_that("APA2 und Tabelle und APA2_multiresponse  works", {
   expect_equal(
     ans4[[1]][, 5],
     c(
-      "F<sub>(1, 18)</sub>=0.18, p=.673" ,
-      "F<sub>(1, 18)</sub>=Inf, p<.001",
-      "F<sub>(1, 18)</sub>=1.98, p=.177" ,
-      "F<sub>(1, 18)</sub>=0.00, p=1.000"
+      "F(1, 18)=0.18, p=.673" ,
+      "F(1, 18)=Inf, p<.001",
+      "F(1, 18)=1.98, p=.177" ,
+      "F(1, 18)=0.00, p=1.000"
     )
   )
 

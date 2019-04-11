@@ -144,7 +144,7 @@ test_that("default Type fun = eigene Funktion", {
         round(c(mean = mean(x), sd = sd(x)))
     )
   ),
-  c(".id", "wool", "tension", "mean", "sd"))
+  c("Item", "wool", "tension", "mean", "sd"))
 
 
 })
