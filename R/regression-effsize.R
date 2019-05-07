@@ -16,6 +16,34 @@ APA_Effsize<- function(x, ...){
   else etaSquared2(x, ...)
 }
 
+#' @rdname APA2
+#' @export
+#' 
+APA2.visreg <-
+  function(x,
+           caption = x$meta$y,
+           note = "",
+           include.ci = TRUE,
+           digits = 2,
+           ...) {
+    res <- x$fit
+    nc <- ncol(res)
+    nc
+    ci <- res[, (nc - 1):nc]
+    res <- res[, -c((nc - 1):nc)]
+    res[, nc - 2] <-  stp25rndr::rndr2(res[, nc - 2],  digits = digits)
+    names(res)[nc - 2] <- "fit"
+    if (include.ci)
+      res$ci <- stp25rndr::rndr_CI(ci,  digits = digits)
+    
+    
+    Output(prepare_output(
+      res[-which(names(res) == x$meta$y)],
+      caption = caption,
+      note = note,
+      N = nrow(x$res)
+    ))
+  }
 
 #' @rdname APA2
 #' @export
@@ -70,11 +98,13 @@ APA2.efflist <- function(x,
   res <- fix_eff_to_df(x, caption =  caption,
                        note = note)
   for (i in names(res)) {
+    
+   # cat("\n", i ,"\n")
     spalte = which(names(res[[i]]) %in% type)
 
 
     Output(fix_format(res[[i]][-spalte], digits = digits),
-           caption=caption, output=output)
+           caption=paste(caption, i), output=output)
   }
   invisible(res)
 }

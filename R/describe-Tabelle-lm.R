@@ -2,7 +2,7 @@
 
 #' @rdname Tabelle
 #' @export
-Tabelle.lmerModLmerTest <- function(x,
+Tabelle.lmerModLmerTest <- function(x,caption=NULL, note="",
                                     digits = 2,
                                     fun = function(x) {
                                       c(
@@ -12,14 +12,14 @@ Tabelle.lmerModLmerTest <- function(x,
                                       )
                                     },
                                     ...) {
-  Tabelle.lm(x, digits, fun)
+  Tabelle.lm(x, caption, note, digits, fun)
 }
 
 
 
 #' @rdname Tabelle
 #' @export
-Tabelle.glm <- function(x,
+Tabelle.glm <- function(x, caption=NULL, note="",
                         digits = 2,
                         fun = function(x) {
                           f__n = length(x)
@@ -38,14 +38,14 @@ Tabelle.glm <- function(x,
       c(f__n = length(x),
         f__M = mean(x, na.rm = TRUE))
     }
-  Tabelle.lm(x, digits, fun)
+  Tabelle.lm(x, caption, note, digits, fun)
 }
 
 
 
 #' @rdname Tabelle
 #' @export
-Tabelle.lm <- function(x,
+Tabelle.lm <- function(x, caption=NULL, note="",
                        digits = 2,
                        fun = function(x) {
                          c(
@@ -56,7 +56,7 @@ Tabelle.lm <- function(x,
                        },
                        ...) {
   res_list <- NULL
-  myeff <- effects::allEffects(x)
+  myeff <- effects::allEffects(x, ...)
   
   for (i in names(myeff)) {
     info <- model_info(myeff[[i]])
@@ -75,9 +75,12 @@ Tabelle.lm <- function(x,
     
     names(ans)<- gsub("\\.f__", "_", names(ans))
    
+    if(is.null(caption))   caption <- paste0("AV: ", AV)
+    
     res_list[[i]] <- prepare_output(ans,
-                                    paste0("AV: ", AV), "",
-                                    info$N,  info$labels)
+                                    caption, note,
+                                    info$N,  
+                                    info$labels)
   }
   res_list
 }
