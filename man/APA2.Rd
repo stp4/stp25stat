@@ -32,6 +32,7 @@
 \alias{APA2.glm}
 \alias{APA2.lme}
 \alias{APA2.lmerMod}
+\alias{APA2.visreg}
 \alias{APA2.eff}
 \alias{APA2.efflist}
 \alias{APA2.polr}
@@ -41,6 +42,8 @@
 \alias{APA2.survdiff}
 \alias{APA2.coxph}
 \alias{APA2.manova}
+\alias{APA2.candisc}
+\alias{APA2.Anova.mlm}
 \alias{APA2.lda}
 \alias{APA2.TukeyHSD}
 \alias{APA2.glht}
@@ -162,6 +165,9 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
   ci.level = 0.95, conf.method = "Wald", test.my.fun = FALSE,
   conf.style.1 = TRUE, digits = 2, ...)
 
+\method{APA2}{visreg}(x, caption = x$meta$y, note = "",
+  include.ci = TRUE, digits = 2, ...)
+
 \method{APA2}{eff}(x, ...)
 
 \method{APA2}{efflist}(x, caption = "Effekte: ", type = NULL,
@@ -190,7 +196,14 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
 \method{APA2}{coxph}(x, caption = "", note = "", ...)
 
 \method{APA2}{manova}(x, test = "Wilks", caption = "MANOVA",
-  note = "", type = c("anova", "manova"), output = which_output())
+  note = "", type = c("anova", "manova"), include.eta = TRUE,
+  output = which_output())
+
+\method{APA2}{candisc}(x, caption = NA, note = "",
+  output = which_output(), LRtests = TRUE, ...)
+
+\method{APA2}{Anova.mlm}(x, caption = NA, note = "",
+  output = which_output(), ...)
 
 \method{APA2}{lda}(x, fit_predict = MASS:::predict.lda(x),
   newdata = model.frame(x), caption = "", note = "",
@@ -299,6 +312,10 @@ labels = c("low", "neutral", "high")
 
 \item{include.df}{df mit ausgeben}
 
+\item{include.eta}{die Manova wird ueber heplots::etasq berechnet und die anova mit den SS eta2=SS/SS_total}
+
+\item{LRtests}{an candisc::Wilks Wilks Lambda Tests for Canonical Correlations}
+
 \item{fit_predict}{lda: MASS predict.lda}
 
 \item{newdata}{lda:model.frame}
@@ -375,6 +392,10 @@ Ordered Logistic or Probit Regression
 https://stats.idre.ucla.edu/r/dae/ordinal-logistic-regression/
 
 MANOVA: APA2(x, , test="Wilks") test : "Wilks", "Pillai"
+
+Canonical Discriminant Analysis (MANOVA)
+
+Anova- Methode (MANOVA)
 
 LDA (linear discriminants analysis) Erweiterung der MANOVA
 
@@ -527,6 +548,8 @@ summary(fit1)$Eigenvalues
 
 
 
+
+
 #-- LDA -------------------------
 
 library(MASS)
@@ -534,7 +557,8 @@ library(MASS)
 require(stp25output)
 
 
-DF2<- stp25aggregate::GetData("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
+DF2 <- stp25aggregate::GetData(
+"C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
 #--https://stats.idre.ucla.edu/spss/dae/discriminant-function-analysis/
 DF2$Job <- factor(DF2$JOB, 1:3, Cs("customer service", "mechanic","dispatcher"))
 DF2$Job2 <- factor(DF2$JOB, c(2,3,1), Cs( "mechanic","dispatcher","customer service"))

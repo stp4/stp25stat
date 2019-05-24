@@ -17,16 +17,16 @@
 \alias{catTest}
 \title{Tabelle}
 \usage{
-\method{Tabelle}{lmerModLmerTest}(x, digits = 2, fun = function(x) {   
-   c(n = length(x), M = mean(x, na.rm = TRUE), SD = sd(x, na.rm = TRUE)) },
-  ...)
+\method{Tabelle}{lmerModLmerTest}(x, caption = NULL, note = "",
+  digits = 2, fun = function(x) {     c(n = length(x), M = mean(x,
+  na.rm = TRUE), SD = sd(x, na.rm = TRUE)) }, ...)
 
-\method{Tabelle}{glm}(x, digits = 2, fun = function(x) {     f__n =
-  length(x) }, ...)
+\method{Tabelle}{glm}(x, caption = NULL, note = "", digits = 2,
+  fun = function(x) {     f__n = length(x) }, ...)
 
-\method{Tabelle}{lm}(x, digits = 2, fun = function(x) {     c(f__n =
-  length(x), f__M = mean(x, na.rm = TRUE), f__SD = sd(x, na.rm = TRUE)) },
-  ...)
+\method{Tabelle}{lm}(x, caption = NULL, note = "", digits = 2,
+  fun = function(x) {     c(f__n = length(x), f__M = mean(x, na.rm =
+  TRUE), f__SD = sd(x, na.rm = TRUE)) }, ...)
 
 Tabelle(..., output = FALSE)
 
@@ -63,6 +63,8 @@ conTest(fml, data, test_name = TRUE)
 catTest(fml, data, include.test = "chisq.test")
 }
 \arguments{
+\item{caption, note}{Uberschrift an Output}
+
 \item{digits}{Kommastellen}
 
 \item{fun}{Eigene Function am Berechne}
@@ -72,8 +74,6 @@ catTest(fml, data, include.test = "chisq.test")
 \item{formula}{An dcast Gruppe ~ .id ist zum Zeilen und Spalten vertauschen}
 
 \item{type}{1 oder 2 1 ist kurzes Format 2 int lang}
-
-\item{caption, note}{Uberschrift an Output}
 
 \item{APA}{APA2 Style TRUE/FALSE}
 
@@ -142,6 +142,8 @@ varana \%>\% Tabelle(m1, m2, m3 , m4)
 #      sd = sd(x)
 #   )
 #)
+
+ get_my_options()$apa.style$mittelwert$include_name
 
 varana2 \%>\% Tabelle2(Merkfgk, by=~ Zeit)
 
