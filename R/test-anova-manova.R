@@ -8,6 +8,7 @@
 
 #' @rdname APA2
 #' @description MANOVA: APA2(x, , test="Wilks") test : "Wilks", "Pillai"
+#' @param include.eta die Manova wird ueber heplots::etasq berechnet und die anova mit den SS eta2=SS/SS_total
 #' @export
 #' @examples
 #'
@@ -88,7 +89,7 @@ APA2.manova <-
     
     for (i in names(res)) {
       rs <- res[[i]]
-      
+     
       resp_name <- data.frame(
         Source = i,
         F = NA,
@@ -121,7 +122,9 @@ APA2.manova <-
                            resp_name[4])
         
       }
-      rs <- rbind(resp_name, rs)
+      #html wird anderst ausgegeben markdown_html ist noch nicht implementiert
+      if( !grepl("html", output) )
+        rs <- rbind(resp_name, rs) 
       
       if (is.null(aov_result))
         aov_result <- rs
@@ -166,58 +169,113 @@ APA2.manova <-
 
 
 
-# APA2.manova <-
-#   function(x,
-#            test = "Wilks",
-#            caption = "MANOVA",
-#            note = "",
-#            type = c("anova", "manova"),
-#            output = which_output()) {
-#     aov_result <- NULL
-#     res <- summary.aov(x)
-#     for (i in names(res)) {
-#       rs <- res[[i]]
-#       rs <- cbind(Source = gsub(".*\\$", "", rownames(rs)),
-#                   rs[, c("F value", "Df", "Pr(>F)")])
-#       
-#       
-#       
-#       if (is.null(aov_result))
-#         aov_result <- rs
-#       else
-#         aov_result <- rbind(aov_result, rs)
-#     }
-#     names(aov_result)[length(names(aov_result))] <-   "p.value"
-#     aov_result <- prepare_output(fix_format(aov_result),
-#                                  caption = caption,
-#                                  note = note)
-#     if ("anova"  %in%  type)
-#       Output(
-#         aov_result,
-#         rgroup = names(res),
-#         n.rgroup = rep(nrow(res[[1]]), (length(res) - 1)),
-#         output = output
-#       )
-#     
-#     maov_result <- summary(x, test = test)
-#     maov_result <- fix_to_data_frame(maov_result$stats)
-#     maov_result$Source <- gsub(".*\\$", "", maov_result$Source)
-#     
-#     maov_result <- prepare_output(fix_format(maov_result),
-#                                   caption = paste(test, "Test"))
-#     names(maov_result)[length(names(maov_result))] <-   "p.value"
-#     if ("manova" %in% type)
-#       Output(maov_result,
-#              output = output)
-#     
-#     invisible(list(manova = aov_result, test = maov_result))
-#   }
-# 
+
+
+ 
+
+
+#' @rdname APA2
+#' @description Canonical Discriminant Analysis (MANOVA)
+#'
+#' @param LRtests an candisc::Wilks Wilks Lambda Tests for Canonical Correlations
+#' @export
+APA2.candisc <- function (x,
+                          caption = NA,
+                          note = "",
+                          output = which_output(),
+                          LRtests = TRUE,
+                          ...){
+  table <- candisc:::canrsqTable(x)
+  if (is.na(caption)) {
+    caption_eigen <-
+      paste("Canonical Discriminant Analysis for ", x$term, sep = "")
+    caption_wilks <-
+      "Test of H0: The canonical correlations in the current row and all that follow are zero"
+  } else{
+    caption_eigen <- caption_wilks <- caption
+  }
+  tests <- NULL
+  Output(prepare_output(fix_format(table, digits = c(2, 2, 2, 1, 1)),
+                        caption = caption_eigen),
+         output = output)
+  
+  if (LRtests) {
+    # Wilks Lambda Tests for Canonical Correlations
+    tests <- candisc::Wilks(x)
+    Output(prepare_output(fix_format(tests),
+                          caption = caption_wilks),
+           output = output)
+    
+  }
+  invisible(list(eigenvalues = table, LRTest = as.data.frame(tests)))
+}
 
 
 
-
-
+#' @rdname APA2
+#' @description Anova- Methode (MANOVA)
+#' @export
+APA2.Anova.mlm <- function(x,
+                           caption = NA,
+                           note = "",
+                           output = which_output(),
+                           ...) {
+  if ((!is.null(x$singular)) && x$singular)
+    stop(
+      "singular error SSP matrix; multivariate tests unavailable\ntry summary(object, multivariate=FALSE)"
+    )
+  test <- x$test
+  repeated <- x$repeated
+  ntests <- length(x$terms)
+  tests <- matrix(NA, ntests, 4)
+  if (!repeated)
+    SSPE.qr <- qr(x$SSPE)
+  for (term in 1:ntests) {
+    eigs <-
+      Re(eigen(qr.coef(if (repeated)
+        qr(x$SSPE[[term]])
+        else
+          SSPE.qr,
+        x$SSP[[term]]), symmetric = FALSE)$values)
+    tests[term, 1:4] <- switch(
+      test,
+      Pillai = car:::Pillai(eigs, x$df[term], x$error.df),
+      Wilks = car:::Wilks(eigs, x$df[term],x$error.df),
+      `Hotelling-Lawley` = car:::HL(eigs, x$df[term],x$error.df),
+      Roy = car:::Roy(eigs, x$df[term], x$error.df)
+    )
+  }
+  ok <- tests[, 2] >= 0 & tests[, 3] > 0 & tests[, 4] > 0
+  ok <- !is.na(ok) & ok
+  tests <- cbind(x$df, tests, pf(tests[ok, 2], tests[ok, 3],
+                                 tests[ok, 4], lower.tail = FALSE))
+  rownames(tests) <- x$terms
+  colnames(tests) <- c("Df", "test stat", "approx F", "num Df", "den Df", "Pr(>F)")
+  
+  
+  if( is.na(caption) )
+    caption <- paste(
+      "Type ",
+      x$type,
+      if (repeated)
+        " Repeated Measures",
+      " MANOVA Tests: ",
+      test,
+      " test statistic",
+      sep = ""
+    ) 
+  
+  tests<- cbind(Source=rownames(tests), as.data.frame(tests))
+  
+  
+  # invisible(x)
+  
+  Output(prepare_output(fix_format(tests),
+                        caption=caption, note=note), output=output)
+  invisible( tests )
+  
+  
+}
 
 
 #' @rdname APA2
@@ -236,7 +294,8 @@ APA2.manova <-
 #' require(stp25output)
 #'
 #'
-#' DF2<- stp25aggregate::GetData("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
+#' DF2 <- stp25aggregate::GetData(
+#' "C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/discrim.sav")
 #' #--https://stats.idre.ucla.edu/spss/dae/discriminant-function-analysis/
 #' DF2$Job <- factor(DF2$JOB, 1:3, Cs("customer service", "mechanic","dispatcher"))
 #' DF2$Job2 <- factor(DF2$JOB, c(2,3,1), Cs( "mechanic","dispatcher","customer service"))
@@ -260,7 +319,6 @@ APA2.lda <- function(x,
                      note = "",
                      output = which_output(),
                      ...) {
-  #  MASS:::predict.lda
   means <- prepare_output(fix_to_data_frame(t(x$means)),
                           caption = paste("Means:", caption))
   
@@ -297,7 +355,6 @@ APA2.lda <- function(x,
   cTotal <- c(diag(prop.table(cTab, 1)),
               Total = sum(diag(prop.table(cTab)))) * 100
   
-  #
   cTotal <- fix_to_data_frame(cTotal)
   Output(fix_format(cTotal),
          "prozentuale Uebereinstimmung",

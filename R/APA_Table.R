@@ -251,28 +251,28 @@ APA_Table <- function(...,
   if (type == "long2") {
     result <- APA2_list(
       myfits,
-      caption = caption, note = note , output=output,
+      caption = caption, note = note, output=output,
       custom.model.names = names ,
-      include.param=include.param,  include.gof=include.gof, include.custom = include.custom,
+      include.param=include.param, include.gof=include.gof, include.custom = include.custom,
       include.b = include.b, include.se = include.se, include.beta = include.beta,
-      include.ci =  include.ci,
+      include.ci = include.ci,
       include.odds = include.odds, include.odds.ci=include.odds.ci,
       include.statistic = include.statistic,
-      include.p =  include.p,
-      include.stars =  include.stars,
+      include.p = include.p,
+      include.stars = include.stars,
       include.df = FALSE,
       include.r = include.r, include.pseudo = include.pseudo,
       include.test = include.test ,
       include.loglik = include.loglik ,
-      include.aic =  include.aic,include.bic = include.bic,
-      ci.level =  ci.level,
+      include.aic = include.aic,include.bic = include.bic,
+      ci.level = ci.level,
       rgroup = rgroup,
       test.my.fun = test.my.fun,
       digits=digits, digits.param = digits.param,
       digits.odds = digits.odds,
       digits.test = digits.test,
       digits.beta = digits.beta,
-      format=format
+      format = format
     )
   }
   else if (type == "wide") {

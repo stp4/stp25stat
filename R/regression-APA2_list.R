@@ -66,7 +66,7 @@ APA2_list <-
             caption = "" ,
             note = "",
             output = stp25output::which_output(),
-            custom.model.names = NULL,include.param = TRUE,include.gof = TRUE,include.custom = NULL,
+            custom.model.names = NULL, include.param = TRUE, include.gof = TRUE, include.custom = NULL,
             include.b = TRUE, include.se = TRUE,
             include.beta = FALSE,
             include.ci = FALSE, include.odds = FALSE, include.odds.ci = FALSE,
@@ -79,21 +79,17 @@ APA2_list <-
             digits.param = 3, digits.odds = 2, digits.test = 2, digits.beta = 2,
             format="fg",
             include.r = TRUE, include.pseudo = TRUE,
-            include.rmse = TRUE,include.sigma = FALSE,include.variance = FALSE,
+            include.rmse = TRUE, include.sigma = FALSE, include.variance = FALSE,
             include.devianze = FALSE,
             include.loglik = FALSE,
-            include.test=FALSE,
-            include.aic = TRUE,include.bic = include.aic,
+            include.test = FALSE,
+            include.aic = TRUE, include.bic = include.aic,
             include.nobs = TRUE,
-
-
             rgroup = c("Parameter", "Goodness of fit"),
             test.my.fun = FALSE,
-
             dictionary = c(std.error = "SE",
                             estimate = "b",
                             p.value = "p"),
-
             ...
             )
   {
@@ -272,8 +268,7 @@ APA2_list <-
         rgroup<- n.rgroup <- NULL
         }
     } else if (include.param) {
-      result <- prepare_output(coefs,
-                               caption, note)
+      result <- prepare_output(coefs, caption, note)
 
       rgroup<- n.rgroup <- NULL
     }
@@ -281,11 +276,10 @@ APA2_list <-
       result <- NULL
     }
  
-   # cat(" --> Output ", output)
-    
+    cat(" --> Output ", output)
+    print(class(result))
     if (!is.logical(output)) {
       Output(result, output=output,
-
              rgroup = rgroup,
              n.rgroup = n.rgroup
 

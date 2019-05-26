@@ -30,7 +30,7 @@
 
 Tabelle(..., output = FALSE)
 
-Tabelle2(..., output = TRUE)
+Tabelle2(..., output = which_output())
 
 \method{Tabelle}{NULL}()
 

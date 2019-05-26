@@ -235,10 +235,19 @@ Reliability.formula <- function(x,
 
 Alpha <- function(...,
                   type = 1,
-                  names = NULL) {
-  if (is.null(names))
-    names <- paste(as.list(sys.call())[-1])
+                  names = NULL ) {
+  if (is.null(names)) {
+    names <- as.list(sys.call())[-1]
+    nms <-
+      which(names(names) %in% c("caption" , "note", "output", "type", "names"))
+    if (length(nms > 0))
+      names <-  paste(names[-nms])
+    else
+      names <-  paste(names)
+  }
+    
   skalen <- list(...)
+
   result <- NULL
   for (i in skalen) {
     result <- rbind(result, fix_alpha(i))
@@ -256,15 +265,24 @@ Alpha2 <- function(...,
                    output = which_output(),
                    type = 1,
                    names = NULL) {
-  if (is.null(names))
-    names <- paste(as.list(sys.call())[-1])
+
+  if (is.null(names)) {
+    names <- as.list(sys.call())[-1]
+    nms <-
+      which(names(names) %in% c("caption" , "note", "output", "type", "names"))
+    if (length(nms > 0))
+      names <-  paste(names[-nms])
+    else
+      names <-  paste(names)
+  }
   
-  result <- Alpha(..., type = type, names = names)
+  result <- Alpha(..., type = type, names = names )
   
   Output(result,
          caption = caption,
          note = note,
          output = output)
+  
   invisible(result)
 }
 

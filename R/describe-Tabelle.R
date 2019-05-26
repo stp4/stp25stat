@@ -53,9 +53,9 @@ Tabelle <- function(...,
 #' varana2 %>% Tabelle2(Merkfgk, by=~ Zeit)
 #'
 Tabelle2 <- function(...,
-                     output = TRUE) {
+                     output = which_output()) {
   x <- Tabelle(...)
-  Output(x)
+  Output(x, output=output)
   invisible(x)
 }
 
