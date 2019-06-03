@@ -202,9 +202,9 @@ APA2.xtabs  <- function(x,
                                  "correlation",
                                  "r"),
                         include.total = FALSE,
-                        include.total.columns = include.total,
-                        include.total.sub = include.total,
-                        include.total.rows = include.total,
+                        include.total.columns = FALSE,
+                        include.total.sub = FALSE,
+                        include.total.rows = FALSE,
                         include.percent = TRUE,
                         include.count = TRUE,
                         include.margins=TRUE,
@@ -441,6 +441,12 @@ which_margin <- function(mydim, #x,
                          include.total.sub = include.total,
                          include.total.rows = include.total) {
   #mydim <- dim(x)
+  
+  # cat("\n in which_margin\n")
+  # print(paste(include.total,
+  #             include.total.columns,
+  #             include.total.sub,
+  #             include.total.rows))
   mylength <- length(mydim)
   margin <-
     if (mylength == 2) {
@@ -453,7 +459,7 @@ which_margin <- function(mydim, #x,
                !include.total.columns)
         list(add = 1, prop = 2)
       else
-        list(add = seq_along(mydim), prop = NULL)
+        list(add = NULL, prop = NULL)
     }
   else{
     if (include.total)
@@ -479,9 +485,8 @@ which_margin <- function(mydim, #x,
              !include.total.sub)
       list(add = c(1, 3), prop = c(2))
     else
-      list(add = seq_along(mydim), prop = NULL)
+      list(add = NULL, prop = NULL)
   }
-
 
  
   margin
@@ -492,9 +497,9 @@ which_margin <- function(mydim, #x,
 # main function for xtabs
 Xtabelle <- function(x,
                      include.total = FALSE,
-                     include.total.columns = include.total,
-                     include.total.sub = include.total,
-                     include.total.rows = include.total,
+                     include.total.columns = FALSE,
+                     include.total.sub = FALSE,
+                     include.total.rows = FALSE,
                      include.margins=TRUE,
                      margin = NA,
                      add.margins = NA,
@@ -502,7 +507,14 @@ Xtabelle <- function(x,
                      percent = TRUE,
 
                      digits = 0)  {
-
+ # cat("\n in Xtabelle dim = ")
+ # print(dim(x))
+ # cat("\n Input: ")
+  # print(paste(include.total,
+  #             include.total.columns,
+  #             include.total.sub,
+  #             include.total.rows))
+  # cat("\n")
   mrgn <-
     which_margin(dim(x),
                  include.total,
@@ -516,7 +528,7 @@ Xtabelle <- function(x,
     mrgn$add <- add.margins
 
 
-  if (include.margins) {
+  if (include.margins & (!is.null(mrgn$add))) {
     f_count <- ftable(addmargins(x, mrgn$add))
     f_percent <-
       ftable(addmargins(prop.table(x, mrgn$prop) * 100, mrgn$add))
