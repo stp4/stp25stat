@@ -117,7 +117,7 @@ APA2.ICC <- function(x,
                          caption = caption,
                          N = n)
   Output(fix_format(ans),
-         ote = note,
+         note = note,
          output = output)
   
   invisible(ans)
@@ -291,7 +291,7 @@ AD_Index.formula <- function(x,
                              data,
                              type = "judge",
                              ...) {
-  X <-  stp25formula::prepare_data2(x,  data)
+  X <- stp25formula::prepare_data2(x, data)
   
   
   if (all(X$measure.class == "factor")) {

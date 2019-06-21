@@ -42,7 +42,8 @@ APA2.visreg <-
       caption = caption,
       note = note,
       N = nrow(x$res)
-    ))
+    ),
+    ...)
   }
 
 #' @rdname APA2

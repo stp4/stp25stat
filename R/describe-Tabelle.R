@@ -43,6 +43,51 @@ Tabelle <- function(...,
   UseMethod("Tabelle")
 }
 
+
+# Tabelle.formula <- function(x, data, ..., subset){
+#   
+#   r <- if (missing(subset)) 
+#     rep_len(TRUE, nrow(data))
+#   else {
+#     e <- substitute(subset)
+#     r <- eval(e, data, parent.frame())
+#     if (!is.logical(r)) 
+#       stop("'subset' must be logical")
+#     r & !is.na(r)
+#   }
+#  
+#   data[r, vars, drop = FALSE]
+#   
+#   
+#   # mf <- match.call(expand.dots = FALSE)
+#   # print(mf)
+#   # m <-  match(c(  "data", "subset" ),
+#   #             names(mf), 0L)
+#   # mf <- mf[c(1L, m)]
+#   # message("An model.frame")
+#   # print(class(mf))
+#   # 
+#   # 
+#   # return( list( formula=NULL))
+#   # frml <- get_meta_formula(formula, groups)
+#   # 
+#   # 
+#   # mf$formula<- frml$all.vars
+#   # mf$drop.unused.levels <- TRUE
+#   # 
+#   # return(NULL)
+#   # mf[[1L]] <- quote(stats::model.frame)
+#   # mf <- eval(mf, parent.frame()) #evaluate call
+#   Tabelle.default(x, data, ...)
+#   
+# }
+# Tabelle.data.frame <- function(data, ... , select){
+#   
+#   Tabelle.default(x, data, ...)
+# }
+
+
+
 #' @rdname Tabelle
 #' @description Tabelle2:  html-Output Tabelle(...) %>% Output()
 #' @export
@@ -261,7 +306,8 @@ calculate_tabelle2 <- function(X,
         warning("Konvertiere die Variable ", X$measure.vars[i], " zu Factor!")
       }
       X$row_name[i] <- paste0(X$row_name[i], " (",
-                                paste0(levels(X$data[[X$measure.vars[i]]]), collapse = "/"), ")")}
+                                paste0(levels(X$data[[X$measure.vars[i]]]), 
+                                       collapse = "/"), ")")}
     else if (X$measure[i] == "mean")
         X$row_name[i] <- paste0(X$row_name[i], " (mean)")
     else if (X$measure[i] == "median")

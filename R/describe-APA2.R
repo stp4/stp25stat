@@ -40,6 +40,14 @@ APA2.NULL <- function(x,
   invisible( res)
 }
 
+
+#' @rdname APA2
+#' @export
+#' 
+APA2.psychobject <- function(...){
+  Output(...)
+  }
+
 #' @rdname APA2
 #' @export
 APA2.default <- function(x,

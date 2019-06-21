@@ -20,6 +20,12 @@ APA <-   function(x,
 }
 
 
+
+#' @rdname APA
+#' @export
+APA2.psychobject <- function(x, ...){ x$text }
+
+
 #' @rdname APA
 #' @export
 APA.NULL <- function(x,
@@ -49,6 +55,13 @@ APA.NULL <- function(x,
 APA.default <- function(x, ...) {
   cat("\nKeine Methode fuer: ", class(x), "\n")
 }
+
+#' @rdname APA
+#' @export
+APA.numeric<- function(...) Mean2(...)
+#' @rdname APA
+#' @export
+APA.factor<- function(...) Prozent(...)
 
 #' @rdname APA
 #'

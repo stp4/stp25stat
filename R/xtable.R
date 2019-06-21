@@ -19,75 +19,7 @@
 #' }
 #'
 #' @export
-#' @examples
-#'
-#' # 
-#'  
-#'
-#'  dat<- stp25aggregate::GetData("
-#' sex treatment  neg  pos
-#' f   KG         10	   9
-#' f   UG         14	   5
-#' m   KG         23	   7
-#' m   UG         18	  14",
-#' Tabel_Expand = TRUE, 
-#' id.vars = 1:2, 
-#' value="befund")
-#'
-#' x1<-xtabs( ~ sex + treatment , dat)
-#' x2<-xtabs( ~ sex + befund + treatment, dat)
-#' APA2(x1)
-#' APA2(x1, include.total=TRUE, percent=F)
-#' APA2(x2, include.total=TRUE)
-#'
-#' APA2(x1, include.total.columns=T)
-#' APA2(x2, include.total.columns=T)
-#'
-#' APA2(x1, include.total.rows=T)
-#' APA2(x2,include.total.rows=T)
-#' APA2(x2,include.total.sub=T)
-#' APA2(x2,include.total.sub=T, 
-#' include.total.rows=T)
-#' APA2(x2,
-#' include.total.columns = T,
-#' include.total.rows = T)
-#'
-#'
-#'
-#'
-#'
-#'
-#' hkarz$LAI<- factor(hkarz$lai, 0:1, c("pos", "neg"))
-#' hkarz$Tzell<- cut(hkarz$tzell, 3, c("low", "med", "hig"))
-#'
-#'
-#' xtab <- xtabs(~ gruppe+LAI, hkarz)
-#' APA2(xtab,
-#' caption="Harnblasenkarzinom", test=FALSE)
-#' APA2(xtab, type="sens",
-#' test=TRUE, caption = "type=sens")
-#' APA2(xtab, type="sens",
-#' caption = "geht nur mit teat=TRUE +  type=sens")
-#' APA2(xtabs(~ gruppe+Tzell, hkarz),
-#' caption="APA_Xtabs: 2x3 Tabelle", test=FALSE)
-#' APA2(xtabs(~ gruppe+LAI+Tzell, hkarz),
-#' caption="APA_Xtabs: 2x2x3 Tabelle", test=FALSE)
-#'
-#'
-#' APA2(xtab,
-#' include.total.columns=TRUE, caption = "include.total.columns")
-#' APA2(xtab,
-#' include.total.sub=TRUE, caption = "include.total.sub")
-#'
-#'
-#'
-#'
-#' xtab <- xtabs(~ gruppe+Tzell, hkarz)
-#' APA2(xtab, test=FALSE, caption="APA2: 2x3 Tabelle")
-#'
-#'
-#'
-#'
+
 APA_Xtabs <-   function(x, ...) {
   UseMethod("APA_Xtabs")
 }
@@ -547,7 +479,7 @@ Xtabelle <- function(x,
     stp25output::fix_to_data_frame(f_count)
     }
   else{
-    rndr_percent_ftable(f_percent, digits=digits)
+   rndr_percent_ftable(f_percent, digits=digits)
   }
 
 }
