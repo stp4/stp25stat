@@ -1,3 +1,84 @@
+#' Likert
+#'
+#'  Analyse von Likertskalen.
+#'
+#' @name Likert
+#' @param ... Alle weiteren Argumente
+#' @return a likert class list with the following elements:
+#'   results: Ergebnisse der Haufigkeiten fuer zB Grafik
+#'   names: Dataframe mit Namen
+#'   freq: Data.frame mit nur den Haufigkeiten ohne NAs
+#'   freq.na:Data.frame mit nur den Haufigkeiten mit NAs
+#'   N: Stichprobengroesse als Zahl
+#'   n: Anzahl der Gueltigen Werte je Item (Vektor)
+#'   m: Mittelwerte (Vektor)
+#'   sd: SD (Vektor)
+#'   Mittelwert: M und SD Formatiert (Vektor)
+#'   items: Daten
+#'   grouping: data frame mit Gruppe (kann auch laenge Null haben)
+#'   nlevels Anzahl an Levels
+#'   levels: Labels fuer zb scale =list( at=nlevels, ...)
+#' @export
+#' @examples
+#'
+#'
+#' set.seed(1)
+#' n<-100
+#' lvs<-c("--","-","o","+","++")
+#' DF2<- data.frame(
+#'   Magazines=gl(length(lvs),1,n,lvs),
+#'   Comic.books=gl(length(lvs),2,n,lvs),
+#'   Fiction=gl(length(lvs),3,n,lvs),
+#'   Newspapers=gl(length(lvs),5,n,lvs))
+#'
+#' DF2$Comic.books[sample.int(n/2)]<- lvs[length(lvs)]
+#' DF2$Newspapers[sample.int(n/2)]<- lvs[1]
+#' DF2$Magazines[sample.int(n/2)]<- lvs[2]
+#'
+#' DF2<- transform(DF2, Geschlecht= cut( rnorm(n), 2, Hmisc::Cs(m, f)))
+#' Res1 <- Likert(~., DF2[,-5] )
+#' APA2(Res1)
+#' APA2(Res2 <- Likert(.~ Geschlecht, DF2 ))
+#'
+#' #require(HH)  # ?likertplot
+#'
+#' #windows(7,3)
+#'  #likertplot( Item   ~ .| Geschlecht , data=Res2$results,
+#'  #            main = '',
+#'  #            ylab = "",
+#'  #            sub = "" ,
+#'  #            xlab = "Prozent",
+#'  #            col = brewer_pal_likert(5),
+#'  #            rightAxis = FALSE,
+#'  #            positive.order = TRUE,
+#'  #            as.percent = TRUE,
+#'  #            auto.key = list(space = "top", columns = 2) ,
+#'  #            layout=c(2,2)
+#'  #)
+#'
+#'
+#'
+#'
+#' # data<- Res2$names
+#' # data$mean<- Res2$m
+#' #  barchart( Item~ mean |Geschlecht, Mymean2, xlim=c(1,5))
+#' # windows(3,6)
+#' # dotplot(Item ~ mean, data,
+#'  #       groups=Geschlecht, xlim=c(.085, 5.15),
+#'  #       type=c("p", "l"))
+#'
+#'
+#' APA2(Res1, ReferenceZero=3)
+#' APA2(Res1, ReferenceZero="-")
+#' APA2(Res2, ReferenceZero=3, na.exclude=TRUE, type="freq")
+#'
+Likert <- function(...) {
+  UseMethod("Likert")
+}
+
+
+
+
 #' @rdname APA2
 #' @description
 #' Likert type : c(1, 2), oder c("Freq", "Precent")
@@ -9,13 +90,10 @@
 APA2.likert <- function(x,
                         caption = "" ,
                         note = "",
-
-
                         ReferenceZero = NULL,
                         type = "percent",
                         include.mean = TRUE,
                         na.exclude = FALSE,
-
                         labels = c("low", "neutral", "high"),
                         order = FALSE,
                         output = which_output(),
@@ -126,83 +204,7 @@ APA_Likert <- function(...){
 }
 
 
-#' Likert
-#'
-#'  Analyse von Likertskalen.
-#'
-#' @name Likert
-#' @param ... Alle weiteren Argumente
-#' @return a likert class list with the following elements:
-#'   results: Ergebnisse der Haufigkeiten fuer zB Grafik
-#'   names: Dataframe mit Namen
-#'   freq: Data.frame mit nur den Haufigkeiten ohne NAs
-#'   freq.na:Data.frame mit nur den Haufigkeiten mit NAs
-#'   N: Stichprobengroesse als Zahl
-#'   n: Anzahl der Gueltigen Werte je Item (Vektor)
-#'   m: Mittelwerte (Vektor)
-#'   sd: SD (Vektor)
-#'   Mittelwert: M und SD Formatiert (Vektor)
-#'   items: Daten
-#'   grouping: data frame mit Gruppe (kann auch laenge Null haben)
-#'   nlevels Anzahl an Levels
-#'   levels: Labels fuer zb scale =list( at=nlevels, ...)
-#' @export
-#' @examples
-#'
-#'
-#' set.seed(1)
-#' n<-100
-#' lvs<-c("--","-","o","+","++")
-#' DF2<- data.frame(
-#'   Magazines=gl(length(lvs),1,n,lvs),
-#'   Comic.books=gl(length(lvs),2,n,lvs),
-#'   Fiction=gl(length(lvs),3,n,lvs),
-#'   Newspapers=gl(length(lvs),5,n,lvs))
-#'
-#' DF2$Comic.books[sample.int(n/2)]<- lvs[length(lvs)]
-#' DF2$Newspapers[sample.int(n/2)]<- lvs[1]
-#' DF2$Magazines[sample.int(n/2)]<- lvs[2]
-#'
-#' DF2<- transform(DF2, Geschlecht= cut( rnorm(n), 2, Hmisc::Cs(m, f)))
-#' Res1 <- Likert(~., DF2[,-5] )
-#' APA2(Res1)
-#' APA2(Res2 <- Likert(.~ Geschlecht, DF2 ))
-#'
-#' #require(HH)  # ?likertplot
-#'
-#' #windows(7,3)
-#'  #likertplot( Item   ~ .| Geschlecht , data=Res2$results,
-#'  #            main = '',
-#'  #            ylab = "",
-#'  #            sub = "" ,
-#'  #            xlab = "Prozent",
-#'  #            col = brewer_pal_likert(5),
-#'  #            rightAxis = FALSE,
-#'  #            positive.order = TRUE,
-#'  #            as.percent = TRUE,
-#'  #            auto.key = list(space = "top", columns = 2) ,
-#'  #            layout=c(2,2)
-#'  #)
-#'
-#'
-#'
-#'
-#' # data<- Res2$names
-#' # data$mean<- Res2$m
-#' #  barchart( Item~ mean |Geschlecht, Mymean2, xlim=c(1,5))
-#' # windows(3,6)
-#' # dotplot(Item ~ mean, data,
-#'  #       groups=Geschlecht, xlim=c(.085, 5.15),
-#'  #       type=c("p", "l"))
-#'
-#'
-#' APA2(Res1, ReferenceZero=3)
-#' APA2(Res1, ReferenceZero="-")
-#' APA2(Res2, ReferenceZero=3, na.exclude=TRUE, type="freq")
-#'
-Likert <- function(...) {
-  UseMethod("Likert")
-}
+
 
 
 #' @rdname Likert
@@ -241,25 +243,21 @@ brewer_pal_likert <- function(n = 5,
 
 #' @rdname Likert
 #' @param data Data.frame
-#' @param grouping (optional) beim direkter ausfuehrung mit dataframes
+#' @param groups (optional) beim direkter ausfuehrung mit dataframes
 #' @export
-Likert.default <- function(data,
-                           grouping = NULL,
-                           ...) {
-  if(!is.data.frame(data)) {
-    warnings("Likert: Nur formula oder data.frames sind erlaubt")
-    return(NULL)
-  }
-  data <- if (!is.null(grouping))
-    cbind(grouping, data)
-  Formula <- if (is.null(grouping))
-    formula(paste("~", paste(names(Formula), collapse = "+")))
-  else
-    formula(paste(paste(names(Formula), collapse = "+"), "~ grouping"))
+Likert.default <- function(data, ..., 
+                           groups = NULL, 
+                           labels=NULL,
+                           reverse.labels=FALSE
+                           ) {
+  X<-prepare_data2(data, ..., 
+                groups=groups)
+ 
 
-  Likert.formula(Formula,
-                 data,
-                 ...)
+  Likert.formula(X$formula,
+                 X$data,
+                 labels=labels,
+                 reverse.labels=reverse.labels)
 }
 
 
@@ -271,9 +269,9 @@ Likert.default <- function(data,
 Likert.formula<- function(x,
                    data,
                    labels=NULL,
-                   reverse.labels=FALSE,
-                   
-                   ...){
+                   reverse.labels=FALSE
+                  ){
+  # umständlich sollte bald geändert werden auf prepare_data2
   X<-Formula_Data(x, data)
   grouping_vars<- X$xname
   # Erstes Item muss stimmen
@@ -293,11 +291,18 @@ Likert.formula<- function(x,
     fm1 <- Item ~ value
     fm2 <- Item ~ .
     result <- list(
-                     freq = reshape2::dcast(xans, fm1, length, drop=FALSE),
-                     n    = reshape2::dcast(xans_num, fm2, function(x) length(na.omit(x)), drop = FALSE ),
-                     m    = reshape2::dcast(xans_num, fm2, function(x) mean(x, na.rm=TRUE), drop = FALSE),
-                     sd   = reshape2::dcast(xans_num, fm2, function(x) sd(x, na.rm=TRUE), drop = FALSE),
-                     statistic = reshape2::dcast(xans_num, fm2, function(x) rndr_mean( mean(x, na.rm=TRUE), sd(x, na.rm=TRUE)), drop = FALSE)
+                     freq = reshape2::dcast(xans, fm1, 
+                                            length, drop=FALSE),
+                     n    = reshape2::dcast(xans_num, fm2, 
+                                            function(x) length(na.omit(x)), drop = FALSE ),
+                     m    = reshape2::dcast(xans_num, fm2, 
+                                            function(x) mean(x, na.rm=TRUE), drop = FALSE),
+                     sd   = reshape2::dcast(xans_num, fm2, 
+                                            function(x) sd(x, na.rm=TRUE), drop = FALSE),
+                     statistic = reshape2::dcast(xans_num, fm2, 
+                                                 function(x) rndr_mean(
+                                                   mean(x, na.rm=TRUE), 
+                                                   sd(x, na.rm=TRUE)), drop = FALSE)
                 )
   }else{
     xans <-  Melt2(cbind( X$X_data, items), id.vars=1:ncol(X$X_data))
@@ -311,10 +316,16 @@ Likert.formula<- function(x,
     fm2<-paste(paste(grouping_vars, collapse="+"), "+ Item ~ .")
     result <-list(
                    freq = reshape2::dcast(xans, fm1, length, drop=FALSE),
-                   n    = reshape2::dcast(xans_num, fm2, function(x) length(na.omit(x)), drop = FALSE),
-                   m    = reshape2::dcast(xans_num, fm2, function(x) mean(x, na.rm=TRUE ), drop = FALSE),
-                   sd   = reshape2::dcast(xans_num, fm2, function(x) sd(x, na.rm=TRUE ), drop = FALSE),
-                   statistic = reshape2::dcast(xans_num, fm2, function(x) rndr_mean( mean(x, na.rm=TRUE), sd(x, na.rm=TRUE)), drop = FALSE)
+                   n    = reshape2::dcast(xans_num, fm2, 
+                                          function(x) length(na.omit(x)), drop = FALSE),
+                   m    = reshape2::dcast(xans_num, fm2, 
+                                          function(x) mean(x, na.rm=TRUE ), drop = FALSE),
+                   sd   = reshape2::dcast(xans_num, fm2, 
+                                          function(x) sd(x, na.rm=TRUE ), drop = FALSE),
+                   statistic = reshape2::dcast(xans_num, fm2, 
+                                               function(x) 
+                                                 rndr_mean( mean(x, na.rm=TRUE), 
+                                                            sd(x, na.rm=TRUE)), drop = FALSE)
                )
        }
   results.with.na <- result$freq # sicherung mit NA
@@ -340,8 +351,9 @@ Likert.formula<- function(x,
                 ,levels=first_levels
                 )
 
-  class(result) <- 'likert'
-  return(result)
+  class(result) <- c('likert', class(result))
+  
+  result
 }
 
 

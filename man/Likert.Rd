@@ -13,10 +13,11 @@ Likert(...)
 brewer_pal_likert(n = 5, name = "RdBu", middle.color = "gray80",
   min_gray = 10, max_gray = 60)
 
-\method{Likert}{default}(data, grouping = NULL, ...)
+\method{Likert}{default}(data, ..., groups = NULL, labels = NULL,
+  reverse.labels = FALSE)
 
 \method{Likert}{formula}(x, data, labels = NULL,
-  reverse.labels = FALSE, ...)
+  reverse.labels = FALSE)
 
 \method{print}{likert}(x, ...)
 }
@@ -27,13 +28,13 @@ brewer_pal_likert(n = 5, name = "RdBu", middle.color = "gray80",
 
 \item{data}{Data.frame}
 
-\item{grouping}{(optional) beim direkter ausfuehrung mit dataframes}
-
-\item{x}{Objekt data.frame oder Formula}
+\item{groups}{(optional) beim direkter ausfuehrung mit dataframes}
 
 \item{labels}{wenn die Labels anderst sein sollen}
 
 \item{reverse.labels}{Codierung umderehen}
+
+\item{x}{Objekt data.frame oder Formula}
 }
 \value{
 a likert class list with the following elements:
