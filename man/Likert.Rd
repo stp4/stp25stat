@@ -15,7 +15,8 @@ brewer_pal_likert(n = 5, name = "RdBu", middle.color = "gray80",
 
 \method{Likert}{default}(data, grouping = NULL, ...)
 
-\method{Likert}{formula}(x, data, labels = NULL, ...)
+\method{Likert}{formula}(x, data, labels = NULL,
+  reverse.labels = FALSE, ...)
 
 \method{print}{likert}(x, ...)
 }
@@ -31,6 +32,8 @@ brewer_pal_likert(n = 5, name = "RdBu", middle.color = "gray80",
 \item{x}{Objekt data.frame oder Formula}
 
 \item{labels}{wenn die Labels anderst sein sollen}
+
+\item{reverse.labels}{Codierung umderehen}
 }
 \value{
 a likert class list with the following elements:

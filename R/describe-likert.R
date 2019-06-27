@@ -266,15 +266,18 @@ Likert.default <- function(data,
 #' @rdname Likert
 #' @param x Objekt data.frame oder Formula
 #' @param labels wenn die Labels anderst sein sollen
+#' @param reverse.labels Codierung umderehen
 #' @export
 Likert.formula<- function(x,
                    data,
                    labels=NULL,
+                   reverse.labels=FALSE,
+                   
                    ...){
   X<-Formula_Data(x, data)
   grouping_vars<- X$xname
   # Erstes Item muss stimmen
-  items <- clean_Likert_item(X$Y_data, labels)
+  items <- clean_Likert_item(X$Y_data, labels, reverse.labels)
   first_levels <- levels(items[,1])
   nlevels<-length(first_levels)
 
@@ -356,19 +359,19 @@ print.likert<-function(x, ...){
 
 #-- Fuer Likert  as_identical_factor
 clean_Likert_item <- function(items,
-                              labels = NULL) {
+                              labels = NULL,
+                              reverse.labels=FALSE) {
   #Test der Voraussetzung
   if (all(sapply(items, is.factor))
       & (diff(range(sapply(items, nlevels))) == 0))
   {
-    if (is.null(labels))
-      return(items)
-    else
-      return(dapply2(items,
+    if (!is.null(labels))
+      items<-dapply2(items,
                      function(x) {
                        x <- as.numeric(x)
                        factor(x, 1:length(labels), labels)
-                     }))
+                     })
+    
   } else if (all(sapply(items, is.numeric))) {
     if (is.null(labels)) {
       labels <-
@@ -377,28 +380,23 @@ clean_Likert_item <- function(items,
             x
           )))))
 
-      return(dapply2(items, function(x) {
-        factor(x, labels)
-      }))
+      items <-dapply2(items, function(x) {factor(x, labels)})
     } else
-      return(dapply2(items, function(x) {
-        factor(x, 1:length(labels), labels)
-      }))
+      items<- dapply2(items, function(x) {factor(x, 1:length(labels), labels)})
   } else{
-    Text("Error gemischtes Skalenniveau!!")
-
+    message("Error gemischtes Skalenniveau!!")
     print(sapply(items, nlevels))
     print(head(items))
 
     items <- dapply2(items, as.numeric)
     labels <-
       unique(unlist(lapply(items, function(x)
-        levels(factor(
-          x
-        )))))
+        levels(factor(x )))))
 
-    return(dapply2(items, function(x) {
-      factor(x, labels)
-    }))
+    items <- dapply2(items, function(x) {factor(x, labels)})
   }
+  
+  if(!reverse.labels) items
+  else dapply2(items, function(x) factor(x, rev(levels(x))))
+  
 }
