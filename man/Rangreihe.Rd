@@ -10,8 +10,8 @@ Rangreihe(...)
 
 \method{Rangreihe}{formula}(x, data = NULL, caption = "Rangreihe",
   note = "Law of Categorical Judgement",
-  output = stp25output::which_output(), exclude = NA, subset,
-  na.action = na.pass, ...)
+  output = stp25output::which_output(), subset, na.action = na.pass,
+  ...)
 
 \method{Rangreihe}{default}(items, caption = "Rangreihe",
   note = "Law of Categorical Judgement",
@@ -29,7 +29,7 @@ Rangreihe(...)
 
 \item{output}{an stp25output}
 
-\item{exclude, subset, na.action}{an Formula_Data}
+\item{subset, na.action}{an Formula_Data}
 
 \item{items}{data.frame}
 

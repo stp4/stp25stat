@@ -181,18 +181,57 @@ Rangreihe <-
 
 
 
+#' cleanup_Rank
+#' 
+#' Doppelte Einträge bereinigen
+#'
+#' @param x data.frame
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#'  dat <-  data.frame(
+#' a = c(NA, "c", "a", NA,   "a", "a", "b", "a"),
+#' b = c("c", NA, "b", NA,  "a", "a", "b", "b"),
+#' c = c("a", "a", "b", NA,   NA, "a", "b", "c"),
+#' d = c(NA, NA, NA, NA,     "a", "a", NA, "d"),
+#' e = c(NA, "e", "a", NA,   "d",   NA, NA, "e")
+#' )
+#' cleanup_Rank(dat)
+cleanup_Rank <- function(x, col.names =  names(x)) {
+  lvl <-  unique(unlist(sapply(x, levels)))
+
+  data <-  as.data.frame(t(apply(x, 1, function(y) {
+    u <- unique(y)
+    if (any(is.na(u)))
+      u <- u[-which(is.na(u))]
+    nu <- length(u)
+    n <- length(y)
+    
+    if (nu < n)
+      u <- c(u, rep(NA,  n - nu))
+    u
+  })),
+  stringsAsFactors = FALSE)
+  names(data) <- col.names
+  attr(data, "levels") <- lvl
+  data
+}
+
 #' @rdname Rangreihe
 #' @param x formula
 #' @param data Data.frame Objekt
 #' @param order,decreasing sortieren
-#' @param exclude,subset,na.action an Formula_Data
+#' @param subset,na.action an Formula_Data
 #' @export
 Rangreihe.formula <- function(x,
                               data = NULL,
                               caption = "Rangreihe",
                               note = "Law of Categorical Judgement",
                               output=stp25output::which_output(),
-                              exclude = NA,
+                             # exclude = NA,
                               subset,
                               na.action = na.pass,
                               ...) {
@@ -235,46 +274,71 @@ Rangreihe.formula <- function(x,
 Rangreihe.default <- function (items,
                                caption = "Rangreihe",
                                note = "Law of Categorical Judgement",
-                               output=stp25output::which_output(),
-                               include.percent=TRUE,
-                               include.freq=TRUE,
-                               include.mean=TRUE,
-                               include.z=TRUE,
-                               include.na=TRUE,
-                               groups=NULL,
-                               order = TRUE, decreasing = TRUE, digits.mean = 2,
-                                
-                               input = NULL,  #c("ranking", "ordering"),
-                             
+                               output = stp25output::which_output(),
+                               include.percent = TRUE,
+                               include.freq = TRUE,
+                               include.mean = TRUE,
+                               include.z = TRUE,
+                               include.na = TRUE,
+                               groups = NULL,
+                               order = TRUE,
+                               decreasing = TRUE,
+                               digits.mean = 2,
+                               
+                               input = NULL,
+                               #c("ranking", "ordering"),
+                               pattern = "____",
                                ...)
 {
-  # @param rankings 
-  # @param N Stichprobe
- N <- if (is.null(groups)) nrow(items) 
-       else nrow(na.omit(groups))
-                               
- rankings <-  NULL #  Rang <- 1. 2. 3. usw
- inpt <-  guess_input(items) 
+  N <- if (is.null(groups))
+    nrow(items)
+  else
+    nrow(na.omit(groups))
   
-  if ( !is.null(groups) ) {
+  rankings <-  NULL #  Rang <- 1. 2. 3. usw
+  
+  inpt <-  guess_input(items)
+  
+  if (!is.null(groups)) {
+    nms <- names(groups)
     data_by_group <-
-      split(inpt$items, groups, sep = "___") #-- seperator fuer mehr als ein Faktor
-    r <- lapply(data_by_group, Calc_Rank, rankings=inpt$rankings, 
-                include.na=include.na)
+      split(inpt$items, groups, sep = pattern) #-- seperator fuer mehr als ein Faktor
+    
+    
+    r <- lapply(data_by_group,
+                Calc_Rank,
+                rankings = inpt$rankings,
+                include.na = include.na)
     res <- NULL
-    for( i in names(r) ) {
+    for (i in names(r)) {
       res_1 <- format_rank(
         r[[i]],
-        include.mean, include.z,
-        include.percent, include.freq,
-        digits.mean, order, decreasing
+        include.mean,
+        include.z,
+        include.percent,
+        include.freq,
+        digits.mean,
+        order,
+        decreasing
       )
-      res <- rbind(res, cbind(Group=i, res_1))  
-      r$mean <- rbind(cbind(r[[i]]$mean, group=i), r$mean)
+      
+      if (length(nms) == 1) {
+        Group <- i
+        names(Group) <- nms
+        res <- rbind(res, cbind(Group, res_1))
+      }
+      else{
+        res <-
+          rbind(res, cbind(reshape2::colsplit(i, pattern, nms), res_1))
+      }
+      r$mean <- rbind(cbind(r[[i]]$mean, group = i), r$mean)
     }
   }
   else{
-    r  <- Calc_Rank(inpt$items, rankings=inpt$rankings,  include.na=include.na)
+    r  <-
+      Calc_Rank(inpt$items,
+                rankings = inpt$rankings,
+                include.na = include.na)
     res <- format_rank(
       r,
       include.mean,
@@ -287,16 +351,17 @@ Rangreihe.default <- function (items,
     )
     
   }
-  stp25output::Output( 
-    stp25stat::prepare_output(res,
-                              caption = paste0(caption, " (N = ", N , ")"),
-                              note=note,
-                              N=N),
-    output=output,
-    ...)
+  stp25output::Output(stp25stat::prepare_output(
+    res,
+    caption = paste0(caption, " (N = ", N , ")"),
+    note = note,
+    N = N
+  ),
+  output = output,
+  ...)
   
   r$rankings  <- rankings
-  r$input<- inpt$input
+  r$input <- inpt$input
   r$res <- res
   r$items <- inpt$items
   r$groups <- groups
@@ -338,16 +403,14 @@ guess_input <- function(items,
     if (is.numeric(items[, 1])) {
       rankings <- unique(unlist(lapply(items,
                                        function(x)
-                                         levels(factor(
-                                           x
-                                         )))))
+                                         levels(factor(x))
+                                       )))
     }
     else if (!is_all_identical2(items)) {
       rankings <- unique(unlist(lapply(items,
                                        function(x)
-                                         levels(factor(
-                                           x
-                                         )))))
+                                         levels(factor(x))
+                                       )))
       warning(
         "Das Skalenniveau in der Rangreihe ist unterschiedlich. Moeglicherweise stimmen die Ergebnisse nicht!"
       )
@@ -362,11 +425,14 @@ guess_input <- function(items,
   else
     rankings <- 1:ncol(items)
   
+  
+#  print(items)
   if (!RankByRow)
-    items <- transpose(items)
+    items <- transpose3(items) #eigene Funktion
   
   }
   
+
   list(
     items=items,
     RankByRow = RankByRow,
@@ -462,12 +528,13 @@ Calc_Rank <-
            mylabels=NULL
   ) {
     
-    if (n < 1) { return(NULL) }
+        if (n < 1) { return(NULL) }
     
     if (!is.table(x)) {
       mylabels <- stp25aggregate::GetLabelOrName(x)
       if ( include.na ) rankings <- c(rankings, ".NA")
       tbl <- table_apply(x, rankings)
+      
       tbl[, ncol(tbl)] <- nrow(x) - rowSums(tbl)
       rel_feq <- prop.table(tbl, 1)
       x_mean <- sapply(x,  function(x) {
