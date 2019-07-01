@@ -6,7 +6,7 @@
 \title{Analyze Kano Type Items.}
 \usage{
 Kano(..., type = 5, umcodieren = FALSE, rm_Q = 10000, rm_I = 10000,
-  methode = 1, vars_func = NULL, vars_dysfunc = NULL, note = "")
+  methode = 1, vars_func = NULL, vars_dysfunc = NULL)
 
 Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
   data = x$molten[-1],
@@ -27,7 +27,11 @@ Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
 
 \item{methode}{wie sind die Items geordnet default = 1  (func dfunk func dfunc func)}
 
+\item{vars_func, vars_dysfunc}{weche Variablen sind die zwei Dimensionen}
+
 \item{caption, note}{Ueberschrift}
+
+\item{note}{}
 
 \item{formula}{intern daten aus Kano-Objekt}
 
@@ -38,8 +42,6 @@ Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
 \item{include.test, include.fong}{Fong und Chie-Test}
 
 \item{rnd_output}{Intern fuer Plot bei FALSE ausgabe als Zahl}
-
-\item{X, grouping, vars_func, vars_dysfunc}{intern an Kano_default}
 
 \item{include.total}{Anzahl Total}
 }

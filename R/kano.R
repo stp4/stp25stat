@@ -73,13 +73,14 @@
 #' Ich verwende zur Berechnung die Kategorien A,O,M,I und R. Q verwende ich nur für die Gesamtsumme
 #'
 #'
-#' @param X,grouping,vars_func,vars_dysfunc intern an Kano_default
 #' @param type type Fragetype entweder  vollstaendig (5) oder gekuerzt (3)
 #' @param umcodieren umcodieren logical False
 #' @param rm_Q Remove Q Kategorien Q entfernen  Anzahl an erlaubten Qs
 #' @param rm_I Remove I Kategorien I entfernen  Anzahl an erlaubten Is
 #' @param methode wie sind die Items geordnet default = 1  (func dfunk func dfunc func)
 #' @param ...   x, data, by, subset, na.action
+#' @param vars_func,vars_dysfunc weche Variablen sind die zwei Dimensionen
+#' @param note 
 #'
 #' @return
 #'  Liste mit:
@@ -185,15 +186,15 @@ Kano<-function( ...,
                 rm_I = 10000,
                 methode = 1,
                 vars_func = NULL,
-                vars_dysfunc = NULL,
-                note=""
+                vars_dysfunc = NULL
                
 ){
+   
   X <- stp25formula::prepare_data2(...)
-  grouping <- X$data[X$group.vars]
-  X <- X$data[X$measure.vars]
-
-  n <- ncol(X)
+  grouping_data <- if (is.null(X$group.vars)) NULL else X$data[X$group.vars]
+  measuer_data <- X$data[X$measure.vars]
+ 
+  n <- ncol(measuer_data)
   note <- ""
   kano_levels <-  c("M", "O", "A", "I", "R", "Q")
   attributes <- c(
@@ -216,10 +217,10 @@ Kano<-function( ...,
 
   if (!is.null(vars_func) &
       !is.null(vars_dysfunc)) {
-    X <- X[, c(rbind(vars_func, vars_dysfunc))]
+    measuer_data <- measuer_data[c(rbind(vars_func, vars_dysfunc))]
   } else{
     if (methode == 2) {
-      X <- X[, c(rbind(1:(n / 2), (n / 2 + 1):n))]
+      measuer_data <- measuer_data[c(rbind(1:(n / 2), (n / 2 + 1):n))]
     }
   }
 
@@ -228,21 +229,18 @@ Kano<-function( ...,
   vars_func <- seq(1, n , by = 2)
   vars_dysfunc <- seq(2, n , by = 2)
 
-
-  nams <- Hmisc::label(X[, vars])
-
-  nams <- ifelse(nams == ""
-                 , gsub(" $", "", gsub("[\\._]+", " ", names(nams)), perl = T)
-                 , nams)
  
-  if (is.factor(X[, 1])) {
+  nams <- stp25aggregate::GetLabelOrName(measuer_data[vars])
+
+  if (is.factor(measuer_data[[1]])) {
+    message("in is.factor(measuer_data)")
     note <- paste(note,
                   "Transform to numeric, ",
-                  paste(levels(X[, 1]), collapse = ", "))
-    X <- dapply1(X, as.numeric)
+                  paste(levels(measuer_data[[1]]), collapse = ", "))
+    measuer_data <- dapply1(measuer_data, as.numeric)
   }
 
-control_levels <- sapply(X, 
+control_levels <- sapply(measuer_data, 
                          function(x) {
                            min(x, na.rm=TRUE) <1 | max(x, na.rm=TRUE)>type
                            }
@@ -253,17 +251,13 @@ control_levels <- sapply(X,
     stop("Zu viele Levels! Nur 5 oder 3 sind bei Kano erlaubt.")
   }
 
-  Scors <- X
-  Scors[, vars_func] <- sapply(Scors[, vars_func]
-                               , function(a)
+  Scors <- measuer_data
+  Scors[vars_func] <- sapply(Scors[vars_func], function(a)
                                  as.numeric(as.character(factor(
-                                   a, 1:5, c(1, .5, 0, -.25, -.5)
-                                 ))))
-  Scors[, vars_dysfunc] <- sapply(Scors[, vars_dysfunc]
-                                  , function(a)
+                                   a, 1:5, c(1, .5, 0, -.25, -.5)))))
+  Scors[vars_dysfunc] <- sapply(Scors[vars_dysfunc], function(a)
                                     as.numeric(as.character(factor(
-                                      a, 1:5, c(-.5, -.25, 0, .5, 1)
-                                    ))))
+                                      a, 1:5, c(-.5, -.25, 0, .5, 1)))))
   Scors <- as.data.frame(Scors)
   names(Scors) <- paste0(names(Scors), ".s")
   
@@ -271,8 +265,8 @@ note<- paste( note, "\ntransform kano (type=",type, ")" )
 
   for (i in vars){
 
-    X_func <- X[,i]
-    X_dysf <- X[,i+1]
+    X_func <- measuer_data[i]
+    X_dysf <- measuer_data[(i+1)]
      if (umcodieren) X_dysf <-  type + 1 - X_dysf
     if(type==3){ #-- Kurzversion
       myrow  <-  ifelse( X_func==1 & X_dysf==1, "A"
@@ -314,17 +308,22 @@ note<- paste( note, "\ntransform kano (type=",type, ")" )
              ,ifelse( X_func==5 & X_dysf==5, "Q"
              ,NA)))))))))))))))))))))))))
     }
-   n<- sample.int(length(X_func))[1]
+ #  n<- sample.int(length(X_func))[1]
 
-    note<- paste(note, "\nnr:", n,  names(X[i]), "|", names(X[i+1]), X_func[n],"+", X_dysf[n], "=", myrow[n] )
-    ANS<-cbind(ANS,myrow)
+    note<- paste(note, "\nnr:", #n, 
+                 X$measure.vars[i], "|", X$measure.vars[i+1]
+                 #, X_func[n],"+", X_dysf[n], "=", myrow[n] 
+                 )
+    ANS<-cbind(ANS, myrow)
   }
 
   Errorrs <- rep(FALSE, n)
   if (rm_Q < 10000 | rm_I < 10000) {
     note <- paste(note, "\nFilter: ")
-    if (rm_Q < 10000) note<-  paste(note, "Entferne Fälle die mehr als", rm_Q, "(Q)-Antworten haben ")
-    if (rm_I < 10000) note<-  paste(note, "Entferne Fälle die mehr als", rm_I, "(I)-Antworten haben")
+    if (rm_Q < 10000) 
+      note<-  paste(note, "Entferne Fälle die mehr als", rm_Q, "(Q)-Antworten haben ")
+    if (rm_I < 10000) 
+      note<-  paste(note, "Entferne Fälle die mehr als", rm_I, "(I)-Antworten haben")
 
     Errorrs <- apply(ANS, 1,
                      function(x)
@@ -344,15 +343,17 @@ note<- paste( note, "\ntransform kano (type=",type, ")" )
       factor(x, levels = kano_levels)))
   colnames(ANS) <- nams
 
-  if (is.null(grouping)) {
+  if (is.null(grouping_data)) {
     data <-  cbind(nr = 1:nrow(ANS), ANS)
     molten <- Melt2(data, id.vars=1)
     fm <- value ~ variable
   } else{
-    data <- cbind(nr = 1:nrow(ANS), grouping, ANS)
-    molten <- Melt2(data, id.vars = 1:(ncol(grouping)+1))
+    data <- cbind(nr = 1:nrow(ANS), grouping_data, ANS)
+    molten <- Melt2(data, id.vars = 1:(ncol(grouping_data)+1))
     fm <-
-      formula(paste("value~", paste(c(names(grouping), "variable"), collapse ="+")))
+      formula(paste("value~", 
+                    paste(c(X$group.vars, "variable"), 
+                          collapse ="+")))
   }
 
  molten$value <- factor(molten$value, kano_levels)
@@ -363,7 +364,7 @@ note<- paste( note, "\ntransform kano (type=",type, ")" )
             formula= fm,
             func=vars_func,
             dysfunc= vars_dysfunc,
-            groups=names(grouping),
+            groups=X$group.vars,
             removed=Errorrs,
             N =c(  total=nrow(data),
                    N=nrow(data)-sum(Errorrs),
