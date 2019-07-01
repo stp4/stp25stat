@@ -8,8 +8,11 @@
 \alias{APA.ScalarIndependenceTest}
 \alias{APA.biVar}
 \alias{APA}
+\alias{APA2.psychobject}
 \alias{APA.NULL}
 \alias{APA.default}
+\alias{APA.numeric}
+\alias{APA.factor}
 \alias{APA.formula}
 \alias{APA.stp25_reliability}
 \alias{APA.lm}
@@ -31,9 +34,17 @@
 
 APA(x, ...)
 
+\method{APA2}{psychobject}(x, caption = "", note = NULL,
+  include.ci = FALSE, include.effect = FALSE,
+  output = stp25output::which_output(), ...)
+
 \method{APA}{NULL}(x, ...)
 
 \method{APA}{default}(x, ...)
+
+\method{APA}{numeric}(...)
+
+\method{APA}{factor}(...)
 
 \method{APA}{formula}(x, data, exclude = NA, max_factor_length = 25,
   ...)

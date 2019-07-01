@@ -3,6 +3,7 @@
 \name{Rangreihe}
 \alias{Rangreihe}
 \alias{Rangreihe.formula}
+\alias{Rangreihe.data.frame}
 \alias{Rangreihe.default}
 \title{Rangreihe}
 \usage{
@@ -13,12 +14,20 @@ Rangreihe(...)
   output = stp25output::which_output(), subset, na.action = na.pass,
   ...)
 
+\method{Rangreihe}{data.frame}(x, ..., caption = "Rangreihe",
+  note = "Law of Categorical Judgement",
+  output = stp25output::which_output(), subset, na.action = na.pass,
+  include.percent = TRUE, include.freq = TRUE, include.mean = TRUE,
+  include.z = TRUE, include.na = TRUE, groups = NULL, order = TRUE,
+  decreasing = TRUE, digits.mean = 2)
+
 \method{Rangreihe}{default}(items, caption = "Rangreihe",
   note = "Law of Categorical Judgement",
   output = stp25output::which_output(), include.percent = TRUE,
   include.freq = TRUE, include.mean = TRUE, include.z = TRUE,
   include.na = TRUE, groups = NULL, order = TRUE,
-  decreasing = TRUE, digits.mean = 2, input = NULL, ...)
+  decreasing = TRUE, digits.mean = 2, input = NULL,
+  pattern = "____")
 }
 \arguments{
 \item{...}{Weitere Argumente}
@@ -27,11 +36,9 @@ Rangreihe(...)
 
 \item{data}{Data.frame Objekt}
 
-\item{output}{an stp25output}
+\item{caption, note, output}{an stp25output}
 
 \item{subset, na.action}{an Formula_Data}
-
-\item{items}{data.frame}
 
 \item{include.percent, include.freq, include.mean, include.z, include.na}{was soll ausgewertet werden}
 
@@ -39,11 +46,13 @@ Rangreihe(...)
 
 \item{order, decreasing}{sortieren}
 
-\item{digits.mean}{digits}
+\item{digits.mean, order, decreasing}{sortierung}
+
+\item{items}{data.frame}
 
 \item{input}{Format der Items c("ranking", "ordering"),}
 
-\item{order, decreasing}{sortierung}
+\item{pattern}{intern gruppen}
 }
 \value{
 Vector

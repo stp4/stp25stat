@@ -15,6 +15,7 @@
 \alias{Corr2}
 \alias{APA2}
 \alias{APA2.NULL}
+\alias{APA2.psychobject}
 \alias{APA2.default}
 \alias{APA2.formula}
 \alias{Recast2_fun}
@@ -78,6 +79,10 @@ Corr2(x, y = NULL, type = "pearson", stars, ...)
 APA2(x, ...)
 
 \method{APA2}{NULL}(x, ...)
+
+\method{APA2}{psychobject}(x, caption = "", note = NULL,
+  include.ci = FALSE, include.effect = FALSE,
+  output = stp25output::which_output(), ...)
 
 \method{APA2}{default}(x, ...)
 
@@ -245,11 +250,11 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
   output = stp25output::which_output(), col_names = NULL,
   print_col = NULL, digits = NULL, test = FALSE, type = c("0",
   "fischer", "odds", "sensitivity", "chisquare", "correlation", "r"),
-  include.total = FALSE, include.total.columns = include.total,
-  include.total.sub = include.total,
-  include.total.rows = include.total, include.percent = TRUE,
-  include.count = TRUE, include.margins = TRUE, margin = NA,
-  add.margins = NA, labels = NULL, ...)
+  include.total = FALSE, include.total.columns = FALSE,
+  include.total.sub = FALSE, include.total.rows = FALSE,
+  include.percent = TRUE, include.count = TRUE,
+  include.margins = TRUE, margin = NA, add.margins = NA,
+  labels = NULL, ...)
 }
 \arguments{
 \item{x}{Ein R Objekt oder eine Formel oder ein data.frame}
@@ -264,6 +269,8 @@ xtabs: type = c("fischer", "odds","sensitivity", "chisquare","correlation", "r")
 \item{...}{weitere Argumente}
 
 \item{cor_diagonale_up}{bei Correlation art der Formatierung}
+
+\item{include.ci}{APA2.glht: Cis}
 
 \item{data}{data.frame wenn x eine Formel ist}
 
@@ -303,8 +310,6 @@ labels = c("low", "neutral", "high")
 \item{include.sub}{Subgruppen-Analyse}
 
 \item{include.se, include.ci, include.odds}{SE, 95-Ci, OR noch nicht fertig}
-
-\item{include.ci}{APA2.glht: Cis}
 
 \item{include.r, include.pseudo}{pseudo R}
 

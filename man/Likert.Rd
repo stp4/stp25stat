@@ -28,13 +28,15 @@ brewer_pal_likert(n = 5, name = "RdBu", middle.color = "gray80",
 
 \item{data}{Data.frame}
 
-\item{groups}{(optional) beim direkter ausfuehrung mit dataframes}
+\item{groups}{(optional)}
 
 \item{labels}{wenn die Labels anderst sein sollen}
 
 \item{reverse.labels}{Codierung umderehen}
 
-\item{x}{Objekt data.frame oder Formula}
+\item{x}{Objekt Formula}
+
+\item{...}{Variablennamen}
 }
 \value{
 a likert class list with the following elements:
