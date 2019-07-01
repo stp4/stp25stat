@@ -243,7 +243,8 @@ brewer_pal_likert <- function(n = 5,
 
 #' @rdname Likert
 #' @param data Data.frame
-#' @param groups (optional) beim direkter ausfuehrung mit dataframes
+#' @param groups (optional) 
+#' @param ...  Variablennamen
 #' @export
 Likert.default <- function(data, ..., 
                            groups = NULL, 
@@ -262,7 +263,7 @@ Likert.default <- function(data, ...,
 
 
 #' @rdname Likert
-#' @param x Objekt data.frame oder Formula
+#' @param x Objekt Formula
 #' @param labels wenn die Labels anderst sein sollen
 #' @param reverse.labels Codierung umderehen
 #' @export
