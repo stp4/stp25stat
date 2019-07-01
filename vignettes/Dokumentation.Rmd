@@ -9,7 +9,7 @@ output:
     toc: yes
   md_document:
     variant: markdown_github
-bibliography: ../../APA-Style/bibliographies/RepResRef.bib
+bibliography: RepResRef.bib
 vignette: >
   %\VignetteIndexEntry{Statistische Methoden}
   %\VignetteEncoding{UTF-8}
@@ -156,7 +156,7 @@ Arithmetisches Mittel	(was meist unter Mittelwert verstanden wird)
 Geometrisches Mittel (für logarithmische  Verteilungen)
 
 ```{r tzel-median, results='asis', warning=FALSE}
-hkarz %>% Tabelle2(tzell="median", Lai, gruppe) 
+hkarz %>% Tabelle2(tzell[median], Lai, gruppe) 
 
 set_my_options(median=list(style="IQR"))
 
@@ -318,7 +318,7 @@ require(pROC)
 ```
 
 
-```{r fig-roc1, fig.cap = "ROC-Kurve zu den Blutzuckerwerten", fig.width=4, fig.height=4, cache=TRUE}
+```{ fig-roc1, fig.cap = "ROC-Kurve zu den Blutzuckerwerten", fig.width=4, fig.height=4, cache=TRUE}
 # require(pROC)
 # data %>% Tabelle(Blutzucker, by=~Gruppe) 
 
@@ -342,7 +342,7 @@ plot(roc_curve, print.thres = "best",
 
 Weitere Info zu ROC findet sich unter https://www.hranalytics101.com/how-to-assess-model-accuracy-the-basics/
 
-```{r roc2, warning=FALSE}
+```{ roc2, warning=FALSE}
 fit1<- glm(gruppe~lai, hkarz, family = binomial)
 x1 <- Klassifikation(fit1)
 x1$statistic[c(1,7,8),]
@@ -363,7 +363,7 @@ ciobj <- ci.se(rocobj, # CI of sensitivity...
 ```
 
 
-```{r fig-roc2, fig.cap = "ROC-Kurve zu den Harnblasenkarzinom",  fig.width=4, fig.height=4, cache=TRUE}
+```{ fig-roc2, fig.cap = "ROC-Kurve zu den Harnblasenkarzinom",  fig.width=4, fig.height=4, cache=TRUE}
 fit1<- glm(gruppe~lai, hkarz, family = binomial)
 fit2<- glm(gruppe~lai+tzell, hkarz, family = binomial)
 #thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
@@ -727,7 +727,7 @@ Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
                 E = round( A + rnorm(30,5,10) + (100-A/10) ))
 
 
-ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
+#ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
  
 ```
 
@@ -749,11 +749,11 @@ plot(x)
 
 ```
  
- 
- 
-#### Verschiedene Situationen
+### Verschiedene Situationen
 
 ```{r met-comp-data2, include=FALSE}
+
+
 set.seed(0815)
 
 n<-100
@@ -767,9 +767,10 @@ DF<- data.frame(
 cutA<-mean(DF$A)
 DF <- transform(DF, C = round( A + rnorm(n, -5, 20)),
                 D = round( A + rnorm(n,0,10) + A/10 ),
-                #E = round( A + rnorm(n,5,10) + (100-A/10) )
                 E = A + ifelse(A<cutA, A/5, -A/5 )+ rnorm(n, 0, 10)
 )
+
+
 ```
 
 
@@ -1374,7 +1375,7 @@ Die Datei mkarz.sav Seite 553 ist ein Datensatz mit 106 Patientan
 library(survival)
 mkarz <- GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Buehl/MKARZ.SAV")
 mkarz$status<- ifelse(mkarz$status=="tot", 1, 0)
-mkarz %>% Tabelle2(survive="median", status, lkb)
+mkarz %>% Tabelle2(survive[median], status, lkb)
 
 ```
 

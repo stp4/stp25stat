@@ -42,7 +42,7 @@ Prop_Test2(data$g)
 #  APA2(g~g2, data, type="freq.ci")
 
 ## ----tzel-median, results='asis', warning=FALSE--------------------------
-hkarz %>% Tabelle2(tzell="median", Lai, gruppe) 
+hkarz %>% Tabelle2(tzell[median], Lai, gruppe) 
 
 set_my_options(median=list(style="IQR"))
 
@@ -135,67 +135,6 @@ require(pROC)
                     rep("Kontrollen", length(blz.cntr)))),
    Blutzucker=c(blz.diab, blz.cntr))
 
-
-## ----fig-roc1, fig.cap = "ROC-Kurve zu den Blutzuckerwerten", fig.width=4, fig.height=4, cache=TRUE----
-# require(pROC)
-# data %>% Tabelle(Blutzucker, by=~Gruppe) 
-
-roc_curve <-  roc(data$Gruppe, data$Blutzucker)
-plot(roc_curve, print.thres = "best",
-     print.auc=TRUE)
-
- 
-
-# das selbe aber mit Regression daher sind die cut off -Werte nur indirekt interpretierbar
-# fit1  <- glm(Gruppe~Blutzucker, data, family = binomial)
-# x1 <- Klassifikation(fit1)
-# roc_curve   <- roc(x1$response, x1$predictor)
-# windows(8,8)
-# plot(roc_curve, print.thres = "best",
-#      print.auc=TRUE)
-# abline(v = 1, lty = 2)
-# abline(h = 1, lty = 2)
-
-
-## ----roc2, warning=FALSE-------------------------------------------------
-fit1<- glm(gruppe~lai, hkarz, family = binomial)
-x1 <- Klassifikation(fit1)
-x1$statistic[c(1,7,8),]
-
-roc_curve <- roc(x1$response, x1$predictor)
-auc(roc_curve)
-#plot(roc_curve, print.thres = "best", print.auc=TRUE)
-#abline(v = 1, lty = 2)
-#abline(h = 1, lty = 2)
-#text(.90, .97, labels = "Ideal Model")
-#points(1,1, pch = "O", cex = 0.5)
-
-## ----fig-roc2, fig.cap = "ROC-Kurve zu den Harnblasenkarzinom",  fig.width=4, fig.height=4, cache=TRUE----
-fit1<- glm(gruppe~lai, hkarz, family = binomial)
-fit2<- glm(gruppe~lai+tzell, hkarz, family = binomial)
-#thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
-#fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())
-x1 <- Klassifikation(fit1)
-x2 <- Klassifikation(fit2) 
-#require(pROC)
-roc1   <- roc(x1$response, x1$predictor)
-roc2   <- roc(x2$response, x2$predictor)
-
-plot(roc1, print.auc = TRUE, print.auc.y = 0.6) 
-plot(roc2, lty = 2, col = "blue", print.auc.y = 0.7, print.auc = TRUE, add = TRUE)
-legend("bottomright",  legend = c("Lai", "Lai + T-Zell"),
-  col = c(par("fg"), "blue"), lty = 1:2, lwd = 2
-)
-roc.test(roc1, roc2)
-
-### Not run: 
-# The latter used Delong's test. To use bootstrap test:
-#roc.test(roc1, roc2, method="bootstrap")
-# Increase boot.n for a more precise p-value:
-#roc.test(roc1, roc2, method="bootstrap", boot.n=10000)
-
-#ciobj <- ci.se(roc2)
-#plot(ciobj, type = "shape", col="#D3D3D3", alpha = .5) 
 
 ## ----effsize-cohen, results='asis', warning=FALSE------------------------
 # APA2(tzell~gruppe,hkarz, type="cohen.d")  # APA_Effsize ist das gleiche
@@ -395,7 +334,7 @@ Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
                 E = round( A + rnorm(30,5,10) + (100-A/10) ))
 
 
-ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
+#ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
  
 
 ## ----fig-BlandAltman3, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
@@ -413,6 +352,8 @@ plot(x)
 
 
 ## ----met-comp-data2, include=FALSE---------------------------------------
+
+
 set.seed(0815)
 
 n<-100
@@ -426,9 +367,10 @@ DF<- data.frame(
 cutA<-mean(DF$A)
 DF <- transform(DF, C = round( A + rnorm(n, -5, 20)),
                 D = round( A + rnorm(n,0,10) + A/10 ),
-                #E = round( A + rnorm(n,5,10) + (100-A/10) )
                 E = A + ifelse(A<cutA, A/5, -A/5 )+ rnorm(n, 0, 10)
 )
+
+
 
 ## ----fig-BAx1, fig.cap = "A und C Messen das gleiche mit SD=20", fig.width=8, fig.height=3, cache=TRUE----
 x<- MetComp_BAP(~A+C, DF)
@@ -618,7 +560,7 @@ txt_log_reg <-  paste("Eine logistische Regressionsanalyse zeigt, dass sowohl da
  "Steigen die T-Zelltypisierung  um jeweils eine Einheit, 
  so nimmt die relative Wahrscheinlichkeit eines Krank/Gesund um OR =",  x$odds[2], 
  "zu. Ist die  T-Zelltypisierung positiv so nimmt die  relative Wahrscheinlichkeit um OR= ", x$odds[2],
- "Das R-Quadrat nach Nagelkerke beträgt",round(Nagelkerke,2), 
+ "Das R-Quadrat nach Nagelkerke betrÃ¤gt",round(Nagelkerke,2), 
 " was nach Cohen (1992) einem starken Effekt entspricht."  )
 # 
 
@@ -695,7 +637,7 @@ APA_Table(lmer_fit1, lmer_fit2, type="long2")
 library(survival)
 mkarz <- GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Buehl/MKARZ.SAV")
 mkarz$status<- ifelse(mkarz$status=="tot", 1, 0)
-mkarz %>% Tabelle2(survive="median", status, lkb)
+mkarz %>% Tabelle2(survive[median], status, lkb)
 
 
 ## ----tab-surv-summary, results='asis', warning=FALSE---------------------

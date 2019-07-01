@@ -126,7 +126,7 @@ R2(fit1)
 
 ## ----kirche-korr,  results='asis', warning=FALSE-------------------------
 #head(kirche)
-##-- Partial-Korrelation Bühl Seite 327
+##-- Partial-Korrelation BÃ¼hl Seite 327
 APA_Correlation(~alter+kirche+gast, kirche)
 
 
@@ -233,10 +233,10 @@ fit3 %>% tidy %>% transform(exp= round(exp(estimate),2)) %>% fix_format()
 Klassifikation(fit3)
 
 ### Magenkarzinom ###
-#mkarz <- GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Bühl/MKARZ.SAV")
+#mkarz <- GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_BÃ¼hl/MKARZ.SAV")
 # Text("Buehl Seite 553", style=3)
 #Text("Die Datei mkarz.sav ist ein Datensatz mit 106 Patientan
-#     mit Magenkarzinom über einen Zeitraum von 5 Jahren")
+#     mit Magenkarzinom Ã¼ber einen Zeitraum von 5 Jahren")
 
 # head(mkarz)
 # 
