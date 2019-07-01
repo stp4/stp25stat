@@ -220,6 +220,8 @@ cleanup_Rank <- function(x, col.names =  names(x)) {
   data
 }
 
+
+
 #' @rdname Rangreihe
 #' @param x formula
 #' @param data Data.frame Objekt
@@ -231,7 +233,6 @@ Rangreihe.formula <- function(x,
                               caption = "Rangreihe",
                               note = "Law of Categorical Judgement",
                               output=stp25output::which_output(),
-                             # exclude = NA,
                               subset,
                               na.action = na.pass,
                               ...) {
@@ -260,16 +261,83 @@ Rangreihe.formula <- function(x,
 
 
 #' @rdname Rangreihe
+#' @export
+Rangreihe.data.frame <- function(x,
+                                 ...,
+                                 
+                                 caption = "Rangreihe",
+                                 note = "Law of Categorical Judgement",
+                                 output = stp25output::which_output(),
+                                 subset,
+                                 na.action = na.pass,
+                                 include.percent = TRUE,
+                                 include.freq = TRUE,
+                                 include.mean = TRUE,
+                                 include.z = TRUE,
+                                 include.na = TRUE,
+                                 groups = NULL,
+                                 order = TRUE,
+                                 decreasing = TRUE,
+                                 digits.mean = 2) {
+  message("in Rangreihe.data.frame")
+  
+ 
+dots <-  sapply(lazyeval::lazy_dots(...), function(x) as.character(x[1]))
+  
+  if(length(dots) ==0) {
+    message("in lenght=0")
+ 
+    Rangreihe.default(x,
+      caption = caption,
+      note = note,
+      output = output,
+     # na.action = na.pass,
+      include.percent = include.percent,
+      include.freq = include.freq,
+      include.mean = include.mean,
+      include.z = include.z,
+      include.na = include.na,
+      groups=groups,
+      order = order,
+      decreasing = decreasing,
+      digits.mean = digits.mean
+    )
+    
+  }else{
+    message("in lenght=0")
+    
+  X <- stp25formula::prepare_data2(x, ..., na.action = na.action)
+  print(  X$formula)
+  Rangreihe.formula(
+    X$formula,
+    X$data,
+    caption = caption,
+    note = note,
+    output = output,
+    na.action = na.pass,
+    include.percent = include.percent,
+    include.freq = include.freq,
+    include.mean = include.mean,
+    include.z = include.z,
+    include.na = include.na,
+    order = order,
+    decreasing = decreasing,
+    digits.mean = digits.mean
+  )}
+}
+
+
+
+#' @rdname Rangreihe
 #'
 #' @param items data.frame
 #' @param groups gruppen
-
 #' @param input  Format der Items c("ranking", "ordering"),
-#' @param output an stp25output
+#' @param caption,note,output an stp25output
 #' @param include.percent,include.freq,include.mean,include.z,include.na was soll ausgewertet werden
-#' @param order,decreasing sortierung
-
-#' @param digits.mean digits
+#' @param digits.mean,order,decreasing sortierung
+#' @param pattern intern gruppen
+#'
 #' @export
 Rangreihe.default <- function (items,
                                caption = "Rangreihe",
@@ -284,19 +352,11 @@ Rangreihe.default <- function (items,
                                order = TRUE,
                                decreasing = TRUE,
                                digits.mean = 2,
-                               
-                               input = NULL,
-                               #c("ranking", "ordering"),
-                               pattern = "____",
-                               ...)
+                               input = NULL, #c("ranking", "ordering"),
+                               pattern = "____")
 {
-  N <- if (is.null(groups))
-    nrow(items)
-  else
-    nrow(na.omit(groups))
-  
+  N <- if (is.null(groups)) nrow(items)  else nrow(na.omit(groups))
   rankings <-  NULL #  Rang <- 1. 2. 3. usw
-  
   inpt <-  guess_input(items)
   
   if (!is.null(groups)) {
@@ -356,9 +416,7 @@ Rangreihe.default <- function (items,
     caption = paste0(caption, " (N = ", N , ")"),
     note = note,
     N = N
-  ),
-  output = output,
-  ...)
+  ), output = output)
   
   r$rankings  <- rankings
   r$input <- inpt$input
@@ -377,68 +435,99 @@ Rangreihe.default <- function (items,
 #'
 #' @return   list(RankByRow=RankByRow, rankings=rankings, input=input)
 #' @noRd
-guess_input <- function(items,
-                        rankings = NULL,
-                        input = NULL) {
-  
-  
-  if (!is.table(input)) {
-  if (is.null(input)) {
+guess_input <- function(items) {
+  if (is.data.frame(items)) {
     if (is.factor(items[, 1]) | is.character(items[, 1])) {
-      RankByRow <- FALSE
       input <- "ordering"
-     
+      rankings <-  seq_len(ncol(items))
+      items <- transpose3(items)
     }
     else {
-      RankByRow <- TRUE
       input <- "ranking"
-    }
-  } else {
-    if (input == "ordering")
-      RankByRow <- FALSE
-    else
-      RankByRow <- TRUE
-  }
-  if (RankByRow) {
-    if (is.numeric(items[, 1])) {
-      rankings <- unique(unlist(lapply(items,
-                                       function(x)
-                                         levels(factor(x))
-                                       )))
-    }
-    else if (!is_all_identical2(items)) {
-      rankings <- unique(unlist(lapply(items,
-                                       function(x)
-                                         levels(factor(x))
-                                       )))
-      warning(
-        "Das Skalenniveau in der Rangreihe ist unterschiedlich. Moeglicherweise stimmen die Ergebnisse nicht!"
-      )
-    }
-    else if (is.factor(items[, 1])) {
-      rankings <- levels(items[, 1])
-    }
-    else{
-      return (NULL)
+       rankings <- seq_len(max(
+                      unlist(
+                        lapply(items, max, na.rm=TRUE)),
+                         na.rm=TRUE))
     }
   }
-  else
-    rankings <- 1:ncol(items)
-  
-  
-#  print(items)
-  if (!RankByRow)
-    items <- transpose3(items) #eigene Funktion
-  
+  else {
+    rankings <- NULL
+    input <- NULL
   }
-  
-
   list(
-    items=items,
-    RankByRow = RankByRow,
+    items = items,
     rankings = rankings,
-    input = input)
+    input = input
+  )
 }
+
+
+
+
+
+# stp25stat:::guess_input
+# function(items,
+#          rankings = NULL,
+#          input = NULL) {
+#   
+#   
+#   if (!is.table(input)) {
+#     if (is.null(input)) {
+#       if (is.factor(items[, 1]) | is.character(items[, 1])) {
+#         RankByRow <- FALSE
+#         input <- "ordering"
+#         
+#       }
+#       else {
+#         RankByRow <- TRUE
+#         input <- "ranking"
+#       }
+#     } else {
+#       if (input == "ordering")
+#         RankByRow <- FALSE
+#       else
+#         RankByRow <- TRUE
+#     }
+#     if (RankByRow) {
+#       if (is.numeric(items[, 1])) {
+#         rankings <- unique(unlist(lapply(items,
+#                                          function(x)
+#                                            levels(factor(x))
+#         )))
+#       }
+#       else if (!is_all_identical2(items)) {
+#         rankings <- unique(unlist(lapply(items,
+#                                          function(x)
+#                                            levels(factor(x))
+#         )))
+#         warning(
+#           "Das Skalenniveau in der Rangreihe ist unterschiedlich. Moeglicherweise stimmen die Ergebnisse nicht!"
+#         )
+#       }
+#       else if (is.factor(items[, 1])) {
+#         rankings <- levels(items[, 1])
+#       }
+#       else{
+#         return (NULL)
+#       }
+#     }
+#     else
+#       rankings <- 1:ncol(items)
+#     
+#     
+#     #  print(items)
+#     if (!RankByRow)
+#       items <- transpose3(items) #eigene Funktion
+#     
+#   }
+#   
+#   
+#   list(
+#     items=items,
+#     RankByRow = RankByRow,
+#     rankings = rankings,
+#     input = input)
+# }
 
 
 

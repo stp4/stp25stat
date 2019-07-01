@@ -33,19 +33,44 @@ dapply1 <-
 #'   R2 = factor(c("B", "B", "B", "A", "B", "D"),   c("A", "B", "C", "D")),
 #'   R3 = factor(c("C", "C", "C", "B", "A", "B"),   c("A", "B", "C", "D"))
 #'   )
-#'   transpose(DF2)
+#'   transpose3(DF2)
 #' @noRd
 #' 
-transpose <- function(x) {
-  last <- nrow(x)
-  x <- cbind(x, id = 1:last)
-  last_column <- ncol(x)
-  
-  x <- stp25aggregate::Melt2(x,
-                             id.vars = last_column,
-                             key = "variable",
-                             value = "rang")
-  
-  x <- tidyr::spread(x, rang, variable)
-  dapply1(x[-1])
+#' 
+#' 
+transpose3 <- function(x) {
+  lvl = levels(x[, 1])
+  transposed <- t(apply(x, 1, function(z) {
+    trans <- NULL
+    for (i in lvl) {
+      tr <- which(z == i)
+      if (length(tr) == 0)
+        tr <- 0
+      names(tr) <- i
+      trans <- c(trans, tr)
+    }
+    trans
+  }))
+  # kontrolle cbind(x, transposed)
+  as.data.frame(transposed) 
 }
+# 
+# transpose_old <- function(x) {
+#   
+#   
+#   print(str(x))
+#   
+#   
+#   last <- nrow(x)
+#   x <- cbind(x, id = 1:last)
+#   last_column <- ncol(x)
+# 
+#   x <- stp25aggregate::Melt2(x,
+#                              id.vars = last_column,
+#                              key = "variable",
+#                              value = "rang")
+# 
+#   x <- tidyr::spread(na.omit(x), rang, variable)
+#   dapply1(x[-1])
+# 
+# }
