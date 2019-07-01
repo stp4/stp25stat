@@ -1,6 +1,6 @@
 context("test-xtable.R")
 
-test_that("korrekte Werte wie xtabl", {
+test_that("korrekte Werte APA_Xtabs und  xtabs", {
   data(infert, package = "datasets")
   
   tt2 <- xtabs( ~ education + induced, data = infert)
@@ -21,13 +21,21 @@ test_that("korrekte Werte wie xtabl", {
 })
 
 
-test_that("default", {
+test_that("default include.total", {
   data(infert, package = "datasets")
   
-  att2 <-
-    APA_Xtabs( ~ education + induced, data = infert, output = FALSE)
-  expect_equal(att2[[1]][, 2],
-               c("2% (4)", "31% (78)", "25% (61)", "58% (143)"))
+  
+  xtbl <- APA_Xtabs( ~ education + induced, data = infert, output = FALSE) 
+  expect_equal(xtbl[[1]][, 2], c("2% (4)" ,  "31% (78)", "25% (61)"))
+  
+  xtbl <- APA_Xtabs( ~ education + induced, data = infert, output = FALSE, include.total=TRUE) 
+  expect_equal(xtbl[[1]][, 2] , c( "2% (4)"  ,  "31% (78)" , "25% (61)" , "58% (143)"))
+  xtbl <- APA_Xtabs( ~ education + induced, data = infert, output = FALSE, include.total.columns=TRUE) 
+  expect_equal(xtbl[[1]][, 5], c("100% (12)" , "100% (120)" ,"100% (116)"))
+  xtbl <- APA_Xtabs( ~ education + induced, data = infert, output = FALSE, include.total.rows=TRUE) 
+  expect_equal(xtbl[[1]][, 2], c("3% (4)"  ,   "55% (78)" ,  "43% (61)" ,  "100% (143)"))
+  xtbl <- APA_Xtabs( ~ education + induced, data = infert, output = FALSE, include.total.sub=TRUE) 
+  expect_equal(xtbl[[1]][, 2], c( "2% (4)" ,  "31% (78)", "25% (61)"))
   
   #   education induced_0 induced_1 induced_2 induced_Sum
   # 1 0-5yrs       2% (4)    1% (2)    2% (6)     5% (12)
@@ -59,7 +67,7 @@ test_that("default", {
     include.total.rows = TRUE,
     output = FALSE
   )
-  expect_equal(att2[[1]][, 5] , c("5% (12)",  "48% (120)", "47% (116)", "100% (248)"))
+  expect_equal(att2[[1]][, 4] , c("2% (6)" , "6% (15)", "6% (16)"))
   att2 <- APA_Xtabs(
     ~ education + induced,
     data = infert,

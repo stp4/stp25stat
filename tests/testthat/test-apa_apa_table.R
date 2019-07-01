@@ -126,8 +126,7 @@ test_that("APA2 estimate Output",
             fit1 <- lm(chol0 ~  ak + rrs0 + med + g, hyper)
             estimate_lm <-  APA2(fit1, output = FALSE)[, 2]
 
-            expect_that(is.character(estimate_lm$estimate),
-                        is_true())
+            expect_true(is.character(estimate_lm$estimate))
 
 
             # median( hyper$chol0)
@@ -136,8 +135,7 @@ test_that("APA2 estimate Output",
               glm(chol0 > 230 ~  ak + rrs0 + med + g, hyper, family =  binomial)
             estimate_glm <-  APA2(fit2, output = FALSE)[, 2]
 
-            expect_that(is.character(estimate_glm$estimate),
-                        is_true())
+            expect_true(is.character(estimate_glm$estimate))
 
 
 

@@ -10,12 +10,15 @@ test_that("Prop_Test2 works", {
 
 
 test_that("Tabelle works", {
-  expect_equal(
-    Tabelle(hkarz,
-            tzell = "median",
-            lai,
-            gruppe)[1, 2],
-               "68.50 (IQR 9.50, range 48.50 to 78.50)")
+  
+  
+ #nicht mehr implementiert tzell = "median",
+  # expect_equal(
+  #   Tabelle(hkarz,
+  #           tzell = "median",
+  #           lai,
+  #           gruppe)[1, 2],
+  #              "68.50 (IQR 9.50, range 48.50 to 78.50)")
 
   set_my_options(median = list(style = "IQR"))
 

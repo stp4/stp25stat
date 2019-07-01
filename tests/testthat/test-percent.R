@@ -12,7 +12,7 @@ test_that("simpel Percent works", {
                 data.frame(
                   lev = c("1", "2", "3" , "4"),
                   n = c("5", "", "" , ""),
-                  m = c("20% (1)", "20% (1)", "60% (3)", "<1% (0)"),
+                  m = c("20% (1)", "20% (1)", "60% (3)", "."),
                   stringsAsFactors = FALSE
                 ))
 

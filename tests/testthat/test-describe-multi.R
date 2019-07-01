@@ -68,7 +68,7 @@ test_that("APA2 und Tabelle und APA2_multiresponse  works", {
 
 
   expect_equal(ans4[[1]][, 4],
-               c("50% (5)" , "<1% (0)", "50% (5)" , "50% (5)"))
+               c("50% (5)" , ".", "50% (5)" , "50% (5)"))
   expect_equal(
     ans4[[1]][, 5],
     c(

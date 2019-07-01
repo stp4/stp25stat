@@ -60,12 +60,49 @@ DF<- stp25aggregate::upData2(DF,  labels=c(f1="Fahreigenschaften"
 
  
 
-kano_res1 <-  Kano( ~ . , DF[-c(1,2)])
-DF[-c(1,2)] <- stp25aggregate::dapply2(DF[-c(1,2)], 
-                                       function(x) factor( x, 1:5, kano_labels))
-kano_res2 <-  Kano(~ . , DF[-c(1, 2)])
+kano_res1 <-  Kano( ~ f1 + d1 + f2 + d2 + f3 + d3 +
+                      f4 + d4 + f5  + d5 + f6  + d6 +
+                      f7 + d7 + f8 + d8 + f9 + d9 + f10 + d10
+                    , DF)
+x<- APA2(kano_res1, output=FALSE)
+
+
+expect_equal(dim(x), c(10, 16))
+expect_equal(
+  names(kano_res1),
+  c(
+    "data" ,
+    "molten" ,
+    "scors" ,
+    "formula",
+    "func" ,
+    "dysfunc" ,
+    "groups" ,
+    "removed"  ,
+    "N"   ,
+    "attributes",
+    "answers"  ,
+    "note"
+  )
+)
+expect_equal(kano_res1$data[1:2, 1:2],
+     data.frame(nr = 1:2, Fahreigenschaften = factor(c("Q", "A"), c (
+       "M", "O", "A" , "I", "R", "Q"
+     ))))
+
+expect_equal(levels(kano_res1$data[, 2]),
+     c("M", "O", "A" , "I", "R", "Q"))
+
+DF[-c(1, 2)] <- stp25aggregate::dapply2(DF[-c(1, 2)],
+                                        function(x)
+                                          factor(x, 1:5, kano_labels))
+kano_res2 <-Kano( ~ f1 + d1 + f2 + d2 + f3 + d3 +
+                    f4 + d4 + f5  + d5 + f6  + d6 +
+                    f7 + d7 + f8 + d8 + f9 + d9 + f10 + d10
+                  , DF)
 
 expect_equal(kano_res1$scors,
-             kano_res2$scors)
+     kano_res2$scors)
+ 
   
 })

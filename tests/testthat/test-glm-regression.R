@@ -111,8 +111,7 @@ test_that("APA2 vs APA_Table vs Ordnen vs ectract_param", {
     APA_Table(fit, output = FALSE, type = "long")
 
 
-  expect_that(is.character(fit_APA2$estimate),
-              is_true())
+  expect_true(is.character(fit_APA2$estimate) )
 
   expect_equal(fit_extract$estimate,
                c("-10.1", "0.24", "0.398", "0.000786", "-0.805", "-0.73"))

@@ -38,8 +38,7 @@ test_that("default works", {
   )
   
   
-  expect_that(is.data.frame(Res1$results),
-              is_true())
+  expect_true(is.data.frame(Res1$results) )
   
   expect_equal(Res1$results[, 2], c(10, 10, 21, 60))
   
@@ -69,8 +68,7 @@ test_that("APA2 works", {
  
  
   
-  expect_that(is.data.frame(ans),
-              is_true())
+  expect_true(is.data.frame(ans))
   
   expect_equal(ans[, 2], c("10% (10)", "10% (10)", "21% (21)", "60% (60)"))
   

@@ -3,11 +3,9 @@ context("test-tabelle.R")
 test_that("return value default", {
   res <-  Tabelle(warpbreaks, breaks, wool, tension)
 
-  expect_that(is.data.frame(res),
-              is_true())
+  expect_true(is.data.frame(res) )
 
-  expect_that(is.character(res[, 2]),
-              is_true())
+  expect_true(is.character(res[, 2]) )
   expect_equal(res[, 2],
                c("28.15 (SD 13.20, range 10.00 to 70.00)",
                  "27/27" ,
@@ -19,11 +17,9 @@ test_that("return value default", {
 
 test_that("return value APA=TRUE", {
   res <-  Tabelle(warpbreaks, breaks, wool, tension, APA = TRUE)
-  expect_that(is.data.frame(res),
-              is_true())
+  expect_true(is.data.frame(res))
 
-  expect_that(is.character(res[, 2]),
-              is_true())
+  expect_true(is.character(res[, 2]))
 
   expect_equal(dim(res), c(8, 3))
 

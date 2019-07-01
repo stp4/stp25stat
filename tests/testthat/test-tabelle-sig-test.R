@@ -29,11 +29,9 @@ test_that("auto sig test", {
 
 
 
-  expect_that(is.list(res),
-              is_true())
+  expect_true(is.list(res))
 
-  expect_that(is.data.frame(res[[1]]),
-              is_true())
+  expect_true(is.data.frame(res[[1]]))
 
 
   expect_equal(
