@@ -194,7 +194,7 @@ Tabelle.default <- function(...,
 
   if(type=="correlation"){
     stop("Benutze Bitte die Funktion APA_Correlation()!")
-  } else if(type=="multi") APA <- TRUE
+  } else if(type=="multiresponse") APA <- TRUE
 
   if (APA) {
 
