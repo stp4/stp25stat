@@ -2,27 +2,17 @@
 % Please edit documentation in R/describe-rank.R
 \name{Rangreihe}
 \alias{Rangreihe}
-\alias{Rangreihe.formula}
-\alias{Rangreihe.data.frame}
-\alias{Rangreihe.default}
+\alias{Rangreihe_default}
 \title{Rangreihe}
 \usage{
-Rangreihe(...)
-
-\method{Rangreihe}{formula}(x, data = NULL, caption = "Rangreihe",
+Rangreihe(..., caption = "Rangreihe",
   note = "Law of Categorical Judgement",
-  output = stp25output::which_output(), subset, na.action = na.pass,
-  ...)
-
-\method{Rangreihe}{data.frame}(x, ..., caption = "Rangreihe",
-  note = "Law of Categorical Judgement",
-  output = stp25output::which_output(), subset, na.action = na.pass,
+  output = stp25output::which_output(), na.action = na.pass,
   include.percent = TRUE, include.freq = TRUE, include.mean = TRUE,
   include.z = TRUE, include.na = TRUE, groups = NULL, order = TRUE,
   decreasing = TRUE, digits.mean = 2)
 
-\method{Rangreihe}{default}(items, caption = "Rangreihe",
-  note = "Law of Categorical Judgement",
+Rangreihe_default(items, caption = "", note = "",
   output = stp25output::which_output(), include.percent = TRUE,
   include.freq = TRUE, include.mean = TRUE, include.z = TRUE,
   include.na = TRUE, groups = NULL, order = TRUE,
@@ -32,19 +22,11 @@ Rangreihe(...)
 \arguments{
 \item{...}{Weitere Argumente}
 
-\item{x}{formula}
-
-\item{data}{Data.frame Objekt}
-
 \item{caption, note, output}{an stp25output}
-
-\item{subset, na.action}{an Formula_Data}
 
 \item{include.percent, include.freq, include.mean, include.z, include.na}{was soll ausgewertet werden}
 
 \item{groups}{gruppen}
-
-\item{order, decreasing}{sortieren}
 
 \item{digits.mean, order, decreasing}{sortierung}
 

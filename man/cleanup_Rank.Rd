@@ -9,6 +9,9 @@ cleanup_Rank(x, col.names = names(x))
 \arguments{
 \item{x}{data.frame}
 }
+\value{
+data.frame
+}
 \description{
 Doppelte Einträge bereinigen
 }

@@ -39,7 +39,7 @@ dapply1 <-
 #' 
 #' 
 transpose3 <- function(x) {
-  lvl = levels(x[, 1])
+  lvl = levels(x[[1]])
   transposed <- t(apply(x, 1, function(z) {
     trans <- NULL
     for (i in lvl) {
