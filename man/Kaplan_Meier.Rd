@@ -2,12 +2,69 @@
 % Please edit documentation in R/regression-surv.R
 \name{Kaplan_Meier}
 \alias{Kaplan_Meier}
+\alias{APA.survfit}
+\alias{APA.survdiff}
+\alias{APA2.summary.survfit}
+\alias{APA2.survfit}
+\alias{APA2.survdiff}
+\alias{APA2.coxph}
+\alias{APA2_coxph_param}
+\alias{Coxph_Test}
+\alias{Summary_Surv}
+\alias{Summary_Surv.list}
+\alias{Summary_Surv.survfit}
 \title{Kaplan Maier}
+\usage{
+\method{APA}{survfit}(x, ...)
+
+\method{APA}{survdiff}(x)
+
+\method{APA2}{summary.survfit}(x, digits = NULL, percent = FALSE,
+  include = c(time = "time", n.risk = "n.risk", n.event = "n.event", surv
+  = "survival", std.err = "std.err", lower = "lower 95\% CI", upper =
+  "upper 95\% CI"), ...)
+
+\method{APA2}{survfit}(x, caption = "NULL", output = which_output(),
+  note = "", type = 1, digits = 2, ...)
+
+\method{APA2}{survdiff}(x, caption = "Test Survival Curve Differences",
+  note = "")
+
+\method{APA2}{coxph}(x, caption = "", note = "",
+  output = which_output(), include.param = FALSE,
+  include.test = TRUE, ...)
+
+APA2_coxph_param(x, caption = "", note = "", include.ci = TRUE,
+  include.se = FALSE, output = which_output())
+
+Coxph_Test(..., data, names = NA, caption = "Wald test", note = "",
+  output = which_output())
+
+Summary_Surv(...)
+
+\method{Summary_Surv}{list}(fits, times = 1, digits = 0,
+  percent = FALSE, names_time = c("n (\% [95\% CI])",
+  "n (est [95\% CI])"), caption = "", note = "",
+  output = which_output())
+
+\method{Summary_Surv}{survfit}(x, times = 1, digits = 0,
+  percent = FALSE, names_time = c("n (\% [95\% CI])",
+  "n (est [95\% CI])"), cleanup_names = FALSE, caption = "",
+  note = "", output = which_output())
+}
+\arguments{
+\item{percent}{Formatierung}
+
+\item{times}{Zeit}
+
+\item{names_time, cleanup_names}{Header}
+}
 \value{
-A \code{\link[tibble]{tibble}} with counted tagged NA values.
+data.frame
 }
 \description{
-Summary -Funktion für Kaplan-Maier
+Summary-Funktion fuer Kaplan-Maier
+
 Beispiel unter
 (see  \link[stp25data]{hkarz} )
 
@@ -21,18 +78,27 @@ Beispiel unter
 \subsection{survival rate at a certain time }{
 \code{APA2(summary(res, times=c(5, 10, 15)))}
 }
+
+APA.survfit  Mediane berechnen.
+
+APA.survdiff Log-Rank-Test  berechnen.
+
+APA2_coxph_param Kopie von survival:::print.coxph
+
+Summary_Surv(): Summary of a Survival Curve survival::survfit- Objekt
 }
 \examples{
 
-#'### Magenkarzinom ###
-require(stp25output)
+### Magenkarzinom ###
+require(stpvers)
+require(survival)
 mkarz <-stp25aggregate::GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Buehl/MKARZ.SAV")
 
 # Text("Buehl Seite 553", style=3)
 #Text("Die Datei mkarz.sav ist ein Datensatz mit 106 Patientan
-#     mit Magenkarzinom Ã¼ber einen Zeitraum von 5 Jahren")
+#     mit Magenkarzinom ueber einen Zeitraum von 5 Jahren")
 #require(stp25data)
-mkarz \%>\% Tabelle2(survive="median", status, lkb)
+mkarz \%>\% Tabelle2(survive[median], status, lkb)
 mkarz$status<- ifelse(mkarz$status=="tot", 1, 0)
 
 #Head("Kaplan-Meier estimator without grouping", style=3)
@@ -52,20 +118,69 @@ APA2(res0)
 
 
 APA2(summary(res0, times= c(5, 10,12,17, 20, 60)),
-percent=TRUE,
-#Statistik Anfordern und ander Schreibweise
-include=c( time ="time", n.risk ="n.risk", 
-           n.event ="n.event", surv = "survival",
-           lower = "lower 95\% CI",upper ="upper 95\% CI"),
-caption="Kaplan-Meier" )
-#'
+     percent=TRUE,
+     #Statistik Anfordern und ander Schreibweise
+     include=c( time ="time", n.risk ="n.risk",
+                n.event ="n.event", surv = "survival",
+                lower = "lower 95\% CI",upper ="upper 95\% CI"),
+     caption="Kaplan-Meier" )
+
 m1 <- Surv(survive, status) ~ lkb
 res1<- survfit(m1, mkarz)
+APA2(res1, caption="survfit: Compute a survival Curve for Censored Data (survival)")
+
+
 fit1<- coxph(m1, mkarz)
 logrank1<- survdiff(m1, mkarz)
 model_info(logrank1)
-APA2(res1, caption="Kaplan-Meier")
+
 APA2(logrank1)
 APA2(coxph(m1,mkarz))
 
+
+APA.survfit(survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian)  )
+
+
+
+APA.survdiff(survdiff(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
+
+
+APA2.summary.survfit(summary(
+survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian),
+time=c(180, 365)))
+
+
+Summary_Surv(
+  survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian),
+  times = c(180, 365), percent =TRUE
+)
+
+
+APA2.survfit(survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
+APA2.survfit(survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian), type=2)
+#ovarian$fustat.r <- 1 - ovarian$fustat
+#APA2.survfit(survfit(Surv(futime, fustat.r) ~ ecog.ps, data = ovarian))
+
+
+APA2.survdiff(survdiff(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
+
+APA2.coxph(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian) )
+APA2.coxph(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian),
+ include.param=TRUE, include.test = FALSE)
+ Coxph_Test(Surv(futime, fustat) ~ ecog.ps, data = ovarian) 
+ 
+
+APA2_coxph_param(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
+
+ 
+Summary_Surv(
+  survfit(Surv(futime, fustat) ~ ecog.ps +rx , data = ovarian),
+  times = c(180, 360),
+  percent = TRUE 
+  #, cleanup_names=TRUE
+)
+
+summary(survfit(Surv(futime, fustat) ~ ecog.ps +rx , data = ovarian), times = c(180, 360))
+
+  
 }
