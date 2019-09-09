@@ -3,6 +3,11 @@
 \name{Effsize}
 \alias{Effsize}
 \alias{APA_Effsize}
+\alias{APA2.emmGrid}
+\alias{APA2.emm_list}
+\alias{APA2.visreg}
+\alias{APA2.eff}
+\alias{APA2.efflist}
 \alias{etaSquared2}
 \alias{cohens.d}
 \alias{cohens.d.default}
@@ -10,6 +15,23 @@
 \title{Effsize}
 \usage{
 APA_Effsize(x, ...)
+
+\method{APA2}{emmGrid}(x, caption = "Estimated marginal means",
+  note = attr(x, "mesg"), output = which_output())
+
+\method{APA2}{emm_list}(x, caption = "Estimated marginal means",
+  note = attr(x, "mesg"), output = which_output(),
+  include.means = TRUE, include.contrasts = TRUE, digits = 2)
+
+\method{APA2}{visreg}(x, caption = x$meta$y, note = "",
+  include.ci = TRUE, digits = 2, ...)
+
+\method{APA2}{eff}(x, ...)
+
+\method{APA2}{efflist}(x, caption = "Effekte: ", type = NULL,
+  note = "", output = stp25output::which_output(), digits = 2,
+  include.fit = TRUE, include.n = FALSE, include.ci = TRUE,
+  include.se = FALSE, ...)
 
 etaSquared2(x, type = 2, anova = FALSE, ...)
 
@@ -23,6 +45,10 @@ cohens.d(x, ...)
 \item{x}{Objekt oder Formel}
 
 \item{...}{weitere Optionen}
+
+\item{include.means}{emmeans Mittelwewrte}
+
+\item{include.contrasts}{emmeans p_werte}
 
 \item{type}{etaSquared2: Anova Type default ist 2}
 
@@ -43,6 +69,8 @@ Pearson's r correlation Small 0.2,  Medium 0.5, Large 0.8
 r2 coefficient of determination Small 0.04, Medium 0.25, Large 0.64
 Quelle: http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3444174/pdf/i1949-8357-4-3-279.pdf
 
+emmeans: APA2_methode fuer
+
 Eta-Quadrat Kopie von lsr::etaSquared.
 Die Ergebnisse entsprechen denen von SPSS (Univariat-Partial Eta Squared)
 
@@ -57,6 +85,31 @@ Cohen, J. (1988).  Statistical power analysis for the behavioral sciences (2nd e
 Gestolen von https://cran.r-project.org/web/packages/effsize/effsize.pdf
 }
 \examples{
+
+ require(emmeans)
+
+
+warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+
+r1 <- emmeans (warp.lm,  ~ wool | tension)
+r2 <- emmeans (warp.lm, poly ~ tension | wool)
+r3 <- emmeans(warp.lm, pairwise ~ tension | wool)
+APA2(r1)
+APA2(r2)
+APA2(r3)
+
+# plot(r3)
+# emmip(warp.lm, wool ~ tension)
+
+
+#' # Effekte / Mittelwerte
+fit1 <- lm(chol0 ~  ak + rrs0 + med + g, hyper)
+Tabelle2(fit1, digits = 2)  # mean SD
+
+eff <- effects::allEffects(fit1)
+
+APA2(eff)
+
 
 # etaSquared
 

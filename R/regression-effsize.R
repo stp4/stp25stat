@@ -16,7 +16,92 @@ APA_Effsize<- function(x, ...){
   else etaSquared2(x, ...)
 }
 
-#' @rdname APA2
+ 
+
+ 
+
+#' @rdname Effsize
+#' @export
+
+APA2.emmGrid <-
+  function(x,
+           caption = "Estimated marginal means",
+           note = attr(x, "mesg"),
+           output = which_output()) {
+    Output(fix_format(x),
+           caption = caption,
+           note = note,
+           output = output)
+    invisible(data.frame(x))
+  }
+
+#' @rdname Effsize
+#' @description emmeans: APA2_methode fuer 
+#' @param include.means emmeans Mittelwewrte
+#' @param include.contrasts  emmeans p_werte
+#' @export
+#'
+#' @examples
+#' 
+#'  require(emmeans)
+#' 
+#' 
+#' warp.lm <- lm(breaks ~ wool * tension, data = warpbreaks)
+#' 
+#' r1 <- emmeans (warp.lm,  ~ wool | tension)
+#' r2 <- emmeans (warp.lm, poly ~ tension | wool)
+#' r3 <- emmeans(warp.lm, pairwise ~ tension | wool)
+#' APA2(r1)
+#' APA2(r2)
+#' APA2(r3)
+#' 
+#' # plot(r3)
+#' # emmip(warp.lm, wool ~ tension)
+#' 
+APA2.emm_list <- function(x,
+                          caption = "Estimated marginal means",
+                          note = attr(x, "mesg"),
+                          output = which_output(),
+                          include.means = TRUE,
+                          include.contrasts = TRUE,
+                          digits=2) {
+  if (include.means)
+    APA2.emmGrid(x$emmeans)
+  if (include.contrasts) {
+    cx <- data.frame(x$contrasts)
+     
+    #Irgendwas ist in fix_format faul.
+    Output(
+      transform(
+        cx,
+        estimate = stp25rndr::rndr2(estimate, digits = digits),
+        SE = stp25rndr::rndr2(SE, digits = digits),
+        df = stp25rndr::rndr2(df, digits = 1),
+        t.ratio = stp25rndr::rndr2(t.ratio, digits = 2),
+        p.value = stp25rndr::rndr_P(p.value,
+                                    include.symbol = FALSE)
+      ),
+      caption = caption,
+      note = note,
+      output = output
+    )
+    
+  }
+  invisible(list(
+    emmeans = data.frame(x$emmeans),
+    contrasts = cx
+  ))
+}
+
+
+
+
+
+
+
+
+
+#' @rdname Effsize
 #' @export
 #' 
 APA2.visreg <-
@@ -46,7 +131,7 @@ APA2.visreg <-
     ...)
   }
 
-#' @rdname APA2
+#' @rdname Effsize
 #' @export
 APA2.eff <- function(x, ...) {
   if (names(x)[2] %in% "formula") {
@@ -58,7 +143,7 @@ APA2.eff <- function(x, ...) {
 }
 
 
-#' @rdname APA2
+#' @rdname Effsize
 #' @export
 #' @examples
 #'
