@@ -125,15 +125,58 @@ fit1<- glm(gruppe~lai, hkarz, family = binomial)
 Klassifikation(fit1)$statistic[c(1,7,8),]
 Klassifikation(xtab)$statistic[c(1,7,8),]
 
-## ----roc-data, include=FALSE---------------------------------------------
+## ----fig-roc-1, fig.cap = "ROC-Kurve zu den Blutzuckerwerten", fig.width=4, fig.height=4----
+
 require(pROC)
 
- blz.diab <- round(rnorm(100, mean=115, sd=20), 1)
- blz.cntr <- round(rnorm(100, mean=85, sd=20), 1)
- data <- data.frame(
-   Gruppe= factor(c(rep("Diabetiker", length(blz.diab)), 
-                    rep("Kontrollen", length(blz.cntr)))),
-   Blutzucker=c(blz.diab, blz.cntr))
+blz.diab <- round(rnorm(100, mean = 115, sd = 20), 1)
+blz.cntr <- round(rnorm(100, mean = 85, sd = 20), 1)
+data <- data.frame(Gruppe = factor(c(
+  rep("Diabetiker", length(blz.diab)),
+  rep("Kontrollen", length(blz.cntr))
+)),
+Blutzucker = c(blz.diab, blz.cntr))
+
+
+roc_curve <-  roc(data$Gruppe, data$Blutzucker)
+plot(roc_curve, print.thres = "best", print.auc = TRUE)
+
+
+## ----fig-roc-2, fig.cap = "ROC-Kurve zu den Blutzuckerwerten", fig.width=4, fig.height=4----
+
+fit1  <- glm(Gruppe ~ Blutzucker, data, family = binomial)
+x1 <- Klassifikation(fit1)
+roc_curve   <- roc(x1$response, x1$predictor)
+
+plot(roc_curve, print.thres = "best", print.auc = TRUE)
+abline(v = 1, lty = 2)
+abline(h = 1, lty = 2)
+
+## ----fig-roc-3, fig.cap = "ROC-Kurve zu den Blutzuckerwerten", fig.width=4, fig.height=4----
+
+fit1 <- glm(gruppe ~ lai, hkarz, family = binomial)
+fit2 <- glm(gruppe ~ lai + tzell, hkarz, family = binomial)
+#thkarz <- as.data.frame(xtabs(~gruppe+lai, hkarz))
+#fit2<- glm(Freq ~ gruppe*lai, thkarz, family = poisson())
+x1 <- Klassifikation(fit1)
+x2 <- Klassifikation(fit2)
+#require(pROC)
+roc1   <- roc(x1$response, x1$predictor)
+roc2   <- roc(x2$response, x2$predictor)
+
+plot(roc1, print.auc = TRUE, print.auc.y = 0.6)
+plot(
+  roc2,  lty = 2,  col = "blue",
+  print.auc.y = 0.7,  print.auc = TRUE,
+  add = TRUE
+)
+legend(
+  "bottomright",
+  legend = c("Lai", "Lai + T-Zell"),
+  col = c(par("fg"), "blue"),
+  lty = 1:2,  lwd = 2
+)
+roc.test(roc1, roc2)
 
 
 ## ----effsize-cohen, results='asis', warning=FALSE------------------------

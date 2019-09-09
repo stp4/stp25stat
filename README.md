@@ -197,6 +197,16 @@ APA_Correlation(~o1+o2+o3+o4+o5+c1+c2+c3, DF)
 fit<- lm(Einkommen ~ sex + age + O + C + E + N + A, DF)
 #Tabelle2  gibt die Tabellen formatiert aus.
 mean_sd<- Tabelle(fit )
+```
+
+    ## Registered S3 methods overwritten by 'lme4':
+    ##   method                          from
+    ##   cooks.distance.influence.merMod car 
+    ##   influence.merMod                car 
+    ##   dfbeta.influence.merMod         car 
+    ##   dfbetas.influence.merMod        car
+
+``` r
 mean_sd$sex %>% Output( "Mittelwerte")
 ```
 

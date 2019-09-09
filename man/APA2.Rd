@@ -2,9 +2,9 @@
 % Please edit documentation in R/ICC2.R, R/MetComp.R, R/T-test.R,
 %   R/correlation.R, R/describe-APA2.R, R/describe-likert.R,
 %   R/describe-z-auto-test.R, R/dimred-pca.R, R/dimred-reliability.R, R/kano.R,
-%   R/meta-analysis.R, R/regression-APA2-lm-lmer.R, R/regression-effsize.R,
-%   R/regression-polr.R, R/regression-step.R, R/regression-surv.R,
-%   R/test-anova-manova.R, R/test-anova-multcomp.R, R/test-anova.R, R/xtable.R
+%   R/meta-analysis.R, R/regression-APA2-lm-lmer.R, R/regression-polr.R,
+%   R/regression-step.R, R/test-anova-manova.R, R/test-anova-multcomp.R,
+%   R/test-anova.R, R/xtable.R
 \name{APA2.ICC}
 \alias{APA2.ICC}
 \alias{APA2.bland_altman}
@@ -33,15 +33,8 @@
 \alias{APA2.glm}
 \alias{APA2.lme}
 \alias{APA2.lmerMod}
-\alias{APA2.visreg}
-\alias{APA2.eff}
-\alias{APA2.efflist}
 \alias{APA2.polr}
 \alias{APA2.step}
-\alias{APA2.summary.survfit}
-\alias{APA2.survfit}
-\alias{APA2.survdiff}
-\alias{APA2.coxph}
 \alias{APA2.manova}
 \alias{APA2.candisc}
 \alias{APA2.Anova.mlm}
@@ -170,35 +163,12 @@ errate_statistik2(Formula, data, caption = "caption", note = "note",
   ci.level = 0.95, conf.method = "Wald", test.my.fun = FALSE,
   conf.style.1 = TRUE, digits = 2, ...)
 
-\method{APA2}{visreg}(x, caption = x$meta$y, note = "",
-  include.ci = TRUE, digits = 2, ...)
-
-\method{APA2}{eff}(x, ...)
-
-\method{APA2}{efflist}(x, caption = "Effekte: ", type = NULL,
-  note = "", output = stp25output::which_output(), digits = 2,
-  include.fit = TRUE, include.n = FALSE, include.ci = TRUE,
-  include.se = FALSE, ...)
-
 \method{APA2}{polr}(x, caption = NULL, note = NULL, include.b = TRUE,
   include.se = TRUE, include.ci = FALSE, include.odds = TRUE, ...)
 
 \method{APA2}{step}(x,
   caption = "Backward elimination of non-significant effects of linear mixed effects model",
   note = "", include.se = FALSE, include.df = FALSE, ...)
-
-\method{APA2}{summary.survfit}(x, digits = NULL, percent = FALSE,
-  include = c(time = "time", n.risk = "n.risk", n.event = "n.event", surv
-  = "survival", std.err = "std.err", lower = "lower 95\% CI", upper =
-  "upper 95\% CI"), ...)
-
-\method{APA2}{survfit}(x, caption = "NULL", note = "", type = 1,
-  digits = 2, ...)
-
-\method{APA2}{survdiff}(x, caption = "Test Survival Curve Differences",
-  note = "")
-
-\method{APA2}{coxph}(x, caption = "", note = "", ...)
 
 \method{APA2}{manova}(x, test = "Wilks", caption = "MANOVA",
   note = "", type = c("anova", "manova"), include.eta = TRUE,
@@ -458,15 +428,6 @@ APA2(fits,
                        Wald=c("F(1)=245", "F(2)=245","F(3)=245"),
                        Chi=c("X(4)=2.45", "X(5)=24.5","X(6)=24.5")))
 
-
-
-#' # Effekte / Mittelwerte
-fit1 <- lm(chol0 ~  ak + rrs0 + med + g, hyper)
-Tabelle2(fit1, digits = 2)  # mean SD
-
-eff <- effects::allEffects(fit1)
-
-APA2(eff)
 
 
  #--- Ordered Logistic or Probit Regression

@@ -92,7 +92,7 @@ function(x) {
 
 ## ----default-table, results='asis'---------------------------------------
  names(DF)
-DF %>% Tabelle2(sex, age, edu, beruf,single, APA = TRUE, caption= "Characteristics")
+DF %>% Tabelle2(sex, age, edu, beruf, single, APA = TRUE, caption= "Characteristics")
 
 ## ----pca-table, results='asis'-------------------------------------------
 
