@@ -389,7 +389,7 @@ errate_statistik3 <-
             include.total = FALSE,# Total Anzahl + Statistik bei Gruppe
 
             include.test = test,
-
+            exclude.level=NULL,
           #  include.p = TRUE,
          #   include.stars = FALSE,
          #   include.mean=FALSE,  # fuer Correlation
@@ -446,6 +446,14 @@ errate_statistik3 <-
         )
         res$n <- ""
         x1 <- cbind(Item = mySep2, res)
+        if (!is.null(exclude.level) & length(x1$lev) == 2) {
+          #print(x1$lev %in% exclude.level)
+          excld <- which(x1$lev %in% exclude.level)
+          if (length(excld) > 0)
+            x1 <- x1[-excld, ]
+          
+        }
+        
         rr <- rbind(x0, x1)
       } else
         rr <-

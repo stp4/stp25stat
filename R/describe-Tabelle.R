@@ -143,7 +143,7 @@ Tabelle.NULL <- function(){
 #' @param na.action,exclude an Formula
 #'
 #' @param include.n,include.nr,include.total Anzahl ausgeben
-#'
+#' @param exclude.level Wenn ein Factor zwei Levels hat kann einer Ausgeschlossen werden exclude.level ="no" bei levels = c("yes", "no")
 #' @param max_factor_length Fehler bei langen Faktoren abfangen
 #'
 #' @param APA APA2 Style TRUE/FALSE
@@ -175,6 +175,7 @@ Tabelle.default <- function(...,
                             include.total = FALSE,
 
                             include.test = test,
+                            exclude.level=NULL,
 
                           #  include.p = TRUE,
                            # include.stars = FALSE,
@@ -217,6 +218,7 @@ Tabelle.default <- function(...,
                                    # "SPSS", "Hmisc"
                                    #         "shapiro.test" "KS.test"
                                   #  Kolmogorov-Smirnov-Anpassungstest mit SPSS
+      exclude.level=exclude.level,
    #   include.p = include.p,
    #   include.stars = include.stars,
     #  include.mean=include.mean,

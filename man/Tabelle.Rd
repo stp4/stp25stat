@@ -40,8 +40,8 @@ Tabelle2(..., output = which_output())
   "custom_fun"), caption = "Charakteristik", note = "",
   digits = NULL, APA = FALSE, test = FALSE, na.action = na.pass,
   exclude = NA, include.n = TRUE, include.nr = FALSE,
-  include.total = FALSE, include.test = test, max_factor_length = 35,
-  measure.name = "value")
+  include.total = FALSE, include.test = test, exclude.level = NULL,
+  max_factor_length = 35, measure.name = "value")
 
 Describe2(..., output = FALSE)
 
@@ -56,7 +56,7 @@ Describe2(..., output = FALSE)
 errate_statistik3(..., type = NULL, caption = "", note = "",
   na.action = na.pass, exclude = NA, include.n = TRUE,
   include.nr = FALSE, include.total = FALSE, include.test = test,
-  max_factor_length = 35)
+  exclude.level = NULL, max_factor_length = 35)
 
 conTest(fml, data, test_name = TRUE)
 
@@ -86,6 +86,8 @@ catTest(fml, data, include.test = "chisq.test")
 \item{na.action, exclude}{an Formula}
 
 \item{include.n, include.nr, include.total}{Anzahl ausgeben}
+
+\item{exclude.level}{Wenn ein Factor zwei Levels hat kann einer Ausgeschlossen werden exclude.level ="no" bei levels = c("yes", "no")}
 
 \item{max_factor_length}{Fehler bei langen Faktoren abfangen}
 
