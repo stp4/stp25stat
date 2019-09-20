@@ -90,6 +90,7 @@ APA2_list <-
             dictionary = c(std.error = "SE",
                             estimate = "b",
                             p.value = "p"),
+            col_names=NULL,
             ...
             )
   {
@@ -276,10 +277,10 @@ APA2_list <-
       result <- NULL
     }
  
-    cat(" --> Output ", output)
-    print(class(result))
+   # cat(" --> Output ", output)
+ #   print(class(result))
     if (!is.logical(output)) {
-      Output(result, output=output,
+      Output(result, output=output, col_names=col_names,
              rgroup = rgroup,
              n.rgroup = n.rgroup
 

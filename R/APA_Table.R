@@ -136,6 +136,7 @@ APA_Table <- function(...,
                                "texreg","stargazer","sjPlot",
                                "anova"),
                       names = NULL,
+                      col_names=NULL,
                       custom.model.names = NULL,
                       digits = NULL,
 
@@ -272,7 +273,7 @@ APA_Table <- function(...,
       digits.odds = digits.odds,
       digits.test = digits.test,
       digits.beta = digits.beta,
-      format = format
+      format = format, col_names=col_names
     )
   }
   else if (type == "wide") {
