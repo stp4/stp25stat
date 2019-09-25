@@ -8,6 +8,7 @@
 \alias{APA.ScalarIndependenceTest}
 \alias{APA.biVar}
 \alias{APA}
+\alias{APA.coxph}
 \alias{APA2.psychobject}
 \alias{APA.NULL}
 \alias{APA.default}
@@ -31,6 +32,8 @@
 \method{APA}{biVar}(x, ...)
 
 APA(x, ...)
+
+\method{APA}{coxph}(x, ...)
 
 \method{APA2}{psychobject}(x, caption = "", note = NULL,
   include.ci = FALSE, include.effect = FALSE,

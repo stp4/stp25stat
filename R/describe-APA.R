@@ -19,6 +19,26 @@ APA <-   function(x,
   UseMethod("APA")
 }
 
+#' @rdname APA
+#' @export
+#' 
+#' 
+APA.coxph<- 
+function (x, ...){
+  gmodel <- broom::glance(x)
+  paste0(
+    "# Events: ",
+    gmodel$nevent,
+    "; Global p-value (Log-Rank): ",
+    stp25rndr::rndr_P(gmodel$p.value.log),
+    " \nAIC: ",
+    round(gmodel$AIC, 0),
+    "; Concordance Index: ",
+    round(gmodel$concordance, 2)
+  )
+  
+}
+
 
 
 #' @rdname APA
