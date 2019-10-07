@@ -19,7 +19,8 @@ APA2_list(x, caption = "", note = "",
   include.loglik = FALSE, include.test = FALSE, include.aic = TRUE,
   include.bic = include.aic, include.nobs = TRUE,
   rgroup = c("Parameter", "Goodness of fit"), test.my.fun = FALSE,
-  dictionary = c(std.error = "SE", estimate = "b", p.value = "p"), ...)
+  dictionary = c(std.error = "SE", estimate = "b", p.value = "p"),
+  col_names = NULL, ...)
 }
 \arguments{
 \item{x}{Regressionsobjekt}
