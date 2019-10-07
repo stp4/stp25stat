@@ -79,7 +79,8 @@ APA_Validation<- function(...,
                           
                           caption = "Testing Regression Models",
                           note="",
-                          names = NULL
+                          names = NULL,
+                          output = which_output()
 )
 {
   custom_model_names <- function() {
@@ -138,14 +139,12 @@ APA_Validation<- function(...,
       )
     }
     names(res) <- c("Test", custom.model.names)
-    
   }
+
   
-  cat("\n ende Schleife\n")
-  print(res)
   res <- prepare_output(res, caption, note)
   
-  Output(res)
+  Output(res, output=output)
   invisible(res) 
 } 
 

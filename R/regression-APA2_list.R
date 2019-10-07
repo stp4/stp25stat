@@ -107,11 +107,10 @@ APA2_list <-
         length(custom.model.names) != n)
       custom.model.names <- paste0("Model ", 1:n)
     custom.model.names.s <- paste0(mySep, custom.model.names)
-    #-- Extrahieren ----------------------------------
+   
+     #-- Extrahieren ----------------------------------
     for (i in seq_len(n)) {
-     
-      
-      if(!is.null(digits)){
+       if(!is.null(digits)){
         format <- "f"
         if(is.list(digits)){
           digits.param = digits[[i]]
@@ -121,9 +120,6 @@ APA2_list <-
           digits.odds = digits
         }
       }
-
-
- 
       model <-  extract_param(
         x[[i]],
         include.b = include.b,
@@ -189,7 +185,7 @@ APA2_list <-
     }
 
    
- #   cat(" --> vor include.gof")
+    cat(" --> vor include.gof")
     if (include.gof) {
       for (i in seq_len(n)) {
         model <- t(extract_gof(x[[i]],
@@ -204,11 +200,11 @@ APA2_list <-
                                fix_format = TRUE ))
         
         
-      #  cat(" --> in for extract_gof")
+        cat(" --> in for extract_gof")
         model <- dplyr::tibble(term = rownames(model),
                                model = model[, 1])
         
-       # cat(" --> in for tibble")
+        cat(" --> in for tibble")
         if (i == 1) {
           gofs <- model
           gofs.order <- unique(model$term)
@@ -223,7 +219,7 @@ APA2_list <-
       }
 
       gofs <- gofs[order(match(gofs$term, gofs.order)), ]
-    #  cat(" --> nach include.gof")
+      cat(" --> nach include.gof")
       if (!is.null(include.custom)) {
         if (inherits(include.custom, "data.frame")) {
           names(include.custom) <- names(gofs)
@@ -278,7 +274,7 @@ APA2_list <-
     }
  
    # cat(" --> Output ", output)
- #   print(class(result))
+    print(class(result))
     if (!is.logical(output)) {
       Output(result, output=output, col_names=col_names,
              rgroup = rgroup,

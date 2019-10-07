@@ -67,15 +67,16 @@ extract_param  <- function(x,
                                               format="f"))
   param <-  "term"
   res <- NULL
-
-  # Error in broom:tidy
-  if (inherits(x, "lmerModLmerTest")) {
+ # Error in broom:tidy
+  if (inherits(x, "lmerModLmerTest")) { 
+    #cat("\nlmerModLmerTest\n")
     res <- tidy_lmer(
       x,
       effects = include.effects,
       conf.int = conf.int,
       conf.level = conf.level,
-      conf.method =  conf.method)
+      conf.method =  conf.method) 
+ 
     res$beta <- NA
     coefs <- res
   }
@@ -101,9 +102,7 @@ extract_param  <- function(x,
       res$group <- "fixed"
       res$df <- NA
     }
-
     if (inherits(x, "lme")) {
-
       my_se <- sqrt(diag(vcov(x)))
       my_coef <- lme4::fixef(x)
 
@@ -111,7 +110,6 @@ extract_param  <- function(x,
       res$conf.high =  my_coef + 1.96 * my_se
       warning("Eigene Methode: Assuming a normal approximation for the fixed effects (1.96*standard error).")
       }
-
     coefs <- res
   }
 
@@ -124,8 +122,7 @@ extract_param  <- function(x,
                                     digits = digits.param, format = format)
   }
 
-
-    if (include.ci) {
+  if (include.ci) {
       if (fix_format) {
         if (conf.style.1) {
           param <- c(param,   c("conf"))
@@ -149,8 +146,7 @@ extract_param  <- function(x,
       }
     }
 
-
-    if (include.beta & inherits(x, "lm") & !inherits(x, "glm")) {
+  if (include.beta & inherits(x, "lm") & !inherits(x, "glm")) {
       param <- c(param, "beta")
       # b <- res$estimate[-1]
       # 
@@ -174,7 +170,6 @@ extract_param  <- function(x,
                                     format = "f")
 
     }
-
 
   if (include.se) {
     param <- c(param, "std.error")
@@ -207,9 +202,7 @@ extract_param  <- function(x,
 
     }
 
-
   if (include.odds.ci & inherits(x, "glm")) {
-   # cat("\n in Odds conf\n")
 
     coefs$odds.conf.low <-  res$odds.conf.low <- exp(res$conf.low)
     coefs$odds.conf.high <-  res$odds.conf.high <- exp(res$conf.high)
@@ -250,24 +243,17 @@ extract_param  <- function(x,
 
       }
 
-
-
-
-
-
   if (include.stars) {
     param <- c(param, "stars")
     coefs$stars <- stp25rndr::rndr_Stars(res$p.value)
   }
-
-
-
 
   if (include.p) {
     param <- c(param, "p.value")
     if (fix_format)
       coefs$p.value <- stp25rndr::rndr_P(res$p.value, symbol.leading = c("", "<"))
   }
+ 
   tibble::as_tibble(coefs[param])
 }
 
@@ -545,12 +531,7 @@ extract_gof <- function(x,
 
 
   res <-  broom::glance(x)
-  
-  
-
   param <-  "term"
-
-
 
   if (include.r | include.pseudo) {
     if( any(names(res) %in% "r.squared")){
@@ -559,13 +540,12 @@ extract_gof <- function(x,
     res <- cbind(res, ans_r)
     param <- c(param, names(ans_r))
     }
-
-
   }
 
 
   if (include.aic)
     param <- c(param, "AIC")
+
   if (include.bic)
     param <- c(param, "BIC")
 

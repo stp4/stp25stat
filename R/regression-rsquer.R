@@ -494,10 +494,35 @@ RMSE.mlm <- function(x,...)
  
 #' @rdname R2
 #' @export
-RMSE.lmerModLmerTest <- function(x,...)
+RMSE.lmerModLmerTest <- function(x, ...)
 {
-
-    data.frame(sigma=sigma(x),
-               RMSE= sjstats::rmse(x))
+  data.frame(sigma = sigma(x),
+             RMSE = sqrt(performance::performance_mse(x)))
 }
- 
+
+#' @rdname R2
+#' @export
+RMSE.lmerMod <- function(x, ...)
+{
+  data.frame(sigma = sigma(x),
+             RMSE = sqrt(performance::performance_mse(x)))
+}
+
+#sqrt(performance::performance_mse(fm2))
+#RMSE(fm2)
+
+# sjstats::rmse
+# function (model, normalized = FALSE, verbose = TRUE) 
+# {
+# 
+#     rmse_val <- sqrt(performance::performance_mse(model))
+#     if (normalized) {
+#       resp <- performance::.factor_to_numeric(insight::get_response(model))
+#       rmse_val <- rmse_val/(max(resp, na.rm = TRUE) - 
+#                               min(resp,  na.rm = TRUE))
+#     }
+# 
+#   
+# 
+# }
+
