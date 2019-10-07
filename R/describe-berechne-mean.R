@@ -135,13 +135,20 @@ berechneMean <- function(data = NULL,
 berechne_all <- function(data,
                          x,
                          by = "1",
-                         measure ,
+                         measure,
                          type ,
                          fun = function(x)length(na.omit(x)),
                          fm = NULL,
                          digits = stp25rndr::default_stp25("digits", "mittelwert")[1],
                          measure.name = NULL
 ) {
+  
+  cat("\n")
+  # print(x)
+  # print(head(data))
+  # print(by)
+  # print(measure)
+  # print(fm)
   mdn <- function() {
     aggregate(
       fm,
@@ -165,7 +172,7 @@ berechne_all <- function(data,
   }
 
   mn <- function() {
-
+#cat("in mn \n")
     aggregate(
       fm,
       data,
@@ -200,6 +207,27 @@ berechne_all <- function(data,
     )
   }
 
+  lgcl <- function() {
+  if(length(na.omit(data[all.vars(fm)[1]]))<0){
+    aggregate(
+      fm,
+      data ,
+      FUN = function(x) {
+        x<- factor(x)
+        r <- table(x)
+        paste(r, collapse = "/")
+      }
+    )}
+    else {
+      r<- data.frame(x="", stringsAsFactors=FALSE)
+      names(r)<- all.vars(fm)[1]
+      r
+    }
+  }
+  
+  
+  
+  
   custom_fun <- function() {
     res <-  aggregate(fm, data, FUN = fun, simplify = TRUE)
 
@@ -223,8 +251,10 @@ berechne_all <- function(data,
     median = mdn(),
     integer = mn(),
     mean = mn(),
+    units=mn(), ## library(units)
     custom_fun = custom_fun(),
-    NULL
+    logical = lgcl(), # Zwischen-Ueberschrift
+    NA
   )
 
   if (!is.null(measure.name))

@@ -198,8 +198,6 @@ Tabelle.default <- function(...,
   } else if(type=="multiresponse") APA <- TRUE
 
   if (APA) {
-
-  #  cat("\ninAPA=TRUE")
     errate_statistik3(
       ...,
       type = type,        # "multiresponse"

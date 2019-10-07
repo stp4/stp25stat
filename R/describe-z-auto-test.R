@@ -379,7 +379,7 @@ errate_statistik3 <-
             type = NULL, # "muliresponse" "pearson", "spearman"
             caption = "",
             note = "",
-          #  digits = NULL,
+          # digits = NULL,
          #  test = FALSE,
             na.action = na.pass,
             exclude = NA,
@@ -407,21 +407,17 @@ errate_statistik3 <-
     mySep<-  stp25rndr::symbol_nbsp()
     mySep2  <-  paste0(mySep,mySep)
  
-    
-    
     Emty_res <- function(...) { data.frame(lev="", 
                                            n="", 
                                            m="", 
                                            stringsAsFactors = FALSE)}
 
     Mittelwert_Einzel <- function(i, x) {
+      x  <- na.omit(x)
+      n  <- length(x)
+      rr <- NULL
 
-      x    <- na.omit(x)
-      n    <- length(x)
-      # Result
-      rr <- NULL 
-
-      if(n==0 &  X$measure[i]=="logical")  X$measure[i] <- "header"
+      if(n==0 & X$measure[i]=="logical")  X$measure[i] <- "header"
 
       res <- switch(
         X$measure[i],
@@ -505,8 +501,7 @@ errate_statistik3 <-
     Test <- function(i, j) {
       fm_chi <- formula(paste("~", measure.vars[i], "+",  j))
       fm_aov <- formula(paste(measure.vars[i], "~", j))
-      # fm_aov <- formula(paste(measure.vars[i], "~", j))
-   #   print(X$measure.class[i])
+
       if( X$group.class[j] == "factor") {
         if (X$measure.class[i] == "numeric" ) {
           conTest(fm_aov, X$data, which_test)
@@ -538,7 +533,6 @@ errate_statistik3 <-
       }
     }
 
-
     #-- Vorbereiten der Daten
     ANS <- NULL
     X <- prepare_data2(..., na.action = na.action)
@@ -547,12 +541,19 @@ errate_statistik3 <-
     N            <- nrow(data)
 
     if(is.character(include.test)){
-     which_test <-  match.arg(include.test, c("wilcox.test","u.test",
-                                              "kruskal.test","h.test",
-                                              "chisq.test","t.test",
-                                              "aov", "anova",
-                                              "SPSS", "Hmisc",
-                                              "shapiro.test", "ks.test" #Kolmogorov-Smirnov-Anpassungstest mit SPSS
+     which_test <-  match.arg(include.test, c("wilcox.test",
+                                              "u.test",
+                                              "kruskal.test",
+                                              "h.test",
+                                              "chisq.test",
+                                              "t.test",
+                                              "aov", 
+                                              "anova",
+                                              "SPSS", 
+                                              "Hmisc",
+                                              "shapiro.test", 
+                                              "ks.test"
+                                              # Kolmogorov-Smirnov-Anpassungstest wie SPSS
                                               ))
      if (any(which_test %in% c("shapiro.test", "KS.test"))) {
        include.test <- FALSE # Einzeltest
