@@ -183,8 +183,9 @@ APA2.formula <- function(x,
       order = order,
       decreasing = decreasing,
       na.action = na.action,
-      use.level = use.level
-    ),
+      use.level = use.level,
+      output=FALSE
+    )$tab,
     cohen.d = cohen_d_formula(x, data, ...),
     # effsize = Effsize( x, data, ..., type="cohen.d"),
     describe = Describe2(x, data, stat = c("n", "mean", "sd", "min", "max")),

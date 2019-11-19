@@ -10,6 +10,7 @@ APA2_multiresponse<- function(Formula,
                               sig_test="fischer.test",
                               na.action=na.pass,
                               use.level=1,
+                              output=which_output(),
                               ...  ){
   myTest <- function () {
     ix <- X$xname[1]
@@ -59,6 +60,11 @@ APA2_multiresponse<- function(Formula,
                    data,
                    fun=Prozent,
                    X = X)
+       means<- Recast2(Formula,
+                     data,
+                     fun=mean2,
+                     X = X)
+       
   }else{
     #- Formel( a+s+d~gruppe) -----
     if(length(X$xname)!=1){
@@ -71,6 +77,11 @@ APA2_multiresponse<- function(Formula,
                             id.var = X$xname,
                             formula = formula  ,
                             labels = TRUE, drop = FALSE, margins = X$xname)
+    means <- Recast2(Formula, data, fun = mean2,
+                     X = X, #einfach an Recast2 weil sonst die fun mehrmals ausgefuert wird
+                     id.var = X$xname,
+                     formula = formula  ,
+                     labels = TRUE, drop = FALSE, margins = X$xname)
 
     ncols <- ncol(ANS)
     ANS <- ANS[, c(1, ncols, 2:(ncols-1))]
@@ -89,5 +100,6 @@ APA2_multiresponse<- function(Formula,
   }
 
   ANS <- prepare_output(ANS, caption, note, nrow(X$Y_data))
-  ANS
+  Output(ANS, output=output)
+  invisible(list(tab=ANS, mean=means))
 }
