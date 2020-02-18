@@ -4,7 +4,7 @@ Version: 0.1.6
 Authors@R: person("Wolfgang", "Peter", email = "w.peter@statistik-peter.at",  role = c("aut", "cre"))
 Description: Collection of convenient functions for common statistical computations.
 License: GPL-3
-Date: 2019-05-26
+Date: 2020-02-18
 Type: Package
 Encoding: UTF-8
 Imports: stp25aggregate, 
@@ -24,6 +24,6 @@ Suggests:
   caret,
   pscl
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.3
 VignetteBuilder: knitr  
 Language: de_DE
