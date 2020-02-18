@@ -372,6 +372,8 @@ Describe2.data.frame <- function(data,
   measure <-
     sapply(lazyeval::lazy_dots(...), function(x)
       as.character(x[1]))
+  
+  if(length( measure)==0) measure<-names(data)
    cat("\n Noch nicht getestet!\n")
   
   Describe2.formula(
@@ -427,10 +429,17 @@ Describe2.formula <- function(x,
                              stringsAsFactors = FALSE)
     # stat <- c(names(result), stat)
     # stat <- unique(stat[duplicated(stat)])
-    result <- cbind(Item = GetLabelOrName(data), result)
     
-    res <- result[c("Item", stat)]
+    which_class <- sapply(data, class)
+    result <- cbind(Item = GetLabelOrName(data),
+                    class = which_class,
+                    result)
+
+    res <- result[c("Item", "class", stat)]
     res[-1] <- Format2(res[-1], digits = digits)
+    
+    
+    
     } else{
     names_groups <- which(names(data) %in% all.vars(by))
     groups <- data[names_groups]
