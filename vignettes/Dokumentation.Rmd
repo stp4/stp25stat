@@ -1582,9 +1582,88 @@ Der einfache Korrelationskoeffizient zwischen zwei erklärenden Variablen ist se
 Abhilfemaßnahmen  Entweder nichts unternehmen oder Überflüssig(st)e Variablen entfernen. 
 VIF variance inflation factor. VIF values over 5 are troubling, should probably investigate anything over 2.5.
  
+```{r}
+Diagnose_Plot <- function(data,
+                          x,
+                          y,
+                          fit,
+                          main = "",
+                          ylab = "",
+                          xlab = "",
+                          level = 0.95) {
+  q <- data[, x]
+  predicted.intervals <-
+    predict(fit,
+            data[x],
+            interval = 'confidence',
+            level = level)
+  
+  plot(data[, x],
+       data[, y],
+       # col = 'deepskyblue4',
+       xlab = xlab,
+       ylab = ylab,
+       main = '(a)')
+  
+  title("Observed data", line = .5)
+  
+  lines(q, predicted.intervals[, 1], col = 'deepskyblue4', lwd = 2)
+  lines(q, predicted.intervals[, 2], col = 'black', lwd = 1)
+  lines(q, predicted.intervals[, 3], col = 'black', lwd = 1)
+  
+  
+  plot(fit, 1, main = "(b)",  cex.caption = .8)
+  plot(fit, 2, main = "(c)",  cex.caption = .8)
+  plot(fit, 3, main = "(d)",  cex.caption = .8)
+  plot(fit, 5, main = "(e)",  cex.caption = .8)
+  influence_year <- car::influencePlot(fit, main = '(f)')
+  title("influence Plot", line = .5)
+  
+  invisible(influence_year)
+  
+}
+```
 
 
+```{r diag-plot, out.extra = '', fig.cap='Diagnosediagramm  Residuen', fig.width=8, fig.height=6,  echo=TRUE}
+ 
+df <- psycho::affective 
+fit <- lm(Age ~ Concealing, data=df)
 
+par(mfrow = c(2, 3))
+infFall<- Diagnose_Plot(
+  df, "Concealing","Age",
+  fit,
+  xlab="",  ylab = 'Age' 
+)
+
+
+## `r Text(fit)`  #  psycho::analyze(fit)
+
+```
+
+
+`r Text(fit)`
+
+Der Diagnose-Plot zeigt  Auffälligkeiten  
+hinsichtlich der Residuen
+daraus kann abgeleitet werden  das die 
+Verwendung des linearen Models nicht vertretbar ist. 
+
+  
+ * (a) Observed data: regression line and 95\%-CI
+ * (b) Residuals vs Fitted: This plot shows if residuals 
+        have non-linear patterns (non-linear relationship). 
+ * (c) Normal Q-Q: This plot shows if residuals are normally 
+        distributed. It’s good if residuals are lined well on the 
+        straight dashed line.
+ * (d) Scale-Location: This is how you can check the assumption
+        of equal variance (homoscedasticity). It’s good if 
+        you see a horizontal line with equally (randomly) spread points.
+ * (e) Residuals vs Leverage: This plot helps us to find influential cases
+ * (f) Influence Plot:  Studentized residuals versus hat values, 
+        with the areas of the circles representing the observations 
+        proportional to the value Cook's distance.
 
 
 ## Strukturprüfende Verfahren
