@@ -247,7 +247,9 @@ APA2_list <-
         n_col <- n_param[i] - 1
         j <-  j + 1
         empty_gofs <-
-          tibble::as.tibble(matrix(rep(NA, n_row * n_col), nrow = n_row))
+          tibble::as_tibble(matrix(rep(NA, n_row * n_col),
+                                   nrow = n_row),
+                            .name_repair = NULL)
         gofs <- append(unclass(gofs), empty_gofs, after = j)
         j <- n_col + j
       }

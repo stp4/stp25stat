@@ -31,18 +31,9 @@ test_that("APA2 und Tabelle und APA2_multiresponse  works", {
             APA = TRUE,
             type = "multi")
 
+# Rueckgabewert geändert
 
-
-
-
-
-
-
-
-
-
-
-  expect_equal(ans1[, 2],  ans2[, 2])
+  expect_equal(ans1[, 2],  ans2[[1]][, 2])
   expect_equal(ans1[, 2], ans3[, 3])
 
 

@@ -1,5 +1,6 @@
 #' @rdname APA_
 #' @description  Wird in APA2 verwendet Tabelle Arbeitet mit Multi2default()
+#' und hat anderen Rueckgabewert als Tabelle (Mittelverte vs String)
 #' @export
 APA2_multiresponse<- function(Formula,
                               data,
@@ -73,12 +74,15 @@ APA2_multiresponse<- function(Formula,
       }
     formula<-paste0("variable~", X$xname)
     ANS <-  Recast2(Formula, data, fun = Prozent,
-                            X = X, #einfach an Recast2 weil sonst die fun mehrmals ausgefuert wird
+                            X = X, 
+                    #einfach an Recast2 weil sonst die fun mehrmals ausgefuert wird
                             id.var = X$xname,
                             formula = formula  ,
                             labels = TRUE, drop = FALSE, margins = X$xname)
+    
     means <- Recast2(Formula, data, fun = mean2,
-                     X = X, #einfach an Recast2 weil sonst die fun mehrmals ausgefuert wird
+                     X = X, 
+                     #einfach an Recast2 weil sonst die fun mehrmals ausgefuert wird
                      id.var = X$xname,
                      formula = formula  ,
                      labels = TRUE, drop = FALSE, margins = X$xname)
@@ -101,5 +105,6 @@ APA2_multiresponse<- function(Formula,
 
   ANS <- prepare_output(ANS, caption, note, nrow(X$Y_data))
   Output(ANS, output=output)
+  
   invisible(list(tab=ANS, mean=means))
 }

@@ -223,7 +223,7 @@ R2.mlm <- function(x, ...) {
 #' @export
 R2.merMod <- function(x, ...) {
   
-  as.data.frame(MuMIn::r.squaredGLMM(x, ...))
+  as.data.frame(suppressWarnings(MuMIn::r.squaredGLMM(x, ...)))
 #  rsq<- r.squared.merMod(x)
 #  attr(rsq, "methode") =  "pseudo"
 #  rsq[c("Marginal", "Conditional")]
@@ -235,8 +235,7 @@ R2.merMod <- function(x, ...) {
 #' @rdname R2
 #' @export
 R2.lme <- function(x, ...) {
-  
-  as.data.frame(MuMIn::r.squaredGLMM(x, ...))
+  as.data.frame(suppressWarnings(MuMIn::r.squaredGLMM(x, ...)))
   #require(nlme)
   # rsq <- r.squared.lme(x)
   # attr(rsq, "methode") =  "pseudo"

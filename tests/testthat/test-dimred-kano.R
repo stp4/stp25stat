@@ -100,9 +100,9 @@ kano_res2 <-Kano( ~ f1 + d1 + f2 + d2 + f3 + d3 +
                     f4 + d4 + f5  + d5 + f6  + d6 +
                     f7 + d7 + f8 + d8 + f9 + d9 + f10 + d10
                   , DF)
-
-expect_equal(kano_res1$scors,
-     kano_res2$scors)
+ 
+expect_equivalent(kano_res1$scors,
+             kano_res2$scors)
  
   
 })
