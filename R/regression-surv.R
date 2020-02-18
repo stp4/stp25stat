@@ -553,6 +553,15 @@ Summary_Surv.survfit <-
     names(result)[3:ncol(result)] <-
       paste0(names_time, "_",   names(result)[3:ncol(result)])
     
+    result <- dapply1(result,
+                      function(x) {
+                        if (is.factor(x))
+                          as.character(x)
+                        else
+                          x
+                      })
+    
+    
     Output(result, caption = caption, output = output)
     invisible(result)
   }

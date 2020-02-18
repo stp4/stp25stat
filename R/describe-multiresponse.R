@@ -44,7 +44,7 @@ APA2_multiresponse<- function(Formula,
   if( is_all_dichotom(X$Y_data)){
      if(is.factor(X$Y_data[,1])){
        firstLevel<- levels(X$Y_data[,1])[use.level]
-       note <- paste0(note, "\nBenutze den ", use.level, " Level, <", firstLevel, "> als Zaehler. \n")
+       note <- paste0(note, "\nBenutze den ", use.level, " Level, (", firstLevel, ") als Zaehler. \n")
        X$Y_data<- dapply2(X$Y_data, function(x) ifelse(x==firstLevel, 1 ,0))
      }
 

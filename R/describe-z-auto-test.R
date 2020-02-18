@@ -413,6 +413,8 @@ errate_statistik3 <-
                                            stringsAsFactors = FALSE)}
 
     Mittelwert_Einzel <- function(i, x) {
+      
+     # cat("\nin Mittelwert_Einzel\n")
       x  <- na.omit(x)
       n  <- length(x)
       rr <- NULL
@@ -532,10 +534,11 @@ errate_statistik3 <-
         " "
       }
     }
-
+   # cat("\n errate_stat3 Vorbereiten\n")
     #-- Vorbereiten der Daten
     ANS <- NULL
     X <- prepare_data2(..., na.action = na.action)
+   # cat("\nnach prepare_data2\n")
     group.vars   <- X$group.vars
     measure.vars <- X$measure.vars
     N            <- nrow(data)
