@@ -10,9 +10,15 @@ Prop_Test(x, ...)
 
 Prop_Test2(x, ..., caption = "", note = "", output = which_output())
 
-\method{Prop_Test}{default}(x, p = 1/nlevels(x),
-  n = length(na.omit(x)), conf.level = 0.95, digits = 0,
-  include.ci = TRUE, ...)
+\method{Prop_Test}{default}(
+  x,
+  p = 1/nlevels(x),
+  n = length(na.omit(x)),
+  conf.level = 0.95,
+  digits = 0,
+  include.ci = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{data.frame-Objekt}

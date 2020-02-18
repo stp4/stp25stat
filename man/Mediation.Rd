@@ -5,11 +5,24 @@
 \alias{Sobel_Test}
 \title{Causal Mediation Analysis}
 \usage{
-Mediation(y_x, y_xm, m_x, y_inter_xm = NULL, data = NULL,
-  caption = "", note = "", output = which_output(),
-  include.parameter = TRUE, include.p = TRUE, include.sobl = TRUE,
-  z.transform = TRUE, treat = model_info(m_x)$x[1],
-  mediator = model_info(m_x)$y, type = "long2", ...)
+Mediation(
+  y_x,
+  y_xm,
+  m_x,
+  y_inter_xm = NULL,
+  data = NULL,
+  caption = "",
+  note = "",
+  output = which_output(),
+  include.parameter = TRUE,
+  include.p = TRUE,
+  include.sobl = TRUE,
+  z.transform = TRUE,
+  treat = model_info(m_x)$x[1],
+  mediator = model_info(m_x)$y,
+  type = "long2",
+  ...
+)
 
 Sobel_Test(y_x, y_xm, m_x, treat, mediator, digits = 2)
 }
@@ -30,15 +43,13 @@ Sobel_Test(y_x, y_xm, m_x, treat, mediator, digits = 2)
 
 \item{z.transform}{Transformation bei der Verwendendung von Formeln}
 
-\item{treat, mediator}{Einflussvariable und Moderator}
+\item{treat, mediator}{Einfluss und  Mediatorals string}
 
 \item{type, include.p, ...}{fuer Regression APA_Tabelle()}
 
 \item{digits}{Nachkommastellen}
 
 \item{y_x, y_xm, m_x}{in Sobel-Test lm-Objekte}
-
-\item{treat, mediator}{Einfluss und  Mediatorals string}
 }
 \value{
 list(param, sobel, methode)
@@ -54,9 +65,9 @@ Mediation ist gegeben wenn alle Modelle signifikant (1) und (4)
   (2) Y~X+M  (wenn hier M signifikant ist => partielle Mediation)
   (4) M~X
 
-Moderation ist gegeben wenn die Interaktion (X:M) signifikant ist
+  Moderation ist gegeben wenn die Interaktion (X:M) signifikant ist
 
-(3) Y~ X + M + X:M
+  (3) Y~ X + M + X:M
   
   Ein Beispiel mit Laavan findet sich unter
   https://paolotoffanin.wordpress.com/2017/05/06/multiple-mediator-analysis-with-lavaan/

@@ -5,20 +5,47 @@
 \alias{extract_param_aov}
 \title{extract_param}
 \usage{
-extract_param(x, include.b = TRUE, include.se = TRUE,
-  include.beta = FALSE, include.ci = FALSE, include.odds = FALSE,
+extract_param(
+  x,
+  include.b = TRUE,
+  include.se = TRUE,
+  include.beta = FALSE,
+  include.ci = FALSE,
+  include.odds = FALSE,
   include.odds.ci = if (include.odds & include.ci) TRUE else FALSE,
-  include.statistic = TRUE, include.p = TRUE, include.stars = FALSE,
-  include.df = FALSE, include.effects = c("ran_pars", "fixed"),
-  include.eta = TRUE, include.sumsq = TRUE, include.meansq = FALSE,
-  conf.int = TRUE, conf.level = 0.95, conf.method = "Wald",
-  fix_format = FALSE, digits.param = 3, digits.odds = 2,
-  digits.test = 2, digits.beta = 2, format = "fg",
-  conf.style.1 = FALSE, test.my.fun = FALSE, ...)
+  include.statistic = TRUE,
+  include.p = TRUE,
+  include.stars = FALSE,
+  include.df = FALSE,
+  include.effects = c("ran_pars", "fixed"),
+  include.eta = TRUE,
+  include.sumsq = TRUE,
+  include.meansq = FALSE,
+  conf.int = TRUE,
+  conf.level = 0.95,
+  conf.method = "Wald",
+  fix_format = FALSE,
+  digits.param = 3,
+  digits.odds = 2,
+  digits.test = 2,
+  digits.beta = 2,
+  format = "fg",
+  conf.style.1 = FALSE,
+  test.my.fun = FALSE,
+  ...
+)
 
-extract_param_aov(x, include.eta = TRUE, include.sumsq = TRUE,
-  include.meansq = FALSE, test.my.fun = FALSE, fix_format = FALSE,
-  digits.test = 2, format = "f", ...)
+extract_param_aov(
+  x,
+  include.eta = TRUE,
+  include.sumsq = TRUE,
+  include.meansq = FALSE,
+  test.my.fun = FALSE,
+  fix_format = FALSE,
+  digits.test = 2,
+  format = "f",
+  ...
+)
 }
 \arguments{
 \item{x}{Objekt}

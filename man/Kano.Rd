@@ -5,14 +5,31 @@
 \alias{Kano_Auswertung}
 \title{Analyze Kano Type Items.}
 \usage{
-Kano(..., type = 5, umcodieren = FALSE, rm_Q = 10000, rm_I = 10000,
-  methode = 1, vars_func = NULL, vars_dysfunc = NULL)
+Kano(
+  ...,
+  type = 5,
+  umcodieren = FALSE,
+  rm_Q = 10000,
+  rm_I = 10000,
+  methode = 1,
+  vars_func = NULL,
+  vars_dysfunc = NULL
+)
 
-Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
+Kano_Auswertung(
+  x,
+  caption = "",
+  note = "",
+  formula = x$formula,
   data = x$molten[-1],
   digits = options()$stp4$apa.style$prozent$digits[1],
-  include.n = TRUE, include.percent = TRUE, include.total = TRUE,
-  include.test = TRUE, include.fong = TRUE, rnd_output = TRUE)
+  include.n = TRUE,
+  include.percent = TRUE,
+  include.total = TRUE,
+  include.test = TRUE,
+  include.fong = TRUE,
+  rnd_output = TRUE
+)
 }
 \arguments{
 \item{...}{x, data, by, subset, na.action}
@@ -37,13 +54,11 @@ Kano_Auswertung(x, caption = "", note = "", formula = x$formula,
 
 \item{include.n, include.percent}{Anzahl, Prozent}
 
-\item{include.total}{N und Total}
+\item{include.total}{Anzahl Total}
 
 \item{include.test, include.fong}{Fong und Chie-Test}
 
 \item{rnd_output}{Intern fuer Plot bei FALSE ausgabe als Zahl}
-
-\item{include.total}{Anzahl Total}
 }
 \value{
 Liste mit:
@@ -59,7 +74,7 @@ Die Funktion \code{Kano()} transformiert Kano-Fragebogen zur Kano-Kodierung
 http://www.eric-klopp.de/texte/angewandte-psychologie/18-die-kano-methode
 https://de.wikipedia.org/wiki/Kano-Modell
 
-\subsection{M Basis-Faktoren (Mussfaktoren)}{
+ \subsection{M Basis-Faktoren (Mussfaktoren)}{
  Basis-Merkmale (\strong{M}ustbe) werden vom Kunden Vorausgesetzt schaffen
  Unzufriedenheit wenn sie nicht vorhanden sind.
  }
@@ -79,7 +94,7 @@ https://de.wikipedia.org/wiki/Kano-Modell
 
 
 
-\tabular{lrrrrr}{
+ \tabular{lrrrrr}{
  \strong{Func/Dyfunc} \tab like (1) \tab must-be (2) \tab neutral (3) \tab live with (4)  \tab dislike (5) \cr
    like (1) \tab O \tab A \tab A \tab A \tab O \cr
    must-be (2) \tab R \tab I \tab I \tab I \tab M \cr
@@ -87,7 +102,8 @@ https://de.wikipedia.org/wiki/Kano-Modell
    live with (4) \tab R \tab I \tab I \tab I \tab M \cr
    dislike (5) \tab R \tab R \tab R \tab R \tab Q
 
-}
+     }
+
 
 \strong{Kodierung}
 
@@ -96,6 +112,7 @@ Das setze ich voraus (2)
 Das ist mir egal (3)
 Das könnte ich in Kauf nehmen (4)
 Das würde mich sehr stören (5)
+
 
 
 

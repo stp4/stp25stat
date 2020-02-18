@@ -52,11 +52,14 @@
 \alias{APA2.xtabs}
 \title{APA Style HTML-Tabellen-Ausgabe}
 \usage{
-\method{APA2}{ICC}(x, caption = "ICC", note = NULL, type = c(1, 4),
-  output = which_output())
+\method{APA2}{ICC}(x, caption = "ICC", note = NULL, type = c(1, 4), output = which_output())
 
-\method{APA2}{bland_altman}(x, caption = paste0("Difference (",
-  x$name.diff, "), Mean (", x$name, ")"), note = "", ...)
+\method{APA2}{bland_altman}(
+  x,
+  caption = paste0("Difference (", x$name.diff, "), Mean (", x$name, ")"),
+  note = "",
+  ...
+)
 
 \method{print}{bland_altman}(x)
 
@@ -64,167 +67,362 @@
 
 \method{APA2}{pairwise.htest}(x, caption = "", ...)
 
-Corr1(y, n = nrow(y), type = "pearson", include.p = FALSE,
-  include.stars = TRUE, cor_diagonale_up = TRUE, dimnames = FALSE)
+Corr1(
+  y,
+  n = nrow(y),
+  type = "pearson",
+  include.p = FALSE,
+  include.stars = TRUE,
+  cor_diagonale_up = TRUE,
+  dimnames = FALSE
+)
 
 Corr2(x, y = NULL, type = "pearson", stars, ...)
 
 APA2(x, ...)
 
-\method{APA2}{NULL}(x, ...)
+\method{APA2}{`NULL`}(x, ...)
 
-\method{APA2}{psychobject}(x, caption = "", note = NULL,
-  include.ci = FALSE, include.effect = FALSE,
-  output = stp25output::which_output(), ...)
+\method{APA2}{psychobject}(
+  x,
+  caption = "",
+  note = NULL,
+  include.ci = FALSE,
+  include.effect = FALSE,
+  output = stp25output::which_output(),
+  ...
+)
 
 \method{APA2}{default}(x, ...)
 
-\method{APA2}{formula}(x, data = NULL, caption = "", fun = NULL,
-  type = c("auto", "freq", "mean", "median", "ci", "multiresponse",
-  "cohen.d", "effsize", "freq.ci", "describe"), note = "",
-  na.action = na.pass, test = FALSE, corr_test = "pearson",
-  cor_diagonale_up = TRUE, direction = "long", order = FALSE,
-  decreasing = TRUE, use.level = 1, include.n = TRUE,
-  include.all.n = NULL, include.header.n = TRUE,
-  include.total = FALSE, include.test = test, include.p = FALSE,
-  include.stars = TRUE, include.names = FALSE, include.labels = TRUE,
-  digits = NULL, digits.mean = if (!is.null(digits)) c(digits, digits)
-  else NULL, digits.percent = if (is.null(digits))
-  options()$stp25$apa.style$prozent$digits else c(digits, 0),
-  output = which_output(), ...)
+\method{APA2}{formula}(
+  x,
+  data = NULL,
+  caption = "",
+  fun = NULL,
+  type = c("auto", "freq", "mean", "median", "ci", "multiresponse", "cohen.d",
+    "effsize", "freq.ci", "describe"),
+  note = "",
+  na.action = na.pass,
+  test = FALSE,
+  corr_test = "pearson",
+  cor_diagonale_up = TRUE,
+  direction = "long",
+  order = FALSE,
+  decreasing = TRUE,
+  use.level = 1,
+  include.n = TRUE,
+  include.all.n = NULL,
+  include.header.n = TRUE,
+  include.total = FALSE,
+  include.test = test,
+  include.p = FALSE,
+  include.stars = TRUE,
+  include.names = FALSE,
+  include.labels = TRUE,
+  digits = NULL,
+  digits.mean = if (!is.null(digits)) c(digits, digits) else NULL,
+  digits.percent = if (is.null(digits)) options()$stp25$apa.style$prozent$digits else
+    c(digits, 0),
+  output = which_output(),
+  ...
+)
 
-Recast2_fun(x, data, caption = "", fun, direction = "long",
-  note = "", include.n = FALSE, ...)
+Recast2_fun(
+  x,
+  data,
+  caption = "",
+  fun,
+  direction = "long",
+  note = "",
+  include.n = FALSE,
+  ...
+)
 
-\method{APA2}{likert}(x, caption = "", note = "",
-  ReferenceZero = NULL, type = "percent", include.mean = TRUE,
-  na.exclude = FALSE, labels = c("low", "neutral", "high"),
-  order = FALSE, output = which_output(), ...)
+\method{APA2}{likert}(
+  x,
+  caption = "",
+  note = "",
+  ReferenceZero = NULL,
+  type = "percent",
+  include.mean = TRUE,
+  na.exclude = FALSE,
+  labels = c("low", "neutral", "high"),
+  order = FALSE,
+  output = which_output(),
+  ...
+)
 
-errate_statistik2(Formula, data, caption = "caption", note = "note",
-  type = NULL, na.action = na.pass, exclude = NA, include.n = TRUE,
-  include.all.n = NULL, include.header.n = TRUE,
-  include.total = FALSE, include.test = FALSE, include.p = TRUE,
-  include.stars = FALSE, corr_test = "pearson",
-  cor_diagonale_up = TRUE, max_factor_length = 35, order = FALSE,
-  decreasing = FALSE, useconTest = FALSE, normality.test = FALSE,
+errate_statistik2(
+  Formula,
+  data,
+  caption = "caption",
+  note = "note",
+  type = NULL,
+  na.action = na.pass,
+  exclude = NA,
+  include.n = TRUE,
+  include.all.n = NULL,
+  include.header.n = TRUE,
+  include.total = FALSE,
+  include.test = FALSE,
+  include.p = TRUE,
+  include.stars = FALSE,
+  corr_test = "pearson",
+  cor_diagonale_up = TRUE,
+  max_factor_length = 35,
+  order = FALSE,
+  decreasing = FALSE,
+  useconTest = FALSE,
+  normality.test = FALSE,
   digits.mean = options()$stp25$apa.style$m$digits,
   digits.percent = options()$stp25$apa.style$prozent$digits[1],
-  test_name = "Hmisc", ...)
+  test_name = "Hmisc",
+  ...
+)
 
 \method{APA2}{fa}(...)
 
-\method{APA2}{principal}(x, caption = "", note = "", digits = 2,
-  all = FALSE, cut = 0.3, sort = TRUE, suppress.warnings = TRUE,
-  ...)
+\method{APA2}{principal}(
+  x,
+  caption = "",
+  note = "",
+  digits = 2,
+  all = FALSE,
+  cut = 0.3,
+  sort = TRUE,
+  suppress.warnings = TRUE,
+  ...
+)
 
-\method{APA2}{stp25_reliability}(x, caption = "", note = "",
-  output = which_output(), ...)
+\method{APA2}{stp25_reliability}(x, caption = "", note = "", output = which_output(), ...)
 
-\method{APA2}{Kano}(x, caption = "", note = NULL,
-  output = which_output(), ...)
+\method{APA2}{Kano}(x, caption = "", note = NULL, output = which_output(), ...)
 
 \method{print}{Kano}(x, ...)
 
 \method{APA}{power.htest}(x, ..., output = which_output())
 
-\method{APA2}{meta}(x, caption = "Meta-analysis",
-  note = paste("estimate:", x$sm, x$method.smd), include.table = TRUE,
-  include.fixed = FALSE, include.random = TRUE, include.sub = TRUE,
-  include.total = TRUE, include.heterogeneity = TRUE, digits = 2,
-  output = which_output(), ...)
+\method{APA2}{meta}(
+  x,
+  caption = "Meta-analysis",
+  note = paste("estimate:", x$sm, x$method.smd),
+  include.table = TRUE,
+  include.fixed = FALSE,
+  include.random = TRUE,
+  include.sub = TRUE,
+  include.total = TRUE,
+  include.heterogeneity = TRUE,
+  digits = 2,
+  output = which_output(),
+  ...
+)
 
 \method{APA2}{list}(...)
 
-\method{APA2}{lm}(x, caption = NULL, note = NULL,
-  output = stp25output::which_output(), col_names = NULL,
-  include.b = TRUE, include.se = TRUE, include.beta = FALSE,
-  include.ci = FALSE, include.r = TRUE, include.test = FALSE,
-  ci.level = 0.95, test.my.fun = FALSE, conf.style.1 = TRUE, ...)
+\method{APA2}{lm}(
+  x,
+  caption = NULL,
+  note = NULL,
+  output = stp25output::which_output(),
+  col_names = NULL,
+  include.b = TRUE,
+  include.se = TRUE,
+  include.beta = FALSE,
+  include.ci = FALSE,
+  include.r = TRUE,
+  include.test = FALSE,
+  ci.level = 0.95,
+  test.my.fun = FALSE,
+  conf.style.1 = TRUE,
+  ...
+)
 
-\method{APA2}{glm}(x, caption = NULL, note = NULL,
-  output = stp25output::which_output(), col_names = NULL,
-  include.b = TRUE, include.se = TRUE, include.ci = FALSE,
-  include.odds = TRUE, include.odds.ci = include.ci,
-  include.statistic = TRUE, include.p = TRUE, include.stars = FALSE,
-  include.r = TRUE, include.pseudo = include.r, include.test = FALSE,
-  include.rr = FALSE, include.rr.ci = include.ci, ci.level = 0.95,
-  conf.method = "Wald", test.my.fun = FALSE, conf.style.1 = TRUE,
-  digits = 2, ...)
+\method{APA2}{glm}(
+  x,
+  caption = NULL,
+  note = NULL,
+  output = stp25output::which_output(),
+  col_names = NULL,
+  include.b = TRUE,
+  include.se = TRUE,
+  include.ci = FALSE,
+  include.odds = TRUE,
+  include.odds.ci = include.ci,
+  include.statistic = TRUE,
+  include.p = TRUE,
+  include.stars = FALSE,
+  include.r = TRUE,
+  include.pseudo = include.r,
+  include.test = FALSE,
+  include.rr = FALSE,
+  include.rr.ci = include.ci,
+  ci.level = 0.95,
+  conf.method = "Wald",
+  test.my.fun = FALSE,
+  conf.style.1 = TRUE,
+  digits = 2,
+  ...
+)
 
 \method{APA2}{lme}(...)
 
-\method{APA2}{lmerMod}(x, caption = NULL, note = NULL,
-  output = stp25output::which_output(), col_names = NULL,
-  include.b = TRUE, include.se = TRUE, include.ci = FALSE,
-  include.odds = FALSE, include.odds.ci = include.ci,
-  include.statistic = TRUE, include.p = TRUE, include.stars = FALSE,
-  include.r = TRUE, include.pseudo = include.r, include.test = FALSE,
-  ci.level = 0.95, conf.method = "Wald", test.my.fun = FALSE,
-  conf.style.1 = TRUE, digits = 2, ...)
+\method{APA2}{lmerMod}(
+  x,
+  caption = NULL,
+  note = NULL,
+  output = stp25output::which_output(),
+  col_names = NULL,
+  include.b = TRUE,
+  include.se = TRUE,
+  include.ci = FALSE,
+  include.odds = FALSE,
+  include.odds.ci = include.ci,
+  include.statistic = TRUE,
+  include.p = TRUE,
+  include.stars = FALSE,
+  include.r = TRUE,
+  include.pseudo = include.r,
+  include.test = FALSE,
+  ci.level = 0.95,
+  conf.method = "Wald",
+  test.my.fun = FALSE,
+  conf.style.1 = TRUE,
+  digits = 2,
+  ...
+)
 
-\method{APA2}{polr}(x, caption = NULL, note = NULL, include.b = TRUE,
-  include.se = TRUE, include.ci = FALSE, include.odds = TRUE, ...)
+\method{APA2}{polr}(
+  x,
+  caption = NULL,
+  note = NULL,
+  include.b = TRUE,
+  include.se = TRUE,
+  include.ci = FALSE,
+  include.odds = TRUE,
+  ...
+)
 
-\method{APA2}{step}(x,
-  caption = "Backward elimination of non-significant effects of linear mixed effects model",
-  note = "", include.se = FALSE, include.df = FALSE, ...)
+\method{APA2}{step}(
+  x,
+ 
+    caption = "Backward elimination of non-significant effects of linear mixed effects model",
+  note = "",
+  include.se = FALSE,
+  include.df = FALSE,
+  ...
+)
 
-\method{APA2}{manova}(x, test = "Wilks", caption = "MANOVA",
-  note = "", type = c("anova", "manova"), include.eta = TRUE,
-  output = which_output())
+\method{APA2}{manova}(
+  x,
+  test = "Wilks",
+  caption = "MANOVA",
+  note = "",
+  type = c("anova", "manova"),
+  include.eta = TRUE,
+  output = which_output()
+)
 
-\method{APA2}{candisc}(x, caption = NA, note = "",
-  output = which_output(), LRtests = TRUE, ...)
+\method{APA2}{candisc}(x, caption = NA, note = "", output = which_output(), LRtests = TRUE, ...)
 
-\method{APA2}{Anova.mlm}(x, caption = NA, note = "",
-  output = which_output(), ...)
+\method{APA2}{Anova.mlm}(x, caption = NA, note = "", output = which_output(), ...)
 
-\method{APA2}{lda}(x, fit_predict = MASS:::predict.lda(x),
-  newdata = model.frame(x), caption = "", note = "",
-  output = which_output(), ...)
+\method{APA2}{lda}(
+  x,
+  fit_predict = MASS:::predict.lda(x),
+  newdata = model.frame(x),
+  caption = "",
+  note = "",
+  output = which_output(),
+  ...
+)
 
-\method{APA2}{TukeyHSD}(x, caption = "TukeyHSD", note = "",
-  output = stp25output::which_output(), ...)
+\method{APA2}{TukeyHSD}(
+  x,
+  caption = "TukeyHSD",
+  note = "",
+  output = stp25output::which_output(),
+  ...
+)
 
-\method{APA2}{glht}(x, caption = "Multiple Comparisons of Means",
-  note = "", output = stp25output::which_output(), include.ci = TRUE,
-  level = 0.95, ...)
+\method{APA2}{glht}(
+  x,
+  caption = "Multiple Comparisons of Means",
+  note = "",
+  output = stp25output::which_output(),
+  include.ci = TRUE,
+  level = 0.95,
+  ...
+)
 
 \method{APA2}{multicomp}(x, ...)
 
-\method{APA2}{anova}(x, caption = gsub("\\\\n", "", paste(attr(x,
-  "heading"), collapse = ", ")), note = paste("contrasts: ",
-  paste(options()$contrasts, collapse = ", ")),
-  output = stp25output::which_output(), include.eta = FALSE,
-  include.sumsq = TRUE, include.meansq = FALSE, ...)
+\method{APA2}{anova}(
+  x,
+  caption = gsub("\\\\n", "", paste(attr(x, "heading"), collapse = ", ")),
+  note = paste("contrasts: ", paste(options()$contrasts, collapse = ", ")),
+  output = stp25output::which_output(),
+  include.eta = FALSE,
+  include.sumsq = TRUE,
+  include.meansq = FALSE,
+  ...
+)
 
-\method{APA2}{aov}(x, caption = "ANOVA", note = paste("contrasts: ",
-  paste(options()$contrasts, collapse = ", ")),
-  output = stp25output::which_output(), col_names = NULL, ...)
+\method{APA2}{aov}(
+  x,
+  caption = "ANOVA",
+  note = paste("contrasts: ", paste(options()$contrasts, collapse = ", ")),
+  output = stp25output::which_output(),
+  col_names = NULL,
+  ...
+)
 
-\method{APA2}{summary.aov}(x, caption = "ANOVA", note = "",
-  output = stp25output::which_output(), col_names = NULL, ...)
+\method{APA2}{summary.aov}(
+  x,
+  caption = "ANOVA",
+  note = "",
+  output = stp25output::which_output(),
+  col_names = NULL,
+  ...
+)
 
-\method{APA2}{aovlist}(x, output = stp25output::which_output(),
-  col_names = NULL, ...)
+\method{APA2}{aovlist}(x, output = stp25output::which_output(), col_names = NULL, ...)
 
-\method{APA2}{loglm}(x, caption = "Likelihood", note = "",
-  output = stp25output::which_output(), col_names = NULL, ...)
+\method{APA2}{loglm}(
+  x,
+  caption = "Likelihood",
+  note = "",
+  output = stp25output::which_output(),
+  col_names = NULL,
+  ...
+)
 
 \method{APA2}{summary.table}(x, ...)
 
 \method{APA2}{table}(...)
 
-\method{APA2}{xtabs}(x, caption = "", note = "",
-  output = stp25output::which_output(), col_names = NULL,
-  print_col = NULL, digits = NULL, test = FALSE, type = c("0",
-  "fischer", "odds", "sensitivity", "chisquare", "correlation", "r"),
-  include.total = FALSE, include.total.columns = FALSE,
-  include.total.sub = FALSE, include.total.rows = FALSE,
-  include.percent = TRUE, include.count = TRUE,
-  include.margins = TRUE, margin = NA, add.margins = NA,
-  labels = NULL, ...)
+\method{APA2}{xtabs}(
+  x,
+  caption = "",
+  note = "",
+  output = stp25output::which_output(),
+  col_names = NULL,
+  print_col = NULL,
+  digits = NULL,
+  test = FALSE,
+  type = c("0", "fischer", "odds", "sensitivity", "chisquare", "correlation", "r"),
+  include.total = FALSE,
+  include.total.columns = FALSE,
+  include.total.sub = FALSE,
+  include.total.rows = FALSE,
+  include.percent = TRUE,
+  include.count = TRUE,
+  include.margins = TRUE,
+  margin = NA,
+  add.margins = NA,
+  labels = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{Ein R Objekt oder eine Formel oder ein data.frame}
@@ -261,7 +459,7 @@ corr_test-ddefault ist  "pearson" c("pearson","spearman")}
 
 \item{include.names, include.labels}{Beschriftung der zeilen}
 
-\item{digits}{digits}
+\item{digits}{Nachkommastellen}
 
 \item{digits.mean, digits.percent}{Nachkommastellen}
 
@@ -314,8 +512,6 @@ labels = c("low", "neutral", "high")
 \item{anova_type}{bei lme:  "F"  F-werte (wie SPSS) oder Chi (car::Anova)}
 
 \item{caption, note, output, col_names, print_col, labels}{an Output}
-
-\item{digits}{Nachkommastellen}
 
 \item{test, type}{fischer chi usw}
 

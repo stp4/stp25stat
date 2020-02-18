@@ -35,11 +35,17 @@ APA(x, ...)
 
 \method{APA}{coxph}(x, ...)
 
-\method{APA2}{psychobject}(x, caption = "", note = NULL,
-  include.ci = FALSE, include.effect = FALSE,
-  output = stp25output::which_output(), ...)
+\method{APA2}{psychobject}(
+  x,
+  caption = "",
+  note = NULL,
+  include.ci = FALSE,
+  include.effect = FALSE,
+  output = stp25output::which_output(),
+  ...
+)
 
-\method{APA}{NULL}(x, ...)
+\method{APA}{`NULL`}(x, ...)
 
 \method{APA}{default}(x, ...)
 
@@ -47,8 +53,7 @@ APA(x, ...)
 
 \method{APA}{factor}(...)
 
-\method{APA}{formula}(x, data, exclude = NA, max_factor_length = 25,
-  ...)
+\method{APA}{formula}(x, data, exclude = NA, max_factor_length = 25, ...)
 
 \method{APA}{stp25_reliability}(x, ...)
 

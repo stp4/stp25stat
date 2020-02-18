@@ -4,8 +4,7 @@
 \alias{prepare_output}
 \title{prepare_output}
 \usage{
-prepare_output(x, caption = NULL, note = NULL, N = NULL,
-  labels = NA, ...)
+prepare_output(x, caption = NULL, note = NULL, N = NULL, labels = NA, ...)
 }
 \arguments{
 \item{x}{Objekt Vector oder auch Formel}

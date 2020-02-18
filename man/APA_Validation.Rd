@@ -18,32 +18,58 @@
  
 Im Folgenden die wichtige Voraussetzungen der Regressionsanalyse}
 \usage{
-APA_Validation(..., include.ftest = TRUE, include.loglik = FALSE,
-  include.minus.LL = include.loglik, include.pseudo = TRUE,
-  include.r = include.pseudo, include.heteroskedasticity = TRUE,
-  include.durbin = TRUE, include.levene = FALSE,
-  include.bartlett = FALSE, include.multicollin = FALSE,
-  include.vif = FALSE, include.sigma = FALSE, include.rmse = FALSE,
-  include.aic = TRUE, include.bic = include.aic,
-  include.residual = TRUE, include.normality = TRUE,
-  include.deviance = TRUE, caption = "Testing Regression Models",
-  note = "", names = NULL)
+APA_Validation(
+  ...,
+  include.ftest = TRUE,
+  include.loglik = FALSE,
+  include.minus.LL = include.loglik,
+  include.pseudo = TRUE,
+  include.r = include.pseudo,
+  include.heteroskedasticity = TRUE,
+  include.durbin = TRUE,
+  include.levene = FALSE,
+  include.bartlett = FALSE,
+  include.multicollin = FALSE,
+  include.vif = FALSE,
+  include.sigma = FALSE,
+  include.rmse = FALSE,
+  include.aic = TRUE,
+  include.bic = include.aic,
+  include.residual = TRUE,
+  include.normality = TRUE,
+  include.deviance = TRUE,
+  caption = "Testing Regression Models",
+  note = "",
+  names = NULL,
+  output = which_output()
+)
 
-APA_Multicollinearity(x, caption = "Test for Multicollinearity ",
-  note = "", include.vif = TRUE, include.cor = TRUE,
-  output = which_output())
+APA_Multicollinearity(
+  x,
+  caption = "Test for Multicollinearity ",
+  note = "",
+  include.vif = TRUE,
+  include.cor = TRUE,
+  output = which_output()
+)
 
 APA_Autocorrelation(x, order = 1, ...)
 
 APA_Heteroscedasticity(x...)
 
-APA_Durbin_Watson(x,
+APA_Durbin_Watson(
+  x,
   caption = "Durbin-Watson Test for Autocorrelated Errors",
-  note = NULL, ...)
+  note = NULL,
+  ...
+)
 
-\method{APA2}{durbinWatsonTest}(x,
+\method{APA2}{durbinWatsonTest}(
+  x,
   caption = "Durbin-Watson Test for Autocorrelated Errors",
-  note = NULL, ...)
+  note = NULL,
+  ...
+)
 
 VIF(x, ...)
 
@@ -76,11 +102,9 @@ VIF2(..., caption = "VIF", notes = "")
 
 \item{caption, note}{Ueberschrift an Output}
 
-\item{x}{model- fit}
+\item{x}{fit-Objekt}
 
 \item{include.cor}{Bivariate Correlations}
-
-\item{x}{fit-Objekt}
 }
 \description{
 Das Modell ist linear in den Parametern.

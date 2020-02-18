@@ -4,8 +4,12 @@
 \alias{Info_Statistic}
 \title{Information uere die verwendeten Methoden}
 \usage{
-Info_Statistic(methode = "describe", library = "base",
-  fun = "summary", my_methodes = "")
+Info_Statistic(
+  methode = "describe",
+  library = "base",
+  fun = "summary",
+  my_methodes = ""
+)
 }
 \arguments{
 \item{methode, library, fun}{Text}

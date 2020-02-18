@@ -10,11 +10,19 @@ SEM(x, ...)
 
 \method{SEM}{default}(x, ...)
 
-\method{APA2}{lavaan}(x, baseline.model = NULL, caption = "",
-  note = "", output = which_output(), type = "all",
-  include.ci = FALSE, include.model = if (type == "all") TRUE else
-  FALSE, include.varianz = if (type == "all") TRUE else FALSE,
-  include.latent = if (type == "all") TRUE else FALSE, ...)
+\method{APA2}{lavaan}(
+  x,
+  baseline.model = NULL,
+  caption = "",
+  note = "",
+  output = which_output(),
+  type = "all",
+  include.ci = FALSE,
+  include.model = if (type == "all") TRUE else FALSE,
+  include.varianz = if (type == "all") TRUE else FALSE,
+  include.latent = if (type == "all") TRUE else FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{Objekt}

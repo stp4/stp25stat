@@ -11,52 +11,117 @@
 \alias{APA_Table_Anova}
 \title{Regressions Tabelle}
 \usage{
-APA_Table(..., caption = NULL, note = NULL,
-  output = stp25output::which_output(), type = c("long2", "wide",
-  "default", "long", "broom", "texreg", "stargazer", "sjPlot", "anova"),
-  names = NULL, custom.model.names = NULL, digits = NULL,
-  include.b = TRUE, include.se = TRUE, include.t = FALSE,
-  include.beta = FALSE, include.odds = FALSE, include.ci = FALSE,
-  include.odds.ci = FALSE, include.p = FALSE, include.stars = if
-  (include.p) FALSE else TRUE, include.variance = TRUE,
-  include.r = TRUE, include.pseudo = FALSE, include.ftest = FALSE,
-  include.loglik = FALSE, include.custom = NULL, include.aic = TRUE,
-  include.bic = include.aic, include.anova = FALSE,
-  include.sumsq = TRUE, include.meansq = FALSE, include.eta = FALSE,
-  include.gof = TRUE, include.param = TRUE, ci.level = 0.95,
-  single.row = TRUE, rgroup = c("Parameter", "Goodness of fit"),
-  test.my.fun = FALSE, include.effects = c("ran_pars", "fixed"),
-  include.statistic = FALSE, include.test = FALSE, conf.int = TRUE,
-  conf.level = 0.95, conf.method = "Wald", fix_format = FALSE,
-  digits.param = 3, digits.odds = 2, digits.test = 2,
-  digits.beta = 2, format = "fg")
+APA_Table(
+  ...,
+  caption = NULL,
+  note = NULL,
+  output = stp25output::which_output(),
+  type = c("long2", "wide", "default", "long", "broom", "texreg", "stargazer", "sjPlot",
+    "anova"),
+  names = NULL,
+  col_names = NULL,
+  custom.model.names = NULL,
+  digits = NULL,
+  include.b = TRUE,
+  include.se = TRUE,
+  include.t = FALSE,
+  include.beta = FALSE,
+  include.odds = FALSE,
+  include.ci = FALSE,
+  include.odds.ci = FALSE,
+  include.p = FALSE,
+  include.stars = if (include.p) FALSE else TRUE,
+  include.variance = TRUE,
+  include.r = TRUE,
+  include.pseudo = FALSE,
+  include.ftest = FALSE,
+  include.loglik = FALSE,
+  include.custom = NULL,
+  include.aic = TRUE,
+  include.bic = include.aic,
+  include.anova = FALSE,
+  include.sumsq = TRUE,
+  include.meansq = FALSE,
+  include.eta = FALSE,
+  include.gof = TRUE,
+  include.param = TRUE,
+  ci.level = 0.95,
+  single.row = TRUE,
+  rgroup = c("Parameter", "Goodness of fit"),
+  test.my.fun = FALSE,
+  include.effects = c("ran_pars", "fixed"),
+  include.statistic = FALSE,
+  include.test = FALSE,
+  conf.int = TRUE,
+  conf.level = 0.95,
+  conf.method = "Wald",
+  fix_format = FALSE,
+  digits.param = 3,
+  digits.odds = 2,
+  digits.test = 2,
+  digits.beta = 2,
+  format = "fg"
+)
 
-type_default(x, caption = NULL, output = NA, note = NULL,
-  custom.model.names = NULL, test.my.fun = FALSE, ...)
+type_default(
+  x,
+  caption = NULL,
+  output = NA,
+  note = NULL,
+  custom.model.names = NULL,
+  test.my.fun = FALSE,
+  ...
+)
 
-type_texreg(list, caption = "", note = "", output = NA,
-  names = NULL, digits = 2, single.row = TRUE,
-  include.stars = TRUE, include.p = FALSE, ci.force = FALSE,
-  include.variance = TRUE, custom.model.names = if (is.null(names))
-  paste0("(", 1:length(list), ")") else names,
+type_texreg(
+  list,
+  caption = "",
+  note = "",
+  output = NA,
+  names = NULL,
+  digits = 2,
+  single.row = TRUE,
+  include.stars = TRUE,
+  include.p = FALSE,
+  ci.force = FALSE,
+  include.variance = TRUE,
+  custom.model.names = if (is.null(names)) paste0("(", 1:length(list), ")") else names,
   center = options()$stp25$apa.style$center,
   stars = options()$stp25$apa.style$p$stars.value,
-  stars.symbols = options()$stp25$apa.style$p$stars.symbols)
+  stars.symbols = options()$stp25$apa.style$p$stars.symbols
+)
 
 type_stargazer(list, caption, digits)
 
 type_long(...)
 
-regression_output(fits, caption = "", note = "",
-  custom.model.names = NULL, digits = 2, p.value = TRUE,
-  col_names = NULL, rgroup = c("Parameter", "Goodness of fit"),
-  include.pseudo = FALSE, include.ftest = FALSE,
-  include.loglik = FALSE, include.CI = FALSE, ...)
+regression_output(
+  fits,
+  caption = "",
+  note = "",
+  custom.model.names = NULL,
+  digits = 2,
+  p.value = TRUE,
+  col_names = NULL,
+  rgroup = c("Parameter", "Goodness of fit"),
+  include.pseudo = FALSE,
+  include.ftest = FALSE,
+  include.loglik = FALSE,
+  include.CI = FALSE,
+  ...
+)
 
-APA_Table_Anova(myfits, caption = "Anova", note = NULL,
-  output = stp25output::which_output(), names = NULL,
-  include.eta = TRUE, include.sumsq = TRUE, include.meansq = FALSE,
-  ...)
+APA_Table_Anova(
+  myfits,
+  caption = "Anova",
+  note = NULL,
+  output = stp25output::which_output(),
+  names = NULL,
+  include.eta = TRUE,
+  include.sumsq = TRUE,
+  include.meansq = FALSE,
+  ...
+)
 }
 \arguments{
 \item{...}{Modelle}

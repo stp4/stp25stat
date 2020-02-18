@@ -10,19 +10,22 @@
 \usage{
 Likert(...)
 
-brewer_pal_likert(n = 5, name = "RdBu", middle.color = "gray80",
-  min_gray = 10, max_gray = 60)
+brewer_pal_likert(
+  n = 5,
+  name = "RdBu",
+  middle.color = "gray80",
+  min_gray = 10,
+  max_gray = 60
+)
 
-\method{Likert}{default}(data, ..., groups = NULL, labels = NULL,
-  reverse.labels = FALSE)
+\method{Likert}{default}(data, ..., groups = NULL, labels = NULL, reverse.labels = FALSE)
 
-\method{Likert}{formula}(x, data, labels = NULL,
-  reverse.labels = FALSE)
+\method{Likert}{formula}(x, data, labels = NULL, reverse.labels = FALSE)
 
 \method{print}{likert}(x, ...)
 }
 \arguments{
-\item{...}{Alle weiteren Argumente}
+\item{...}{Variablennamen}
 
 \item{n, name, middle.color, min_gray, max_gray}{brewer_pal_likert Default 5 Stufen mit Grau in der Mitte}
 
@@ -35,8 +38,6 @@ brewer_pal_likert(n = 5, name = "RdBu", middle.color = "gray80",
 \item{reverse.labels}{Codierung umderehen}
 
 \item{x}{Objekt Formula}
-
-\item{...}{Variablennamen}
 }
 \value{
 a likert class list with the following elements:

@@ -5,19 +5,40 @@
 \alias{Rangreihe_default}
 \title{Rangreihe}
 \usage{
-Rangreihe(..., caption = "Rangreihe",
+Rangreihe(
+  ...,
+  caption = "Rangreihe",
   note = "Law of Categorical Judgement",
-  output = stp25output::which_output(), na.action = na.pass,
-  include.percent = TRUE, include.freq = TRUE, include.mean = TRUE,
-  include.z = TRUE, include.na = TRUE, groups = NULL, order = TRUE,
-  decreasing = TRUE, digits.mean = 2)
+  output = stp25output::which_output(),
+  na.action = na.pass,
+  include.percent = TRUE,
+  include.freq = TRUE,
+  include.mean = TRUE,
+  include.z = TRUE,
+  include.na = TRUE,
+  groups = NULL,
+  order = TRUE,
+  decreasing = TRUE,
+  digits.mean = 2
+)
 
-Rangreihe_default(items, caption = "", note = "",
-  output = stp25output::which_output(), include.percent = TRUE,
-  include.freq = TRUE, include.mean = TRUE, include.z = TRUE,
-  include.na = TRUE, groups = NULL, order = TRUE,
-  decreasing = TRUE, digits.mean = 2, input = NULL,
-  pattern = "____")
+Rangreihe_default(
+  items,
+  caption = "",
+  note = "",
+  output = stp25output::which_output(),
+  include.percent = TRUE,
+  include.freq = TRUE,
+  include.mean = TRUE,
+  include.z = TRUE,
+  include.na = TRUE,
+  groups = NULL,
+  order = TRUE,
+  decreasing = TRUE,
+  digits.mean = 2,
+  input = NULL,
+  pattern = "____"
+)
 }
 \arguments{
 \item{...}{Weitere Argumente}
@@ -171,7 +192,7 @@ Rangreihe(dat_bortz)
 n <- 2 * 3 * 4 * 1
 
 set.seed(n)
-kaffee <- c("Guatemala", "Vietnam", "Honduras", "Äthiopien")
+kaffee <- c("Guatemala", "Vietnam", "Honduras", "Ã„thiopien")
 sex<- c("male", "female")
 age<- c("20-29", "30-39", "40-49", "50-59")
 kaffe<- c("Espresso", "Filterkaffee", "Milchkaffee")

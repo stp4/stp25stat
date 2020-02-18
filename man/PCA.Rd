@@ -16,13 +16,24 @@ PCA2(x, ...)
 
 Principal(x, ...)
 
-\method{PCA}{default}(data, nfactors = 1, cut = 0.35,
-  residuals = FALSE, rotate = "varimax", n.obs = NA, covar = FALSE,
-  scores = TRUE, missing = FALSE, impute = "median",
-  oblique.scores = TRUE, method = "regression", sort = TRUE,
+\method{PCA}{default}(
+  data,
+  nfactors = 1,
+  cut = 0.35,
+  residuals = FALSE,
+  rotate = "varimax",
+  n.obs = NA,
+  covar = FALSE,
+  scores = TRUE,
+  missing = FALSE,
+  impute = "median",
+  oblique.scores = TRUE,
+  method = "regression",
+  sort = TRUE,
   N = nrow(data),
   caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
-  ...)
+  ...
+)
 }
 \arguments{
 \item{...}{weitere Argumente wie:
@@ -91,7 +102,9 @@ Anzahl an Faktoren
 Faustregel nur Eigenwerte größer als eins (Kaiser-Guttman-Kriterium)
 oder Scree-Plot hier wird der charakteristische Knick als kriterium gewaehlt
 
+
 Rotierte Komponentenmatrix (varimax)
+
 
 Quelle: \url{http://statistikguru.de/spss/hauptkomponentenanalyse/auswerten-und-berichten.html}
 

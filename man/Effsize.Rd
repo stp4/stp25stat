@@ -16,22 +16,40 @@
 \usage{
 APA_Effsize(x, ...)
 
-\method{APA2}{emmGrid}(x, caption = "Estimated marginal means",
-  note = attr(x, "mesg"), output = which_output())
+\method{APA2}{emmGrid}(
+  x,
+  caption = "Estimated marginal means",
+  note = attr(x, "mesg"),
+  output = which_output()
+)
 
-\method{APA2}{emm_list}(x, caption = "Estimated marginal means",
-  note = attr(x, "mesg"), output = which_output(),
-  include.means = TRUE, include.contrasts = TRUE, digits = 2)
+\method{APA2}{emm_list}(
+  x,
+  caption = "Estimated marginal means",
+  note = attr(x, "mesg"),
+  output = which_output(),
+  include.means = TRUE,
+  include.contrasts = TRUE,
+  digits = 2
+)
 
-\method{APA2}{visreg}(x, caption = x$meta$y, note = "",
-  include.ci = TRUE, digits = 2, ...)
+\method{APA2}{visreg}(x, caption = x$meta$y, note = "", include.ci = TRUE, digits = 2, ...)
 
 \method{APA2}{eff}(x, ...)
 
-\method{APA2}{efflist}(x, caption = "Effekte: ", type = NULL,
-  note = "", output = stp25output::which_output(), digits = 2,
-  include.fit = TRUE, include.n = FALSE, include.ci = TRUE,
-  include.se = FALSE, ...)
+\method{APA2}{efflist}(
+  x,
+  caption = "Effekte: ",
+  type = NULL,
+  note = "",
+  output = stp25output::which_output(),
+  digits = 2,
+  include.fit = TRUE,
+  include.n = FALSE,
+  include.ci = TRUE,
+  include.se = FALSE,
+  ...
+)
 
 etaSquared2(x, type = 2, anova = FALSE, ...)
 
@@ -44,7 +62,7 @@ cohens.d(x, ...)
 \arguments{
 \item{x}{Objekt oder Formel}
 
-\item{...}{weitere Optionen}
+\item{...}{}
 
 \item{include.means}{emmeans Mittelwewrte}
 
@@ -55,8 +73,6 @@ cohens.d(x, ...)
 \item{anova}{etaSquared2: Ausgabe der ANOVA Tabelle}
 
 \item{x, y}{formel oder x, y}
-
-\item{...}{}
 }
 \value{
 Vector

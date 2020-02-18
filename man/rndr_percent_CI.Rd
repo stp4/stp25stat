@@ -4,8 +4,16 @@
 \alias{rndr_percent_CI}
 \title{rendere percent and CIs}
 \usage{
-rndr_percent_CI(x, low, upr, digits = 0, prc = "\% ", sep = ", ",
-  sep_1 = "[", sep_2 = "]")
+rndr_percent_CI(
+  x,
+  low,
+  upr,
+  digits = 0,
+  prc = "\% ",
+  sep = ", ",
+  sep_1 = "[",
+  sep_2 = "]"
+)
 }
 \arguments{
 \item{x, low, upr}{Wert, Lower und Upper}

@@ -4,12 +4,23 @@
 \alias{extract_gof}
 \title{extract_gof}
 \usage{
-extract_gof(x, include.r = TRUE, include.pseudo = TRUE,
-  include.rmse = TRUE, include.sigma = FALSE,
-  include.variance = FALSE, include.devianze = FALSE,
-  include.loglik = FALSE, include.test = FALSE, include.aic = TRUE,
-  include.bic = include.aic, include.nobs = TRUE, digits = 2,
-  fix_format = FALSE, ...)
+extract_gof(
+  x,
+  include.r = TRUE,
+  include.pseudo = TRUE,
+  include.rmse = TRUE,
+  include.sigma = FALSE,
+  include.variance = FALSE,
+  include.devianze = FALSE,
+  include.loglik = FALSE,
+  include.test = FALSE,
+  include.aic = TRUE,
+  include.bic = include.aic,
+  include.nobs = TRUE,
+  digits = 2,
+  fix_format = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{objekt}

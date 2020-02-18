@@ -7,35 +7,53 @@
 \alias{MetComp_BAP}
 \title{MetComp:  Uebereinstimmung und Praezision von Messwerten}
 \usage{
-MetComp(..., include.ci = TRUE, ci.level = 0.95,
-  include.weighted = TRUE, include.unweighted = TRUE, caption = NULL,
-  note = "", digits = 2, output = stp25output::which_output())
+MetComp(
+  ...,
+  include.ci = TRUE,
+  ci.level = 0.95,
+  include.weighted = TRUE,
+  include.unweighted = TRUE,
+  caption = NULL,
+  note = "",
+  digits = 2,
+  output = stp25output::which_output()
+)
 
-MetComp_Kappa(x, include.ci = TRUE, ci.level = 0.95,
-  include.weighted = TRUE, include.unweighted = TRUE,
-  weights = "Equal-Spacing", x_kapa = vcd::Kappa(x, weights = weights))
+MetComp_Kappa(
+  x,
+  include.ci = TRUE,
+  ci.level = 0.95,
+  include.weighted = TRUE,
+  include.unweighted = TRUE,
+  weights = "Equal-Spacing",
+  x_kapa = vcd::Kappa(x, weights = weights)
+)
 
-\method{APA2}{Kappa}(x, caption = "Kappa", note = "",
-  include.ci = TRUE, ci.level = 0.95, include.weighted = TRUE,
-  include.unweighted = TRUE, ...)
+\method{APA2}{Kappa}(
+  x,
+  caption = "Kappa",
+  note = "",
+  include.ci = TRUE,
+  ci.level = 0.95,
+  include.weighted = TRUE,
+  include.unweighted = TRUE,
+  ...
+)
 
-MetComp_BAP(..., X = NULL, include.ci = TRUE, ci.level = 0.95,
-  digits = 2)
+MetComp_BAP(..., X = NULL, include.ci = TRUE, ci.level = 0.95, digits = 2)
 }
 \arguments{
 \item{...}{an Formula_Data}
 
 \item{include.weighted, include.unweighted}{kappa statistic}
 
-\item{x}{Formula Objekt}
+\item{x}{Objekt Kappa aus VCD}
 
 \item{weights}{an vcd::Kappa   c("Equal-Spacing", "Fleiss-Cohen")}
 
 \item{X}{Aufbereitete Daten aus prepare_data2}
 
 \item{data}{Daten}
-
-\item{x}{Objekt Kappa aus VCD}
 }
 \value{
 Ein bland_altman-Objekt mit den Daten (data) und der Statistik (stat).

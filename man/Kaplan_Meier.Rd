@@ -19,38 +19,79 @@
 
 \method{APA}{survdiff}(x)
 
-\method{APA2}{summary.survfit}(x, digits = NULL, percent = FALSE,
-  include = c(time = "time", n.risk = "n.risk", n.event = "n.event", surv
-  = "survival", std.err = "std.err", lower = "lower 95\% CI", upper =
-  "upper 95\% CI"), ...)
+\method{APA2}{summary.survfit}(
+  x,
+  digits = NULL,
+  percent = FALSE,
+  include = c(time = "time", n.risk = "n.risk", n.event = "n.event", surv = "survival",
+    std.err = "std.err", lower = "lower 95\% CI", upper = "upper 95\% CI"),
+  ...
+)
 
-\method{APA2}{survfit}(x, caption = "NULL", output = which_output(),
-  note = "", type = 1, digits = 2, ...)
+\method{APA2}{survfit}(
+  x,
+  caption = "NULL",
+  output = which_output(),
+  note = "",
+  type = 1,
+  digits = 2,
+  ...
+)
 
-\method{APA2}{survdiff}(x, caption = "Test Survival Curve Differences",
-  note = "")
+\method{APA2}{survdiff}(x, caption = "Test Survival Curve Differences", note = "")
 
-\method{APA2}{coxph}(x, caption = "", note = "",
-  output = which_output(), include.param = FALSE,
-  include.test = TRUE, ...)
+\method{APA2}{coxph}(
+  x,
+  caption = "",
+  note = "",
+  output = which_output(),
+  include.param = FALSE,
+  include.test = TRUE,
+  ...
+)
 
-APA2_coxph_param(x, caption = "", note = "", include.ci = TRUE,
-  include.se = FALSE, output = which_output())
+APA2_coxph_param(
+  x,
+  caption = "",
+  note = "",
+  include.ci = TRUE,
+  include.se = FALSE,
+  output = which_output()
+)
 
-Coxph_Test(..., data, names = NA, caption = "Wald test", note = "",
-  output = which_output())
+Coxph_Test(
+  ...,
+  data,
+  names = NA,
+  caption = "Wald test",
+  note = "",
+  output = which_output()
+)
 
 Summary_Surv(...)
 
-\method{Summary_Surv}{list}(fits, times = 1, digits = 0,
-  percent = FALSE, names_time = c("n (\% [95\% CI])",
-  "n (est [95\% CI])"), caption = "", note = "",
-  output = which_output())
+\method{Summary_Surv}{list}(
+  fits,
+  times = 1,
+  digits = 0,
+  percent = FALSE,
+  names_time = c("n (\% [95\% CI])", "n (est [95\% CI])"),
+  caption = "",
+  note = "",
+  output = which_output()
+)
 
-\method{Summary_Surv}{survfit}(x, times = 1, digits = 0,
-  percent = FALSE, names_time = c("n (\% [95\% CI])",
-  "n (est [95\% CI])"), cleanup_names = FALSE, caption = "",
-  note = "", output = which_output())
+\method{Summary_Surv}{survfit}(
+  x,
+  times = 1,
+  digits = 0,
+  percent = FALSE,
+  names_time = c("n (\% [95\% CI])", "n (est [95\% CI])"),
+  cleanup_names = FALSE,
+  caption = "",
+  note = "",
+  output = which_output()
+)
 }
 \arguments{
 \item{percent}{Formatierung}

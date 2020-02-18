@@ -12,6 +12,7 @@
 \alias{RMSE.default}
 \alias{RMSE.mlm}
 \alias{RMSE.lmerModLmerTest}
+\alias{RMSE.lmerMod}
 \title{R2}
 \usage{
 R2(x, ...)
@@ -35,6 +36,8 @@ RMSE(x, ...)
 \method{RMSE}{mlm}(x, ...)
 
 \method{RMSE}{lmerModLmerTest}(x, ...)
+
+\method{RMSE}{lmerMod}(x, ...)
 }
 \arguments{
 \item{x}{fit-Objekt lm glm}

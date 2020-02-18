@@ -11,21 +11,38 @@ corr_plot(x, ...)
 
 \method{corr_plot}{formula}(x, data, ...)
 
-\method{corr_plot}{lm}(x, data = x$model, type = c("p", "r"),
-  scales = list(x = list(relation = "free")), ylab = names(data)[1],
-  xlab = "", layout = c(ncol(data) - 1, 1), ...)
+\method{corr_plot}{lm}(
+  x,
+  data = x$model,
+  type = c("p", "r"),
+  scales = list(x = list(relation = "free")),
+  ylab = names(data)[1],
+  xlab = "",
+  layout = c(ncol(data) - 1, 1),
+  ...
+)
 
-\method{corr_plot}{data.frame}(data, jitter = FALSE, smooth = TRUE,
-  lines = TRUE, pch = 20, digits = 2, cex.cor = NULL,
-  method = "pearson", stars = FALSE, resize = FALSE, hist = TRUE,
-  ...)
+\method{corr_plot}{data.frame}(
+  data,
+  jitter = FALSE,
+  smooth = TRUE,
+  lines = TRUE,
+  pch = 20,
+  digits = 2,
+  cex.cor = NULL,
+  method = "pearson",
+  stars = FALSE,
+  resize = FALSE,
+  hist = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{formula}
 
 \item{...}{weitere Param an Lattice oder pairs}
 
-\item{data}{a data matrix}
+\item{data}{aus x$model}
 
 \item{type}{an xyplot c("p", "r")}
 
@@ -52,8 +69,6 @@ corr_plot(x, ...)
 \item{stars}{Sternchen}
 
 \item{hist}{Histogram TRUE/FLASE}
-
-\item{data}{aus x$model}
 }
 \value{
 nix

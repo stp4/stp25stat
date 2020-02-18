@@ -21,69 +21,147 @@
 \alias{APA_Xtabs.default}
 \title{APA Syle Table}
 \usage{
-APA_ICC(..., caption = "ICC", note = "", type = c(1, 4),
-  output = which_output())
+APA_ICC(
+  ...,
+  caption = "ICC",
+  note = "",
+  type = c(1, 4),
+  output = which_output()
+)
 
-APA_Ttest(x, data, caption = "T Test", note = alternative,
-  output = stp25output::which_output(), var.equal = FALSE,
-  paired = FALSE, alternative = "two.sided", include.mean = TRUE,
-  include.d = TRUE, include.mean.diff = TRUE, include.se = FALSE,
-  type = "t.test", digits = 2, ...)
+APA_Ttest(
+  x,
+  data,
+  caption = "T Test",
+  note = alternative,
+  output = stp25output::which_output(),
+  var.equal = FALSE,
+  paired = FALSE,
+  alternative = "two.sided",
+  include.mean = TRUE,
+  include.d = TRUE,
+  include.mean.diff = TRUE,
+  include.se = FALSE,
+  type = "t.test",
+  digits = 2,
+  ...
+)
 
-APA_Correlation(..., caption = "Korrelation", note = "",
-  output = which_output(), col_names = NULL, cor_diagonale_up = TRUE,
-  type = c("pearson", "spearman"), include.mean = FALSE,
-  include.n = TRUE, stars = TRUE, p.value = FALSE,
-  include.stars = stars, include.p = p.value)
+APA_Correlation(
+  ...,
+  caption = "Korrelation",
+  note = "",
+  output = which_output(),
+  col_names = NULL,
+  cor_diagonale_up = TRUE,
+  type = c("pearson", "spearman"),
+  include.mean = FALSE,
+  include.n = TRUE,
+  stars = TRUE,
+  p.value = FALSE,
+  include.stars = stars,
+  include.p = p.value
+)
 
-Hmisc_rcorr(..., cor_diagonale_up = TRUE, include.stars = TRUE,
-  include.p = FALSE, include.mean = FALSE, include.n = TRUE,
-  type = c("pearson", "spearman"), caption = "", note = "")
+Hmisc_rcorr(
+  ...,
+  cor_diagonale_up = TRUE,
+  include.stars = TRUE,
+  include.p = FALSE,
+  include.mean = FALSE,
+  include.n = TRUE,
+  type = c("pearson", "spearman"),
+  caption = "",
+  note = ""
+)
 
 APA_NULL(x, ...)
 
 APA_Likert(...)
 
-APA2_multiresponse(Formula, data, caption = "", note = "",
-  test = FALSE, order = FALSE, decreasing = TRUE,
-  sig_test = "fischer.test", na.action = na.pass, use.level = 1, ...)
+APA2_multiresponse(
+  Formula,
+  data,
+  caption = "",
+  note = "",
+  test = FALSE,
+  order = FALSE,
+  decreasing = TRUE,
+  sig_test = "fischer.test",
+  na.action = na.pass,
+  use.level = 1,
+  output = which_output(),
+  ...
+)
 
-APA_PCA(data, ..., include.pca = TRUE, include.loading = include.pca,
-  include.test = include.pca, include.plot = FALSE,
-  include.kmo = TRUE, w = 5, h = 5, opene_graphic_device = FALSE,
+APA_PCA(
+  data,
+  ...,
+  include.pca = TRUE,
+  include.loading = include.pca,
+  include.test = include.pca,
+  include.plot = FALSE,
+  include.kmo = TRUE,
+  w = 5,
+  h = 5,
+  opene_graphic_device = FALSE,
   save_graphic = opene_graphic_device,
   caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
-  note = "", output = which_output(), main = "")
+  note = "",
+  output = which_output(),
+  main = ""
+)
 
-APA_Reliability(..., caption = "", note = "",
-  output = which_output())
+APA_Reliability(..., caption = "", note = "", output = which_output())
 
 APA_R2(..., caption, note)
 
 APA_Xtabs(x, ...)
 
-\method{APA_Xtabs}{glm}(x, caption = "",
-  output = stp25output::which_output(), thresh = 0.5, ...)
+\method{APA_Xtabs}{glm}(
+  x,
+  caption = "",
+  output = stp25output::which_output(),
+  thresh = 0.5,
+  ...
+)
 
-\method{APA_Xtabs}{formula}(x, data = NULL, caption = "",
-  output = stp25output::which_output(), labels = FALSE,
-  addNA = FALSE, exclude = if (!addNA) c(NA, NaN),
-  drop.unused.levels = FALSE, include.prop.chisq = TRUE,
-  include.chisq = FALSE, include.correlation = FALSE,
-  include.fisher = FALSE, include.mcnemar = FALSE,
-  include.resid = FALSE, include.sresid = FALSE,
-  include.sensitivity = FALSE, test = include.prop.chisq |
-  include.chisq | include.fisher | include.mcnemar, ...)
+\method{APA_Xtabs}{formula}(
+  x,
+  data = NULL,
+  caption = "",
+  output = stp25output::which_output(),
+  labels = FALSE,
+  addNA = FALSE,
+  exclude = if (!addNA) c(NA, NaN),
+  drop.unused.levels = FALSE,
+  include.prop.chisq = TRUE,
+  include.chisq = FALSE,
+  include.correlation = FALSE,
+  include.fisher = FALSE,
+  include.mcnemar = FALSE,
+  include.resid = FALSE,
+  include.sresid = FALSE,
+  include.sensitivity = FALSE,
+  test = include.prop.chisq | include.chisq | include.fisher | include.mcnemar,
+  ...
+)
 
-\method{APA_Xtabs}{data.frame}(data = NULL, formula, caption = "",
-  output = stp25output::which_output(), labels = FALSE, ...)
+\method{APA_Xtabs}{data.frame}(
+  data = NULL,
+  formula,
+  caption = "",
+  output = stp25output::which_output(),
+  labels = FALSE,
+  ...
+)
 
 \method{APA_Xtabs}{default}(x, ...)
 }
 \arguments{
-\item{...}{Formel mit Daten wird von prepare_data2()aufgedroeselt}
+\item{...}{extra arguments}
 
-\item{caption, note}{Ueberschrift}
+\item{caption, note}{Ueberschrift an Output}
 
 \item{type}{enweder "pearson" oder "spearman"}
 
@@ -95,7 +173,7 @@ APA_Xtabs(x, ...)
 
 \item{var.equal, paired, alternative}{an t.Test var.equal = FALSE  "two.sided"}
 
-\item{include.mean}{Mittelwerte mit SD}
+\item{include.mean}{Mittelwerte}
 
 \item{include.d}{Cohens d}
 
@@ -122,12 +200,6 @@ APA_Xtabs(x, ...)
 \item{w, h, main, opene_graphic_device, save_graphic}{Fenster w=5 h=5 Ueberschrift}
 
 \item{addNA, exclude, drop.unused.levels}{An xtabs() default = FALSE}
-
-\item{include.mean}{Mittelwerte}
-
-\item{caption, note}{Ueberschrift an Output}
-
-\item{...}{extra arguments}
 }
 \value{
 a data.frame or list with data.frame

@@ -9,14 +9,17 @@
 \usage{
 Klassifikation(x, ...)
 
-Klassifikation2(x, ..., caption = "", include.xtab = TRUE,
-  include.statistics = TRUE)
+Klassifikation2(
+  x,
+  ...,
+  caption = "",
+  include.xtab = TRUE,
+  include.statistics = TRUE
+)
 
-\method{Klassifikation}{glm}(x, thresh = 0.5,
-  caption = "Klassifikation", ...)
+\method{Klassifikation}{glm}(x, thresh = 0.5, caption = "Klassifikation", ...)
 
-\method{Klassifikation}{xtabs}(x, lvs = c("positiv", "negativ"),
-  digits = 2, ...)
+\method{Klassifikation}{xtabs}(x, lvs = c("positiv", "negativ"), digits = 2, ...)
 }
 \arguments{
 \item{x}{glm oder xtab Objekt}

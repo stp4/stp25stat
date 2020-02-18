@@ -29,36 +29,76 @@
 \usage{
 berechne(...)
 
-\method{berechne}{data.frame}(data, ..., by = "1", type = 1,
-  na.rm = TRUE, conf.interval = 0.95, .drop = TRUE)
+\method{berechne}{data.frame}(
+  data,
+  ...,
+  by = "1",
+  type = 1,
+  na.rm = TRUE,
+  conf.interval = 0.95,
+  .drop = TRUE
+)
 
-berechneMean(data = NULL, measurevar, by = NULL, na.rm = TRUE,
-  conf.interval = 0.95, .drop = TRUE)
+berechneMean(
+  data = NULL,
+  measurevar,
+  by = NULL,
+  na.rm = TRUE,
+  conf.interval = 0.95,
+  .drop = TRUE
+)
 
-berechne_all(data, x, by = "1", measure, type, fun = function(x)
-  length(na.omit(x)), fm = NULL,
+berechne_all(
+  data,
+  x,
+  by = "1",
+  measure,
+  type,
+  fun = function(x) length(na.omit(x)),
+  fm = NULL,
   digits = stp25rndr::default_stp25("digits", "mittelwert")[1],
-  measure.name = NULL)
+  measure.name = NULL
+)
 
-calc_median(x, digits = 2, n = length(x),
+calc_median(
+  x,
+  digits = 2,
+  n = length(x),
   median.style = get_my_options()$apa.style$mittelwert$median.style,
-  unit = NULL)
+  unit = NULL
+)
 
-calc_mean(x, digits = stp25rndr::default_stp25("digits", "mittelwert"),
+calc_mean(
+  x,
+  digits = stp25rndr::default_stp25("digits", "mittelwert"),
   n = length(x),
   mean.style = get_my_options()$apa.style$mittelwert$mean.style,
-  unit = NULL)
+  unit = NULL
+)
 
-Mean2default(x, digits = 2, n = length(x),
+Mean2default(
+  x,
+  digits = 2,
+  n = length(x),
   mean.style = get_my_options()$apa.style$mittelwert$mean.style,
-  include.level = get_my_options()$apa.style$mittelwert$include_name)
+  include.level = get_my_options()$apa.style$mittelwert$include_name
+)
 
-Median2default(x, digits = 2, n = length(x),
+Median2default(
+  x,
+  digits = 2,
+  n = length(x),
   median.style = get_my_options()$apa.style$mittelwert$median.style,
-  include.level = get_my_options()$apa.style$mittelwert$include_name)
+  include.level = get_my_options()$apa.style$mittelwert$include_name
+)
 
-Multi2default(x, digits = 0, n = length(x), use.level = 1,
-  include.level = get_my_options()$apa.style$prozent$include_name)
+Multi2default(
+  x,
+  digits = 0,
+  n = length(x),
+  use.level = 1,
+  include.level = get_my_options()$apa.style$prozent$include_name
+)
 
 mean2(x, na.rm = TRUE, ...)
 
@@ -80,22 +120,42 @@ Median2(x, ...)
 
 \method{Median2}{formula}(x, data, ...)
 
-\method{Median2}{default}(x, digits = NULL,
-  median.style = get_my_options()$apa.style$mittelwert$median.style, ...)
+\method{Median2}{default}(
+  x,
+  digits = NULL,
+  median.style = get_my_options()$apa.style$mittelwert$median.style,
+  ...
+)
 
 Meanci2(x, digits = NULL, ...)
 
-Prozent(x, digits = 1, continuous = 3, breaks = NULL,
-  labels = NULL, count_factor = c("yes", "ja", "T", "TRUE", 1),
-  retur_tabel = FALSE)
+Prozent(
+  x,
+  digits = 1,
+  continuous = 3,
+  breaks = NULL,
+  labels = NULL,
+  count_factor = c("yes", "ja", "T", "TRUE", 1),
+  retur_tabel = FALSE
+)
 
-Prozent2default(x, digits = 0, n = length(x), exclude = NA,
-  max_factor_length = 25)
+Prozent2default(
+  x,
+  digits = 0,
+  n = length(x),
+  exclude = NA,
+  max_factor_length = 25
+)
 
 Prozent2APA(x, exclude = NA, digits = 1, max_factor_length = 35, ...)
 
-Multi2default(x, digits = 0, n = length(x), use.level = 1,
-  include.level = get_my_options()$apa.style$prozent$include_name)
+Multi2default(
+  x,
+  digits = 0,
+  n = length(x),
+  use.level = 1,
+  include.level = get_my_options()$apa.style$prozent$include_name
+)
 }
 \arguments{
 \item{...}{alles weitere}

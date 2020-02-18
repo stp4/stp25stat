@@ -17,46 +17,102 @@
 \alias{catTest}
 \title{Tabelle}
 \usage{
-\method{Tabelle}{lmerModLmerTest}(x, caption = NULL, note = "",
-  digits = 2, fun = function(x) {     c(n = length(x), M = mean(x,
-  na.rm = TRUE), SD = sd(x, na.rm = TRUE)) }, ...)
+\method{Tabelle}{lmerModLmerTest}(
+  x,
+  caption = NULL,
+  note = "",
+  digits = 2,
+  fun = function(x) {     c(n = length(x), M = mean(x, na.rm = TRUE), SD = sd(x, na.rm =
+    TRUE)) },
+  ...
+)
 
-\method{Tabelle}{glm}(x, caption = NULL, note = "", digits = 2,
-  fun = function(x) {     f__n = length(x) }, ...)
+\method{Tabelle}{glm}(
+  x,
+  caption = NULL,
+  note = "",
+  digits = 2,
+  fun = function(x) {     f__n = length(x) },
+  ...
+)
 
-\method{Tabelle}{lm}(x, caption = NULL, note = "", digits = 2,
-  fun = function(x) {     c(f__n = length(x), f__M = mean(x, na.rm =
-  TRUE), f__SD = sd(x, na.rm = TRUE)) }, ...)
+\method{Tabelle}{lm}(
+  x,
+  caption = NULL,
+  note = "",
+  digits = 2,
+  fun = function(x) {     c(f__n = length(x), f__M = mean(x, na.rm = TRUE), f__SD =
+    sd(x, na.rm = TRUE)) },
+  ...
+)
 
 Tabelle(..., output = FALSE)
 
 Tabelle2(..., output = which_output())
 
-\method{Tabelle}{NULL}()
+\method{Tabelle}{`NULL`}()
 
-\method{Tabelle}{default}(..., formula = NULL, fun = NULL,
-  type = c("2", "1", "freq", "freq.ci", "mean", "median", "ci",
-  "cohen.d", "effsize", "multiresponse", "describe", "correlation",
-  "custom_fun"), caption = "Charakteristik", note = "",
-  digits = NULL, APA = FALSE, test = FALSE, na.action = na.pass,
-  exclude = NA, include.n = TRUE, include.nr = FALSE,
-  include.total = FALSE, include.test = test, exclude.level = NULL,
-  max_factor_length = 35, measure.name = "value")
+\method{Tabelle}{default}(
+  ...,
+  formula = NULL,
+  fun = NULL,
+  type = c("2", "1", "freq", "freq.ci", "mean", "median", "ci", "cohen.d", "effsize",
+    "multiresponse", "describe", "correlation", "custom_fun"),
+  caption = "Charakteristik",
+  note = "",
+  digits = NULL,
+  APA = FALSE,
+  test = FALSE,
+  na.action = na.pass,
+  exclude = NA,
+  include.n = TRUE,
+  include.nr = FALSE,
+  include.total = FALSE,
+  include.test = test,
+  exclude.level = NULL,
+  max_factor_length = 35,
+  measure.name = "value"
+)
 
 Describe2(..., output = FALSE)
 
-\method{Describe2}{data.frame}(data, ..., by = NULL, caption = "",
-  note = "", stat = c("n", "mean", "sd", "min", "max"),
-  output = which_output(), digits = 2)
+\method{Describe2}{data.frame}(
+  data,
+  ...,
+  by = NULL,
+  caption = "",
+  note = "",
+  stat = c("n", "mean", "sd", "min", "max"),
+  output = which_output(),
+  digits = 2
+)
 
-\method{Describe2}{formula}(x, data, by = NULL, caption = "",
-  note = "", stat = c("n", "mean", "sd", "min", "max"),
-  output = which_output(), digits = 2, ...)
+\method{Describe2}{formula}(
+  x,
+  data,
+  by = NULL,
+  caption = "",
+  note = "",
+  stat = c("n", "mean", "sd", "min", "max"),
+  output = which_output(),
+  digits = 2,
+  ...
+)
 
-errate_statistik3(..., type = NULL, caption = "", note = "",
-  na.action = na.pass, exclude = NA, include.n = TRUE,
-  include.nr = FALSE, include.total = FALSE, include.test = test,
-  exclude.level = NULL, max_factor_length = 35)
+errate_statistik3(
+  ...,
+  type = NULL,
+  caption = "",
+  note = "",
+  na.action = na.pass,
+  exclude = NA,
+  include.n = TRUE,
+  include.nr = FALSE,
+  include.total = FALSE,
+  include.test = test,
+  exclude.level = NULL,
+  max_factor_length = 35
+)
 
 conTest(fml, data, test_name = TRUE)
 

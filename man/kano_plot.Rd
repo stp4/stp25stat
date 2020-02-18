@@ -5,24 +5,50 @@
 \alias{kano_barchart}
 \title{Kano Plot}
 \usage{
-kano_plot(x, main = "", xlim = c(0, 1), ylim = c(0, 1), mar = c(0,
-  1, 2, 1), legend.position = list(x = "right", y = NULL),
-  legend.title = NULL, my.lines = "circle", col.bg = "gray95",
-  col = NA, txt.bg = list(m = "M", i = "I", o = "O", a = "A"),
-  cex.bg = 12, jitter = TRUE, cex = 1, cex.items = cex * 1,
-  cex.lab = cex * 1.07, cex.legend = cex * 1.1,
+kano_plot(
+  x,
+  main = "",
+  xlim = c(0, 1),
+  ylim = c(0, 1),
+  mar = c(0, 1, 2, 1),
+  legend.position = list(x = "right", y = NULL),
+  legend.title = NULL,
+  my.lines = "circle",
+  col.bg = "gray95",
+  col = NA,
+  txt.bg = list(m = "M", i = "I", o = "O", a = "A"),
+  cex.bg = 12,
+  jitter = TRUE,
+  cex = 1,
+  cex.items = cex * 1,
+  cex.lab = cex * 1.07,
+  cex.legend = cex * 1.1,
   ylab = "Zufriedenheitsstiftung (CS+)",
-  xlab = "Unzufriedenheitsstiftung (CS-)", center.axis = FALSE,
-  use.labels = TRUE, use.total.strength = TRUE, use.categorie = TRUE,
-  use.points = FALSE, ...)
+  xlab = "Unzufriedenheitsstiftung (CS-)",
+  center.axis = FALSE,
+  use.labels = TRUE,
+  use.total.strength = TRUE,
+  use.categorie = TRUE,
+  use.points = FALSE,
+  ...
+)
 
-kano_barchart(x, data = x$molten, groups = x$groups[1],
-  main = "Kano-Analyse", auto.key = list(space = "right"),
-  prop.table = TRUE, ylab = if (prop.table) "Prozent" else "Anzahl",
+kano_barchart(
+  x,
+  data = x$molten,
+  groups = x$groups[1],
+  main = "Kano-Analyse",
+  auto.key = list(space = "right"),
+  prop.table = TRUE,
+  ylab = if (prop.table) "Prozent" else "Anzahl",
   col = RColorBrewer::brewer.pal(6, "Dark2")[c(4, 1, 2, 3, 5, 6)],
   par.settings = list(superpose.polygon = list(col = col)),
-  include.Q = TRUE, include.R = TRUE, include.n = TRUE,
-  levels = c("M", "O", "A", "I", "R", "Q"), ...)
+  include.Q = TRUE,
+  include.R = TRUE,
+  include.n = TRUE,
+  levels = c("M", "O", "A", "I", "R", "Q"),
+  ...
+)
 }
 \arguments{
 \item{x}{Kano-Objekt}

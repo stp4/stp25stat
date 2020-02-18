@@ -5,9 +5,16 @@
 \title{Fix tidy_lmer
 https://github.com/tidymodels/broom/issues/309}
 \usage{
-tidy_lmer(x, effects = c("ran_pars", "fixed"), scales = NULL,
-  ran_prefix = NULL, conf.int = FALSE, conf.level = 0.95,
-  conf.method = "Wald", ...)
+tidy_lmer(
+  x,
+  effects = c("ran_pars", "fixed"),
+  scales = NULL,
+  ran_prefix = NULL,
+  conf.int = FALSE,
+  conf.level = 0.95,
+  conf.method = "Wald",
+  ...
+)
 }
 \arguments{
 \item{x}{Objekt}

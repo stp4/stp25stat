@@ -15,8 +15,7 @@
 \usage{
 ICC(...)
 
-ICC2(..., caption = "ICC", note = "", type = c(1, 4),
-  output = which_output())
+ICC2(..., caption = "ICC", note = "", type = c(1, 4), output = which_output())
 
 \method{ICC}{matrix}(data)
 
@@ -26,10 +25,16 @@ ICC2(..., caption = "ICC", note = "", type = c(1, 4),
 
 AD_Index(x, ...)
 
-AD_Index2(x, data, ..., A = NULL, type = "judge",
+AD_Index2(
+  x,
+  data,
+  ...,
+  A = NULL,
+  type = "judge",
   caption = "Interrater Agreement",
   note = "AD index (based on deviations from the item medians)",
-  output = which_output())
+  output = which_output()
+)
 
 \method{AD_Index}{data.frame}(data, ...)
 

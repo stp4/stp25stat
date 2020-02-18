@@ -4,9 +4,15 @@
 \alias{APA2.psychobject}
 \title{APA2}
 \usage{
-\method{APA2}{psychobject}(x, caption = "", note = NULL,
-  include.ci = FALSE, include.effect = FALSE,
-  output = stp25output::which_output(), ...)
+\method{APA2}{psychobject}(
+  x,
+  caption = "",
+  note = NULL,
+  include.ci = FALSE,
+  include.effect = FALSE,
+  output = stp25output::which_output(),
+  ...
+)
 }
 \arguments{
 \item{x}{lm object.}

@@ -24,17 +24,40 @@ Reliability2(...)
 
 Alpha(..., type = 1, names = NULL)
 
-Alpha2(..., caption = "", note = "", output = which_output(),
-  type = 1, names = NULL)
+Alpha2(
+  ...,
+  caption = "",
+  note = "",
+  output = which_output(),
+  type = 1,
+  names = NULL
+)
 
-\method{Reliability}{default}(x, revcoded = FALSE, check.keys = FALSE,
-  max.level = NA, min.level = NA, type = "mean", na.rm = TRUE, ...)
+\method{Reliability}{default}(
+  x,
+  revcoded = FALSE,
+  check.keys = FALSE,
+  max.level = NA,
+  min.level = NA,
+  type = "mean",
+  na.rm = TRUE,
+  ...
+)
 
-Index(x, revcoded = FALSE, fun = "mean", na.rm = TRUE, digits = 4,
-  max.level = NA, min.level = NA, return.index = TRUE, ...)
+Index(
+  x,
+  revcoded = FALSE,
+  fun = "mean",
+  na.rm = TRUE,
+  digits = 4,
+  max.level = NA,
+  min.level = NA,
+  return.index = TRUE,
+  ...
+)
 }
 \arguments{
-\item{...}{an psych}
+\item{...}{an psych::alpha()}
 
 \item{data}{data.frame mit den Daten}
 
@@ -52,8 +75,6 @@ Index(x, revcoded = FALSE, fun = "mean", na.rm = TRUE, digits = 4,
 
 \item{check.keye}{aus psych wenn \code{check.keye=TRUE} 
 gesetzt wird werden die Daten automatisch umkodiert}
-
-\item{...}{an psych::alpha()}
 }
 \value{
 \code{Reliability()} gibt eine Liste mit den Resultaten und den transformierten Daten
