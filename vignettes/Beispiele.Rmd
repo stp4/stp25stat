@@ -23,9 +23,14 @@ require(tidyverse)
 require(lmerTest)
 require(modelr)
 require(stpvers)
+library(effects)
+library(gridExtra)
+ library(broom)
+ library(car)
 Tab_Index <- 0
 Abb_Index <- 0
-
+#require(semPlot)
+#require(ggm)
 
 ```
 
@@ -37,7 +42,7 @@ Einfache Tabellen
 ```{r simpel-apa, results='asis', warning=FALSE}
 APA2(alter ~ geschl, varana)
 Tabelle2(alter ~ geschl, varana)
-Tabelle2(alter ~ geschl, varana, APA=TRUE)
+Tabelle2(alter ~ geschl, varana, APA = TRUE)
 #varana %>% berechne(m1, m2, m3, m4, by =  ~ geschl) %>%
 #  fix_format() %>% (function(x) x[, c(1:7,9)])
 
@@ -47,6 +52,8 @@ Mittelwertdiagramme einmal mit *berechne()* und einmal mit *melt2*
 
 
 ```{r fig-mean-berechne, fig.cap = "Mittelwerte",  fig.width=4, fig.height=3, cache=TRUE}
+
+
 renameLevels<- function(data,
                         labels=c("Begin", "2 Monate", "6 Monate", "12 Monate"),
                         var= "variable"){
@@ -264,10 +271,12 @@ APA2(fit.Lavaan)
 
 
 ```{r pca-lavan-plot, fig.cap = "Mittelwerte",  fig.width=4, fig.height=4, cache=TRUE}
-require(semPlot)
+# require(semPlot)
+# 
+# semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
+# title("Std", line = 3)
 
-semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
-title("Std", line = 3)
+plot(1)
  
 ```
 # Reliability 
@@ -297,12 +306,14 @@ Alpha(Verarbeitung, Coping, Vertrauen, Religion, Distanz) %>% Output()
  
  
 #  Harnblasenkarzinom (hkarz) 
-
-
-```{r}
+```{r hkarz, results='asis'}
 library(broom)
 fit2<- glm(gruppe~tzell, hkarz, family = binomial)
 APA_Table(fit2)
+```
+
+
+```{r}
 lmtest::lrtest(fit2) %>%
   tidy %>% fix_format()
 r2<- R2(fit2)
@@ -314,10 +325,18 @@ round(c( '-2 Log-Likeliehood' = anova(fit2)[2, "Resid. Dev" ],
 fit2 %>% tidy %>% transform(exp= round(exp(estimate),2)) %>% fix_format()
 
 Klassifikation(fit2)
+```
 
 
+```{r, results='asis'}
 fit3<- glm(gruppe~tzell+lai, hkarz, family = binomial)
 APA_Table(fit3)
+```
+
+
+
+
+```{r}
 lmtest::lrtest(fit3) %>%
   tidy %>% fix_format()
 r2<- R2(fit3)
@@ -329,44 +348,51 @@ round(c( '-2 Log-Likeliehood' = min(anova(fit3)[ , "Resid. Dev" ]),
 fit3 %>% tidy %>% transform(exp= round(exp(estimate),2)) %>% fix_format()
 
 Klassifikation(fit3)
+```
 
-### Magenkarzinom ###
-#mkarz <- GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Bühl/MKARZ.SAV")
-# Text("Buehl Seite 553", style=3)
-#Text("Die Datei mkarz.sav ist ein Datensatz mit 106 Patientan
-#     mit Magenkarzinom über einen Zeitraum von 5 Jahren")
 
-# head(mkarz)
-# 
-# mkarz %>% Tabelle2(survive="median", status, lkb)
-# mkarz$status<- ifelse(mkarz$status=="tot", 1, 0)
-# 
-# #Head("Kaplan-Meier estimator without grouping", style=3)
-# #Text("
-# #     m0 <- Surv(survive, status) ~ 1
-# #     res0<- survfit(m0, mkarz)
-# #
-# #     ")
-# m0 <- Surv(survive, status) ~ 1
-# res0<- survfit(m0, mkarz)
-# APA2(res0)
-# #windows(8,4)
-# #par(mfrow=c(1,2))
-# #plot( res0 , ylab="Hazard", mark.time = T)
-# #plot( res0, fun="cumhaz",  ylab="Cumulative Hazard" )
-# #SaveData(caption="plot: mkarz")
-# 
-# 
-# 
-# 
-#   m1 <- Surv(survive, status) ~ lkb
-# res1<- survfit(m1, mkarz)
-# fit1<- coxph(m1, mkarz)
-# logrank1<- survdiff(m1, mkarz)
-#  model_info(logrank1)
-# APA2(res1, caption="Kaplan-Meier")
-# APA2(logrank1)
-# APA2(coxph(m1,mkarz))
+```{r}
+require(survival)
+mkarz <-
+  GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Buehl/MKARZ.SAV")
+
+Text(
+  "Buehl Seite 553: Die Datei mkarz.sav ist ein Datensatz mit 106 Patientan
+    mit Magenkarzinom über einen Zeitraum von 5 Jahren"
+)
+head(mkarz)
+
+mkarz %>% Tabelle2(survive[median], status, lkb)
+mkarz$status <- ifelse(mkarz$status == "tot", 1, 0)
+
+#Head("Kaplan-Meier estimator without grouping", style=3)
+#Text("
+#     m0 <- Surv(survive, status) ~ 1
+#     res0<- survfit(m0, mkarz)
+#
+#     ")
+m0 <- Surv(survive, status) ~ 1
+res0 <- survfit(m0, mkarz)
+APA2(res0)
+#windows(8,4)
+#par(mfrow=c(1,2))
+#plot( res0 , ylab="Hazard", mark.time = T)
+#plot( res0, fun="cumhaz",  ylab="Cumulative Hazard" )
+#SaveData(caption="plot: mkarz")
+
+
+
+
+m1 <- Surv(survive, status) ~ lkb
+res1 <- survfit(m1, mkarz)
+fit1 <- coxph(m1, mkarz)
+logrank1 <- survdiff(m1, mkarz)
+
+model_info(logrank1)
+APA2(res1, caption = "Kaplan-Meier")
+APA2(logrank1)
+APA2(coxph(m1, mkarz))
+ 
 ```
 
 
@@ -375,21 +401,18 @@ Klassifikation(fit3)
 
 Mixed-Models 
 
-
 ```{r}
-library(effects)
-library(gridExtra)
-#getwd()
-# MMvideo<- read.table("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25/extdata/MMvideo.txt",
-#                     header=TRUE)
 head(MMvideo)
-#Projekt("html")
 fit1<-lm(score ~ agegrp+trial, MMvideo)
 fit2<-lmerTest::lmer(score ~ agegrp+trial + (1|id), MMvideo)
 fit3<-lm(score ~ agegrp*trial, MMvideo)
 fit4<-lmerTest::lmer(score ~ agegrp*trial + (1|id), MMvideo)
-APA_Table(fit1, fit2, fit3, fit4, type="long2")
 
+
+```
+
+```{r mix-mod, results='asis'}
+APA_Table(fit1, fit2, fit3, fit4, type="long2")
 
 
 #  windows(8,6)
@@ -412,13 +435,16 @@ APA_Table(fit1, fit2, fit3, fit4, type="long2")
 
 # Classroom (schools)
 
-
 ```{r}
 #schools<- read.table("file:///C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25/extdata/schools.txt",
 #                    header=TRUE)
 summary(schools)
 fit<-lmerTest::lmer(score ~  grade +treatment  + stdTest + (1|classroom), schools)
-#APA_Table(fit)
+```
+
+```{r schools, results='asis'}
+
+APA_Table(fit)
 
 
 ```
@@ -426,13 +452,9 @@ fit<-lmerTest::lmer(score ~  grade +treatment  + stdTest + (1|classroom), school
 
 # High School (poisson_sim)
 
-
 ```{r}
- library(broom)
- library(car)
-#head(poisson_sim)
-#names(poisson_sim)
-#-- SPSS kodiert die Gruppe 3 als Referenz
+ 
+# SPSS kodiert die Gruppe 3 als Referenz
 poisson_sim$prog <-
   factor(poisson_sim$prog, c("vocation", "general",  "academic"))
   fit1 <- glm(num_awards ~ prog + math, poisson_sim, family = poisson())
@@ -442,25 +464,35 @@ Goodness <- function(x, ..) {
   glance(x)[, c(6, 7, 3, 4, 5)]
 }
 fit1 %>% Goodness
-
 #--Omnibus Test
  lmtest::lrtest(fit1)
-
-#-- Wald Chi-Square
  Anova(fit1)
+```
+
+
+
+```{r poisson, results='asis'}
+#-- Wald Chi-Square
+
  APA_Table(fit1)
 
+
+```
+
+The output above indicates that the incident rate for [prog=academic] is 2.042
+times the incident rate for the reference group, [prog=vocation].
+Likewise, the incident rate for [prog=general] is 0.691 times the incident rate
+for the reference group holding the other variables at constant.
+The percent change in the incident rate of num_awards is an
+increase of 7% for every unit increase in math.
+
+```{r}
 cbind (tidy(fit1), confint(fit1)) %>% fix_format()
 x <- cbind(tidy(fit1)[1:2], confint(fit1))
 x[2:3] <- exp(x[2:3])
 x %>% fix_format()
 
-"The output above indicates that the incident rate for [prog=academic] is 2.042
-times the incident rate for the reference group, [prog=vocation].
-Likewise, the incident rate for [prog=general] is 0.691 times the incident rate
-for the reference group holding the other variables at constant.
-The percent change in the incident rate of num_awards is an
-increase of 7% for every unit increase in math."
+
 R2(fit1)
 RMSE(fit1)
 ```

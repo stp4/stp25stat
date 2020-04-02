@@ -19,7 +19,6 @@
   include.se = TRUE,
   include.ci = FALSE,
   include.odds = TRUE,
-  test.my.fun = FALSE,
   ...
 )
 

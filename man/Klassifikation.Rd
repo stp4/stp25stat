@@ -19,7 +19,13 @@ Klassifikation2(
 
 \method{Klassifikation}{glm}(x, thresh = 0.5, caption = "Klassifikation", ...)
 
-\method{Klassifikation}{xtabs}(x, lvs = c("positiv", "negativ"), digits = 2, ...)
+\method{Klassifikation}{xtabs}(
+  x,
+  lvs = c("positiv", "negativ"),
+  digits = 2,
+  prevalence = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{glm oder xtab Objekt}

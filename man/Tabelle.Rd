@@ -22,8 +22,8 @@
   caption = NULL,
   note = "",
   digits = 2,
-  fun = function(x) {     c(n = length(x), M = mean(x, na.rm = TRUE), SD = sd(x, na.rm =
-    TRUE)) },
+  fun = function(x) {     c(n = length(x), M = mean(x, na.rm = TRUE), SD = sd(x, na.rm
+    = TRUE)) },
   ...
 )
 
@@ -71,6 +71,7 @@ Tabelle2(..., output = which_output())
   include.test = test,
   exclude.level = NULL,
   max_factor_length = 35,
+  order = FALSE,
   measure.name = "value"
 )
 
@@ -111,7 +112,8 @@ errate_statistik3(
   include.total = FALSE,
   include.test = test,
   exclude.level = NULL,
-  max_factor_length = 35
+  max_factor_length = 35,
+  order = FALSE
 )
 
 conTest(fml, data, test_name = TRUE)

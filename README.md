@@ -3470,7 +3470,7 @@ f
 ### Regressionsmodel
 
 ``` r
-APA_Table(fit, include.se=FALSE, include.ci=TRUE, output="html")
+APA_Table(fit, include.se=FALSE, include.ci=TRUE)
 ```
 
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
@@ -3848,7 +3848,7 @@ Obs
 ### GOF
 
 ``` r
- APA_Validation(fit, output="html") 
+ APA_Validation(fit) 
 ```
 
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
@@ -4074,14 +4074,6 @@ dat<- data.frame(
 
 dat<- Label(dat, spd1="Ultra", spd2="Half")
 
-dat %>% Tabelle(spd1, spd2)
-```
-
-    ##          Item                              value
-    ## 1 Ultra [m/s] 3.00 (SD 1.58, range 1.00 to 5.00)
-    ## 2 Half [km/h] 3.00 (SD 1.58, range 1.00 to 5.00)
-
-``` r
 dat
 ```
 
@@ -4091,6 +4083,14 @@ dat
     ## 3 3 [m/s] 3 [km/h]
     ## 4 4 [m/s] 4 [km/h]
     ## 5 5 [m/s] 5 [km/h]
+
+``` r
+dat %>% Tabelle(spd1, spd2)
+```
+
+    ##          Item                              value
+    ## 1 Ultra [m/s] 3.00 (SD 1.58, range 1.00 to 5.00)
+    ## 2 Half [km/h] 3.00 (SD 1.58, range 1.00 to 5.00)
 
 ## Test
 

@@ -4,7 +4,7 @@
 %   R/describe-z-auto-test.R, R/dimred-pca.R, R/dimred-reliability.R, R/kano.R,
 %   R/meta-analysis.R, R/regression-APA2-lm-lmer.R, R/regression-polr.R,
 %   R/regression-step.R, R/test-anova-manova.R, R/test-anova-multcomp.R,
-%   R/test-anova.R, R/xtable.R
+%   R/test-anova.R, R/xtable-classification.R, R/xtable.R
 \name{APA2.ICC}
 \alias{APA2.ICC}
 \alias{APA2.bland_altman}
@@ -46,6 +46,7 @@
 \alias{APA2.aov}
 \alias{APA2.summary.aov}
 \alias{APA2.aovlist}
+\alias{APA2.epi.tests}
 \alias{APA2.loglm}
 \alias{APA2.summary.table}
 \alias{APA2.table}
@@ -388,6 +389,8 @@ errate_statistik2(
 
 \method{APA2}{aovlist}(x, output = stp25output::which_output(), col_names = NULL, ...)
 
+\method{APA2}{epi.tests}(x, ...)
+
 \method{APA2}{loglm}(
   x,
   caption = "Likelihood",
@@ -406,11 +409,7 @@ errate_statistik2(
   caption = "",
   note = "",
   output = stp25output::which_output(),
-  col_names = NULL,
-  print_col = NULL,
   digits = NULL,
-  test = FALSE,
-  type = c("0", "fischer", "odds", "sensitivity", "chisquare", "correlation", "r"),
   include.total = FALSE,
   include.total.columns = FALSE,
   include.total.sub = FALSE,
@@ -420,12 +419,15 @@ errate_statistik2(
   include.margins = TRUE,
   margin = NA,
   add.margins = NA,
-  labels = NULL,
+  include.correlation = FALSE,
+  include.test = FALSE,
+  include.sensitivity = FALSE,
+  prevalence = NULL,
   ...
 )
 }
 \arguments{
-\item{x}{Ein R Objekt oder eine Formel oder ein data.frame}
+\item{x}{epi.tests Objekt}
 
 \item{caption, note}{Ueberschrift an Output}
 
@@ -434,7 +436,7 @@ xtabs: type = c("fischer", "odds","sensitivity", "chisquare","correlation", "r")
 
 \item{output}{Ausgabe von Ergebiss ueber Output}
 
-\item{...}{weitere Argumente}
+\item{...}{an Output}
 
 \item{cor_diagonale_up}{bei Correlation art der Formatierung}
 
@@ -525,6 +527,8 @@ liste mit data.frames
 invisible data.frame und Output mit html/knit oder Text.
 
 dataframe mit p.werte
+
+data.frame
 
 list(xtab, test)
 }
@@ -843,6 +847,28 @@ APA2(glht(lmod, linfct = K))
 #aov.ex3 = aov(Recall~Valence+Error(Subject/Valence),data.ex3)
 #
 #APA2(aov.ex3)
+
+
+#' library(caret)
+require(epiR)
+DF<- GetData("
+GoldStandart RT.qPCR Anzahl
+positiv positiv 111
+positiv negativ 12
+negativ positiv 1
+negativ negativ 62 ", Tabel_Expand =TRUE, id.vars=1:2, output=FALSE)
+DF$GoldStandart<- factor( DF$GoldStandart, rev(levels( DF$GoldStandart)))
+DF$RT.qPCR<- factor( DF$RT.qPCR, rev(levels( DF$RT.qPCR)))
+
+ 
+
+
+dat <- as.table(matrix(c(111, 12, 1, 62), nrow = 2, byrow = TRUE))
+colnames(dat) <- c("RT.qPCR +", "RT.qPCR -")
+rownames(dat) <- c("Gold Standart +", "GoldStandart -")
+rval <- epi.tests(dat, conf.level = 0.95)
+APA2(rval)
+
 
 
 # Fit Log-Linear Models by Iterative Proportional Scaling

@@ -6,11 +6,12 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warnings=FALSE)
 
- require(stpvers)
- set_my_options(prozent = list(
- digits = c(0, 0),
- style = 2,
- null_percent_sign = "."
+require(stpvers)
+
+set_my_options(prozent = list(
+  digits = c(0, 0),
+  style = 2,
+  null_percent_sign = "."
 ))
 scale2<- function(x, mn=1, mx=5){
 x<-  x-min(x, na.rm=TRUE)
@@ -162,12 +163,12 @@ APA2(visreg::visreg(fit, "sex", plot=FALSE))
 ### Regressionsmodel
  
 ```{r, results='asis'}
-APA_Table(fit, include.se=FALSE, include.ci=TRUE, output="html")
+APA_Table(fit, include.se=FALSE, include.ci=TRUE)
 ```
  
 ### GOF
 ```{r, results='asis'}
- APA_Validation(fit, output="html") 
+ APA_Validation(fit) 
 ```
 
 

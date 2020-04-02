@@ -1035,23 +1035,28 @@ Wie viel Varianz kann durch das Regressionsmodell aufgeklärt werden? Die Einsch
 * t-Wert oder z-Wert sind die Wert der Teststatistik H0 
 
 * **RMSEA** Root-Mean-Square-Error of Approximation 
-Der RMSE ist eine relative Grösse (in der Einheit der Zielvariablen), je kleiner umso besser.
+Der RMSE ist eine relative Zahl (in der Einheit der Zielvariablen), je kleiner umso besser.
 Whereas R-squared is a relative measure of fit, RMSE is an absolute measure of fit. https://stats.stackexchange.com/questions/56302/what-are-good-rmse-values
  
 * **Beta-Werte** in Regressionsanalysen sind vereinfacht gesagt die standardisierten Koeffizienten und nur in theoretischen Fragestellungen interpretierbar. Besser sind meist die Koeffizienten (b). Ich verwende nach Möglichkeit immer die Koeffizienten da diese einfacher zu interpretieren sind.
 
  
-Die library(psycho) kann ueber analyze() Betas recht einfach ausgeben. Das geht sowohl bei lm als auch bei lmer.
-Aber die Ergebnisse sind *anderst* als bei PSPP und bei meiner Funktion?? - Gehoert also noch ueberprueft.
+~~Die library(psycho) kann ueber analyze() Betas recht einfach ausgeben. Das geht sowohl bei lm als auch bei lmer.
+Aber die Ergebnisse sind *anders* als bei PSPP und bei meiner Funktion?? - Gehoert also noch ueberprueft.~~
 
-```{r tab-psycho, results='asis'}
+``` 
 
- library(psycho)
- df <- psycho::affective  # Load a dataset from the psycho package
-  #df <- standardize(df)  # Standardize all numeric variables
- fit <- lm(Age ~ Salary, data=df)  # Fit a Bayesian linear model
- results <- analyze(fit)  # Format the output
- APA2(results)
+## Geht nicht mehr easystats
+# 
+# Note: Many functions of the 'psycho' package have been (improved and) moved to other packages of the new 'easystats' collection (https://github.com/easystats). If you don't find where a function is gone, please open an issue at: https://github.com/easystats/easystats/issues
+# Error in analyze(fit) : could not find function "analyze"
+
+ #library(psycho)
+ # df <- psycho::affective  # Load a dataset from the psycho package
+ #  #df <- standardize(df)  # Standardize all numeric variables
+ # fit <- lm(Age ~ Salary, data=df)  # Fit a Bayesian linear model
+ # results <- analyze(fit)  # Format the output
+ # APA2(results)
    
 #  library(lmerTest)
 #  fit <- lmerTest::lmer(Sepal.Length ~ Sepal.Width + (1|Species), data=iris)
@@ -1622,28 +1627,24 @@ Diagnose_Plot <- function(data,
   invisible(influence_year)
   
 }
+
+#fit <- lm(Age ~ Concealing, data=df)
+#par(mfrow = c(2, 3))
+#infFall<- Diagnose_Plot(
+#  df, "Concealing","Age",
+#  fit,
+#  xlab="",  ylab = 'Age' 
+#)
+
+
+
+
 ```
 
 
-```{r diag-plot, out.extra = '', fig.cap='Diagnosediagramm  Residuen', fig.width=8, fig.height=6,  echo=TRUE}
+
+
  
-df <- psycho::affective 
-fit <- lm(Age ~ Concealing, data=df)
-
-par(mfrow = c(2, 3))
-infFall<- Diagnose_Plot(
-  df, "Concealing","Age",
-  fit,
-  xlab="",  ylab = 'Age' 
-)
-
-
-## `r Text(fit)`  #  psycho::analyze(fit)
-
-```
-
-
-`r Text(fit)`
 
 Der Diagnose-Plot zeigt  Auffälligkeiten  
 hinsichtlich der Residuen

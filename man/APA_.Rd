@@ -17,7 +17,7 @@
 \alias{APA_Xtabs}
 \alias{APA_Xtabs.glm}
 \alias{APA_Xtabs.formula}
-\alias{APA_Xtabs.data.frame}
+\alias{APA_Xtabs.xtabs}
 \alias{APA_Xtabs.default}
 \title{APA Syle Table}
 \usage{
@@ -131,30 +131,14 @@ APA_Xtabs(x, ...)
   data = NULL,
   caption = "",
   output = stp25output::which_output(),
-  labels = FALSE,
+  labels = TRUE,
   addNA = FALSE,
   exclude = if (!addNA) c(NA, NaN),
   drop.unused.levels = FALSE,
-  include.prop.chisq = TRUE,
-  include.chisq = FALSE,
-  include.correlation = FALSE,
-  include.fisher = FALSE,
-  include.mcnemar = FALSE,
-  include.resid = FALSE,
-  include.sresid = FALSE,
-  include.sensitivity = FALSE,
-  test = include.prop.chisq | include.chisq | include.fisher | include.mcnemar,
   ...
 )
 
-\method{APA_Xtabs}{data.frame}(
-  data = NULL,
-  formula,
-  caption = "",
-  output = stp25output::which_output(),
-  labels = FALSE,
-  ...
-)
+\method{APA_Xtabs}{xtabs}(x, ...)
 
 \method{APA_Xtabs}{default}(x, ...)
 }
@@ -214,6 +198,7 @@ APA_ICC:Intra-Klassen-Korrelation (mit psych).
 der Funktion  Hmisc::rcorr. Erlaubt ist die getrennte Auswertung ueber by=~b
 
 Wird in APA2 verwendet Tabelle Arbeitet mit Multi2default()
+und hat anderen Rueckgabewert als Tabelle (Mittelverte vs String)
 
 APA_PCA: Faktoranalyse wie SPSS \link{PCA}
 
@@ -300,4 +285,39 @@ fit1<-lm(score ~ grade + treatment, schools)
 fit2<-lm(score ~ grade + treatment + stdTest, schools)
 APA_R2(fit1, fit2)
 
+
+ DF <- GetData(
+"
+GoldStandart Schnell.Test Anzahl
+positiv positiv 124
+positiv negativ 9
+negativ positiv 20
+negativ negativ 305 ",
+Tabel_Expand = TRUE,
+id.vars = 1:2,
+output = FALSE
+)
+
+
+
+DF <- transform(
+  DF,
+  GoldStandart = factor(GoldStandart, rev(levels(DF$GoldStandart))),
+  Schnell.Test = factor(Schnell.Test, rev(levels(DF$Schnell.Test)))
+)
+
+DF<- Label(DF, GoldStandart="Krank Covid-19", Schnell.Test= "Schnell Test GTV8")
+N<- nrow(DF)
+
+
+xtb <- xtabs( ~ Schnell.Test + GoldStandart  , DF)
+
+
+APA_Xtabs(xtb)
+
+APA_Xtabs( ~ Schnell.Test  + GoldStandart,
+           DF,
+           caption = "2x2 Tabelle zur Destimmung der Kennwerte",
+           include.percent = FALSE,
+           include.total=TRUE)
 }
