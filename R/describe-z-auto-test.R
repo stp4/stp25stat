@@ -396,8 +396,8 @@ errate_statistik3 <-
          #   corr_test = "pearson",
           #  cor_diagonale_up = TRUE,
 
-            max_factor_length = 35
-         #   order = FALSE,
+            max_factor_length = 35,
+            order = FALSE
          #   decreasing = FALSE,
            # useconTest = FALSE,
         #    normality.test = FALSE
@@ -480,7 +480,6 @@ errate_statistik3 <-
       ans
     }
 
-
     Total_Gruppe <- function(i, j) {
       groups <- droplevels(X$data[[j]])
       res <- t(as.matrix(table(groups)))
@@ -538,6 +537,8 @@ errate_statistik3 <-
     #-- Vorbereiten der Daten
     ANS <- NULL
     X <- prepare_data2(..., na.action = na.action)
+    if(order){X<- order_by_mean( X )}
+    
    # cat("\nnach prepare_data2\n")
     group.vars   <- X$group.vars
     measure.vars <- X$measure.vars
@@ -654,3 +655,35 @@ errate_statistik3 <-
     }
     ANS
   }
+
+
+
+
+order_by_mean <- function(X) {
+  if (length(X$yname) == 1) {
+    return(X)
+  }
+  
+  my_order <- order(sapply(X$data[X$measure.vars],
+                           function(x) {
+                             if (is.numeric(x))
+                               mean(x, na.rm = TRUE)
+                             else if (is.factor(x))
+                               mean(as.numeric(x), na.rm = TRUE) / 100
+                             else
+                               0
+                           })
+                    , decreasing = TRUE)
+  
+  
+  X$data <-
+    X$data[c(X$measure.vars[my_order], X$group.vars, X$condition.vars)]
+  X$measure.vars <- X$measure.vars[my_order]
+  X$measure <- X$measure[my_order]
+  X$row_name <- X$row_name[my_order]
+  X$measure.class <- X$measure.class[my_order]
+  X$digits <- X$digits[my_order]
+  
+  
+  X
+}
