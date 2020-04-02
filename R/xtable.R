@@ -122,78 +122,139 @@ APA2.xtabs  <- function(x,
                         caption = "" ,
                         note = "",
                         output = stp25output::which_output(),
-                        col_names = NULL,
-                        print_col = NULL,
+                      #  col_names = NULL,
+                       # print_col = NULL,
                         digits = NULL,
-                        test = FALSE,
-                        type = c("0",
-                                 "fischer",
-                                 "odds",
-                                 "sensitivity",
-                                 "chisquare",
-                                 "correlation",
-                                 "r"),
+                        # test = FALSE,
+                        # type = c("0",
+                        #          "fischer",
+                        #          "odds",
+                        #          "sensitivity",
+                        #          "chisquare",
+                        #          "correlation",
+                        #          "r"),
                         include.total = FALSE,
                         include.total.columns = FALSE,
                         include.total.sub = FALSE,
                         include.total.rows = FALSE,
                         include.percent = TRUE,
                         include.count = TRUE,
-                        include.margins=TRUE,
+                        include.margins = TRUE,
                         margin = NA,
                         add.margins = NA,
-                        labels=NULL,   #stp25aggregate::GetLabelOrName()
+                        
+                        
+                        # include.prop.chisq = TRUE,
+                        # include.chisq = FALSE,
+                         include.correlation = FALSE,
+                        # include.fisher = FALSE,
+                        # include.mcnemar = FALSE,
+                        # include.resid = FALSE,
+                        # include.sresid = FALSE,
+                        # ## include.asresid = FALSE,
+                         include.test=FALSE,
+                         include.sensitivity = FALSE,
+                         prevalence = NULL,
+                        # 
+                         # test = include.sensitivity | include.prop.chisq |
+                         #  include.chisq | include.fisher | include.mcnemar ,
+                        
+                     #   labels = NULL,
+                        #stp25aggregate::GetLabelOrName()
                         ...) {
-  res <- NULL
-  type <- match.arg(type, several.ok = TRUE)
- 
-
-    if (is.null(digits)) digits <- options()$stp25$apa.style$prozent$digits[1]
+  res <- list(xtab=NULL)
+#  type <- match.arg(type, several.ok = TRUE)
 
 
-  x_tab <- Xtabelle(
-    x,
-    include.total,
-    include.total.columns,
-    include.total.sub,
-    include.total.rows,
-    include.margins,
-    margin,
-    add.margins,
-    include.count,
-    include.percent,
-    digits
+  res$x_tab   <- prepare_output(
+    Xtabelle(
+      x,
+      include.total,
+      include.total.columns,
+      include.total.sub,
+      include.total.rows,
+      include.margins,
+      margin,
+      add.margins,
+      include.count,
+      include.percent,
+      digits =   if (is.null(digits))
+        options()$stp25$apa.style$prozent$digits[1]
+      else
+        digits
+    ),
+    caption = caption
   )
-#  print(x_tab)
-  x_tab <- prepare_output(x_tab, caption = caption)
-  if( !is.logical(output) ) {
-    Output(x_tab, output = output)
-  }
-  else if (output)  Output(x_tab)
-
-
-  res <- list(xtab = x_tab, test = NULL)
+  Output(res$x_tab, 
+         output = output)
+  
+ 
   #  print(class(res))
-  if (test){
-   # cat("\n in test")
+  if (include.test) {
     dimension <- length(dimnames(x))
-# print(length(x))
-  # margin und add.margins ueber include.total festlegen
-  if (dimension == 1) {
-    # Proportion
-    Text("Funktion noch nicht fertig")
-  } else if (dimension == 2) {
-    if (length(x) != 4)
-      res$test <- test_xtabl_NxM(x, type, output)
-    else
-      res$test <- test_xtabl_2x2(x, type, output)
-  } else if (dimension == 3) {
-    res$test <- test_xtabl_NxMxO(x, type, output)
-  } else {
-    cat("NxMxO... - Tabelle")
-    Text("Funktion noch nicht fertig")
-  }}
+    if (dimension == 1) {
+      # Proportion
+      Text("Funktion  Proportion noch nicht fertig")
+    } else if (dimension == 2 & length(x) == 4) {
+      fisher_test <- fisher.test(x)
+      fisher_test <- prepare_output(
+        data.frame(
+          OR  = stp25rndr::Format2(fisher_test$estimate),
+          CI  = stp25rndr::rndr_CI(matrix(fisher_test$conf.int, ncol=2)),
+          p   = stp25rndr::rndr_P(fisher_test$p.value),
+          stringsAsFactors = FALSE
+        ),
+        caption = "Fisher's Exact Test"
+      )
+      Output(res$fisher_test,
+             output = output)
+    }
+    else{
+      res$chisq_tests <-  vcd::assocstats(xtabs)
+      res$chisq_tests <- prepare_output(
+        data.frame(
+          Test = rownames(stat$chisq_tests),
+          Chi2 = stp25rndr::Format2(stat$chisq_tests[, 1], 2),
+          df   = stp25rndr::Format2(stat$chisq_tests[, 2], 0),
+          p    = stp25rndr::rndr_P(stat$chisq_tests[, 3]),
+          stringsAsFactors = FALSE
+        ),
+        caption = "Chi-Squared Test"
+      )
+      
+      Output(res$chisq_tests,
+             output = output)
+    }
+  }
+  
+ if( include.correlation) {
+   corr_test <-  vcd::assocstats(xtabs)
+   res$corr_test <- prepare_output(data.frame(
+     Test = c("Phi-Coefficient",
+              "Contingency Coefficient",
+              "Cramer's V"),
+     r = stp25rndr::Format2(c(corr_test$phi,
+                   corr_test$contingency,
+                   corr_test$cramer), 3), stringsAsFactors = FALSE
+   ),
+   caption = "Correlation Test")
+Output(res$corr_test,
+       output = output)
 
+
+ }
+
+  if (include.sensitivity) {
+    diagnostic.test <-
+      prepare_output(Klassifikation(x,
+                                    prevalence = prevalence)$statistic,
+                     caption = caption)
+    res[["diagnostic.test"]] <- diagnostic.test
+    Output(diagnostic.test,
+           output = output)
+  }
+  
+     
 
   invisible(res)
 }
@@ -220,32 +281,74 @@ APA_Xtabs.glm <- function(x,
 #' @rdname APA_
 #' @param addNA,exclude,drop.unused.levels An xtabs() default = FALSE
 #' @export
+#' @examples 
+#' 
+#'  DF <- GetData(
+#' "
+#' GoldStandart Schnell.Test Anzahl
+#' positiv positiv 124
+#' positiv negativ 9
+#' negativ positiv 20
+#' negativ negativ 305 ",
+#' Tabel_Expand = TRUE,
+#' id.vars = 1:2,
+#' output = FALSE
+#' )
+#' 
+#' 
+#' 
+#' DF <- transform(
+#'   DF,
+#'   GoldStandart = factor(GoldStandart, rev(levels(DF$GoldStandart))),
+#'   Schnell.Test = factor(Schnell.Test, rev(levels(DF$Schnell.Test)))
+#' )
+#' 
+#' DF<- Label(DF, GoldStandart="Krank Covid-19", Schnell.Test= "Schnell Test GTV8")
+#' N<- nrow(DF)
+#' 
+#' 
+#' xtb <- xtabs( ~ Schnell.Test + GoldStandart  , DF)
+#' 
+#' 
+#' APA_Xtabs(xtb)
+#' 
+#' APA_Xtabs( ~ Schnell.Test  + GoldStandart,
+#'            DF,
+#'            caption = "2x2 Tabelle zur Destimmung der Kennwerte",
+#'            include.percent = FALSE,
+#'            include.total=TRUE)
 APA_Xtabs.formula <- function(x,
                               data = NULL,
                               caption = "",
                               output = stp25output::which_output(),
-                              labels = FALSE,
+                              labels = TRUE,
                               addNA = FALSE,
-                              exclude = if(!addNA) c(NA, NaN),
+                              exclude = if (!addNA)  c(NA, NaN) ,
                               drop.unused.levels = FALSE,
-
-                              include.prop.chisq = TRUE,
-                              include.chisq = FALSE, include.correlation = FALSE,
-                              include.fisher = FALSE,
-                              include.mcnemar = FALSE,
-                              include.resid = FALSE,
-                              include.sresid = FALSE,
-                             ## include.asresid = FALSE,
-                              include.sensitivity = FALSE,
-
-                              test = include.prop.chisq | include.chisq | include.fisher | include.mcnemar,
-
+                              
+                              # include.prop.chisq = TRUE,
+                              # include.chisq = FALSE,
+                              # include.correlation = FALSE,
+                              # include.fisher = FALSE,
+                              # include.mcnemar = FALSE,
+                              # include.resid = FALSE,
+                              # include.sresid = FALSE,
+                              # ## include.asresid = FALSE,
+                              # include.sensitivity = FALSE,
+                              # 
+                              # test = include.prop.chisq |
+                              #   include.chisq | include.fisher | include.mcnemar,
+                              # 
                               ...) {
   fm_x <- x
-  x <- stats::xtabs(x, data,
-                    addNA = addNA, exclude = exclude,
-                    drop.unused.levels = drop.unused.levels)
-
+  x <- stats::xtabs(
+    x,
+    data,
+    addNA = addNA,
+    exclude = exclude,
+    drop.unused.levels = drop.unused.levels
+  )
+  
   if (is.logical(labels)) {
     if (labels) {
       dnn <- dimnames(x)
@@ -258,57 +361,70 @@ APA_Xtabs.formula <- function(x,
     names(dnn)[1:length(labels)] <-
       labels
     dimnames(x) <- dnn
-  }else if(is.list(labels)){
+  } else if (is.list(labels)) {
     dimnames(x) <- labels
   }
-
+  
   #print(x)
   # noch nicht fertig
+  # 
+  # CST <- NULL  #chisq.test
+  # 
+  # if (include.chisq | include.correlation) {
+  #   # chisq.test(x ) #Pearson's Chi-squared test with Yates
+  #   # chisq.test(x, correct = FALSE) #Pearson's Chi-squared test
+  #   # summary(x) # Test for independence of all factors
+  #   #
+  #   CST <- chisq.test(x, correct = FALSE)
+  # }
+  # 
+  # if (include.resid) {
+  #   if (is.null(CST))
+  #     CST <- chisq.test(x, correct = FALSE)
+  #   resid <-  formatC(CST$observed - CST$expected,
+  #                     digits = 2,
+  #                     format = "f")
+  # }
+  # 
+  # if (include.sresid) {
+  #   if (is.null(CST))
+  #     CST <- chisq.test(x, correct = FALSE)
+  #   sresid  <-  formatC(CST$residual , digits = 2,
+  #                       format = "f")
+  # }
+  # 
+  # if (include.mcnemar) {
+  #   McN <- mcnemar.test(x, correct = FALSE)
+  # }
   
-  CST <- NULL  #chisq.test
-
-  if(include.chisq | include.correlation) {
-    # chisq.test(x ) #Pearson's Chi-squared test with Yates
-    # chisq.test(x, correct = FALSE) #Pearson's Chi-squared test
-    # summary(x) # Test for independence of all factors
-    #
-    CST <- chisq.test(x, correct = FALSE)
-  }
-
-  if(include.resid) {
-    if(is.null( CST))  CST <- chisq.test(x, correct = FALSE)
-  resid <-  formatC(CST$observed-CST$expected, digits = 2,
-                    format = "f" ) }
-
-  if(include.sresid) {
-    if(is.null( CST))  CST <- chisq.test(x, correct = FALSE)
-  sresid  <-  formatC(CST$residual , digits = 2,
-                      format = "f" )
-  }
-
-  if (include.mcnemar) {
-    McN <- mcnemar.test(x, correct = FALSE)
-  }
-
   #cat("\n vor APA")
-  APA2.xtabs(x, caption = caption, output = output, ...)
+  APA2.xtabs(x, 
+             caption = caption, 
+             output = output, 
+             ...)
 }
 
 #' @rdname APA_
 #' @export
-APA_Xtabs.data.frame <- function(data = NULL,
-                                 formula,
-                                 caption = "",
-                                 output = stp25output::which_output(),
-                                 labels = FALSE,
-                                 ...) {
-  APA_Xtabs.formula(formula, data, caption, output, labels, ...)
+APA_Xtabs.xtabs <- function(x, ...) {
+  APA2.xtabs(x, ...)
 }
+# 
+# # @rdname APA_
+# # @export
+# APA_Xtabs.data.frame <- function(data = NULL,
+#                                  formula,
+#                                  caption = "",
+#                                  output = stp25output::which_output(),
+#                                  labels = FALSE,
+#                                  ...) {
+#   APA_Xtabs.formula(formula, data, caption, output, labels, ...)
+# }
 
 #' @rdname APA_
 #' @export
 APA_Xtabs.default <- function(x, ...) {
-  Text("Keine Methode fuer", class(x), "vorhanden.")
+  Text("Keine Methode fuer ", class(x), " vorhanden.")
 }
 
 
@@ -316,48 +432,48 @@ APA_Xtabs.default <- function(x, ...) {
 
 # Test Chi und Fisher ---------------------------------------------------------------------
 
+# 
+# fisher_Statistik <- function(x, digits = 2) {
+#   fisher <- fisher.test(x)
+#   
+#   
+#   res <- data.frame(
+#     OR  = Format2(fisher$estimate, digits),
+#     CI  = rndr_CI(as.vector(fisher$conf.int)),
+#     p   = rndr_P(fisher$p.value)
+#   )
+#   names(res) <- c("OR", "95% CI" , "p-Value")
+# 
+#   res
+# }
 
-fisher_Statistik <- function(x, digits = 2) {
-  fisher <- fisher.test(x)
-  
-  
-  res <- data.frame(
-    OR  = Format2(fisher$estimate, digits),
-    CI  = rndr_CI(as.vector(fisher$conf.int)),
-    p   = rndr_P(fisher$p.value)
-  )
-  names(res) <- c("OR", "95% CI" , "p-Value")
-
-  res
-}
-
-chisq_Statistik <- function(xtabs, type,
-                            x = summary(xtabs),
-                            dins = length(dimnames(xtabs))
-                            ) {
-  stat <- vcd::assocstats(xtabs)
-  ans<- list()
-
-  if ("chisquare" %in% type)
-   {
-
-    ans[["Chisq"]] <- data.frame(
-              Test = rownames(stat$chisq_tests),
-              Chi2 = Format2(stat$chisq_tests[, 1], 2),
-              df   = Format2(stat$chisq_tests[, 2], 0),
-              p    = rndr_P(stat$chisq_tests[, 3]))}
-
- if (any(c("correlation", "r") %in% type))
-  ans[["Correlation"]] <- data.frame(
-        Test = c("Phi-Coefficient",
-                 "Contingency Coefficient",
-                 "Cramer's V"),
-        r = Format2(c(stat$phi,
-                      stat$contingency,
-                      stat$cramer), 3)
-      )
-  ans
-}
+# chisq_Statistik <- function(xtabs, type,
+#                             x = summary(xtabs),
+#                             dins = length(dimnames(xtabs))
+#                             ) {
+#   stat <- vcd::assocstats(xtabs)
+#   ans<- list()
+# 
+#   if ("chisquare" %in% type)
+#    {
+# 
+#     ans[["Chisq"]] <- data.frame(
+#               Test = rownames(stat$chisq_tests),
+#               Chi2 = Format2(stat$chisq_tests[, 1], 2),
+#               df   = Format2(stat$chisq_tests[, 2], 0),
+#               p    = rndr_P(stat$chisq_tests[, 3]))}
+# 
+#  if (any(c("correlation", "r") %in% type))
+#   ans[["Correlation"]] <- data.frame(
+#         Test = c("Phi-Coefficient",
+#                  "Contingency Coefficient",
+#                  "Cramer's V"),
+#         r = Format2(c(stat$phi,
+#                       stat$contingency,
+#                       stat$cramer), 3)
+#       )
+#   ans
+# }
 
 
 
@@ -487,46 +603,46 @@ Xtabelle <- function(x,
 
 
 
-test_xtabl_NxMxO <- function(x, type, output, ...) {
-  list(likelihood.test = NULL)
-}
+# test_xtabl_NxMxO <- function(x, type, output, ...) {
+#   list(likelihood.test = NULL)
+# }
 
+# 
+# test_xtabl_NxM <- function (x, type, output, ...) {
+#   ans <- chisq_Statistik(x, type = type)
+#   for (i in names(ans))
+#     Output(
+#       ans[[i]],
+#       caption = i,
+#       fix_colnames = FALSE,
+#       output = output
+#     )
+#   ans #liste mit Test
+# }
 
-test_xtabl_NxM <- function (x, type, output, ...) {
-  ans <- chisq_Statistik(x, type = type)
-  for (i in names(ans))
-    Output(
-      ans[[i]],
-      caption = i,
-      fix_colnames = FALSE,
-      output = output
-    )
-  ans #liste mit Test
-}
-
-test_xtabl_2x2 <- function(x, type, output, lvs = c("+", "-"), ...) {
- 
-  res <- list(fisher=NULL, sensitivity=NULL)
-  # type kann mehr sein  #-- c("fischer", "odds","sensitivity", "chisquare" )
-  if ("fischer" %in%  type) {
- 
-    x_fisher <- prepare_output(fisher_Statistik(x),
-                               caption = "Fisher's Exact Test ")
-
-    
-    Output(x_fisher,  output = output)
-    res$fisher <- x_fisher
- 
-  }
-  if ("sensitivity" %in% type) {
-  
-    x_diagnostic <- prepare_output(Klassifikation.xtabs(x, lvs),
-                                   caption = "Sensitivity Test")
-   
-    Output(x_diagnostic$statistic, output = output)
-
-    res$sensitivity <- x_diagnostic
-  }
-  res
-}
+# test_xtabl_2x2 <- function(x, type, output, lvs = c("+", "-"), ...) {
+#  
+#   res <- list(fisher=NULL, sensitivity=NULL)
+#   # type kann mehr sein  #-- c("fischer", "odds","sensitivity", "chisquare" )
+#   if ("fischer" %in%  type) {
+#  
+#     x_fisher <- prepare_output(fisher_Statistik(x),
+#                                caption = "Fisher's Exact Test ")
+# 
+#     
+#     Output(x_fisher,  output = output)
+#     res$fisher <- x_fisher
+#  
+#   }
+#   if ("sensitivity" %in% type) {
+#   
+#     x_diagnostic <- prepare_output(Klassifikation.xtabs(x, lvs),
+#                                    caption = "Sensitivity Test")
+#    
+#     Output(x_diagnostic$statistic, output = output)
+# 
+#     res$sensitivity <- x_diagnostic
+#   }
+#   res
+# }
 

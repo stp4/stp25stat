@@ -141,6 +141,7 @@ return(res)
 Klassifikation.xtabs<- function(x,
                                 lvs = c("positiv", "negativ"),
                                 digits = 2,
+                                prevalence = NULL,
                                # caption="Klassifikation",
                                # note="",
                                 ...){
@@ -152,7 +153,7 @@ Klassifikation.xtabs<- function(x,
  attr(x, "dimnames")[[1]] <- lvs
  attr(x, "dimnames")[[2]] <- lvs
  xtab<-x
- x <- caret::confusionMatrix(x)
+ x <- caret::confusionMatrix(x, prevalence = prevalence)
  
  out <- as.character(c(
    rndr_(x$overall["Accuracy"], digits),
@@ -196,3 +197,86 @@ Klassifikation.xtabs<- function(x,
       predictor=NULL
       )
 }
+
+
+
+
+
+
+
+
+
+#' APA Methode für epi.tests
+#'
+#' @param x epi.tests Objekt
+#' @param ...  an Output
+#' 
+#' @rdname APA2
+#'
+#' @return data.frame
+#' @export
+#'
+#' @examples
+#' 
+#' #' library(caret)
+#' require(epiR)
+#' DF<- GetData("
+#' GoldStandart RT.qPCR Anzahl
+#' positiv positiv 111
+#' positiv negativ 12
+#' negativ positiv 1
+#' negativ negativ 62 ", Tabel_Expand =TRUE, id.vars=1:2, output=FALSE)
+#' DF$GoldStandart<- factor( DF$GoldStandart, rev(levels( DF$GoldStandart)))
+#' DF$RT.qPCR<- factor( DF$RT.qPCR, rev(levels( DF$RT.qPCR)))
+#' 
+#'  
+#' 
+#' 
+#' dat <- as.table(matrix(c(111, 12, 1, 62), nrow = 2, byrow = TRUE))
+#' colnames(dat) <- c("RT.qPCR +", "RT.qPCR -")
+#' rownames(dat) <- c("Gold Standart +", "GoldStandart -")
+#' rval <- epi.tests(dat, conf.level = 0.95)
+#' APA2(rval)
+#' 
+#' 
+APA2.epi.tests <-
+  function (x, ...)
+  {
+    #    Output(cbind(Test= row.names( x$tab),  x$tab), ...)
+    
+    stat <-  with(x$rval, {
+      data.frame(
+        "Diagnostic Parameters"
+        = c(
+          "Apparent prevalence",
+          "True prevalence",
+          "Sensitivity",
+          "Specificity",
+          "Positive predictive value",
+          "Negative predictive value",
+          # "Positive likelihood ratio",
+          # "Negative likelihood ratio",
+          
+          "Diagnostic Accuracy"
+        ) ,
+        "Point Estimates" = c(
+          sprintf("%.2f (%.2f, %.2f)", aprev$est, aprev$lower, aprev$upper),
+          sprintf("%.2f (%.2f, %.2f)", tprev$est, tprev$lower, tprev$upper),
+          sprintf("%.2f (%.2f, %.2f)", se$est, se$lower, se$upper),
+          sprintf("%.2f (%.2f, %.2f)", sp$est, sp$lower, sp$upper),
+          sprintf("%.2f (%.2f, %.2f)",  ppv$est, ppv$lower, ppv$upper),
+          sprintf("%.2f (%.2f, %.2f)",  npv$est, npv$lower, npv$upper),
+          # sprintf("%.2f (%.2f, %.2f)",  plr$est, plr$lower, plr$upper),
+          #  sprintf("%.2f (%.2f, %.2f)",  nlr$est, nlr$lower, nlr$upper),
+          sprintf("%.2f (%.2f, %.2f)",  diag.acc$est, diag.acc$lower, nlr$upper))
+        
+      )
+    })
+    
+    Output(stat, 
+           caption=paste("Point estimates and", x$conf.level * 100, "%","CIs:"),
+           ...)
+    
+    invisible(stat)
+  }
+
