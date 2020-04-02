@@ -67,9 +67,9 @@ Ordnen.polr <- function(x,
                         include.se = TRUE,
                         include.ci = FALSE,
                         include.odds = TRUE,
-                        test.my.fun=FALSE,
+                      #  test.my.fun=FALSE,
                         ...){
-  if(test.my.fun) cat("\n   -> Ordnen.polr()")
+ # if(test.my.fun) cat("\n   -> Ordnen.polr()")
 
   info <- model_info(x)
   AV <-
