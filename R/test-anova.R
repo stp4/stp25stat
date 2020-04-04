@@ -49,8 +49,7 @@ APA2.anova <- function(x,
 #'
 APA2.aov <- function(x,
                      caption = "ANOVA",
-                     note = paste("contrasts: ", paste(options()$contrasts, collapse =
-                                                         ", ")),
+                     note = paste("contrasts: ", paste(options()$contrasts, collapse =", ")),
                      output = stp25output::which_output(),
                      col_names = NULL,
                      ...) {
