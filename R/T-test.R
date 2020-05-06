@@ -1,30 +1,4 @@
-#' @rdname APA
-#' @description APA.htest: T-Test
-#' @export
-#' @examples
-#'  # T-Test
-#' require(coin)
-#' APA(coin::wilcox_test(mpg ~ factor(vs), mtcars))
-#' APA(wilcox.test(mpg ~ vs, mtcars))
-#' APA(t.test(mpg ~ vs, mtcars))
-APA.htest <- function(x,  ...) {
-  if (names(x$statistic) == "t") {
-    rndr_T(x$statistic,
-           x$parameter,
-           x$p.value)
-  }
-  else if (names(x$statistic) == "BP"){
-    rndr_BP(x$statistic,
-            x$parameter,
-            x$p.value)}
-  else if (names(x$statistic) == "DW"){
-    rndr_DW(x$statistic,
-            x$parameter,
-            x$p.value)}
-  else{
-    rndr_W(x$statistic,
-           x$p.value)}
-}
+
 
 
 #' @rdname APA
@@ -78,7 +52,7 @@ APA.ScalarIndependenceTest <- function(x, ...) {
 APA_Ttest  <- function(x,
                        data,
                        caption = "T Test",
-                       note = alternative,
+                       note = paste(type, alternative),
                        output = stp25output::which_output(),
                        var.equal = FALSE,
                        paired = FALSE,
@@ -215,54 +189,7 @@ calculate_se <- function(x, data) {
 
 
 
-#' @rdname APA2
-#' @export
-APA2.htest <- function(x, caption = "", ...) {
-  # t.test
-  if (names(x$statistic) == "t")
-    Output(
-      fix_data_frame2(
-        Source = x$data.name,
-        T = x$statistic,
-        df = x$parameter,
-        p.value = x$p.value
-      ),
-      caption = paste(x$method, caption),
-      ...
-    )
-  else
-    Output(
-      fix_data_frame2(
-        Source = x$data.name,
-        W = x$statistic,
-        p.value = x$p.value
-      ),
-      caption = paste(x$method, caption)
-      ,
-      ...
-    )
-}
 
-
-#' @rdname APA2
-#' @export
-APA2.pairwise.htest <-
-  function(x, caption = "", ...) {
-    #pairwise.t.test
-    #-- ?pairwise.wilcox.test
-    Output(
-      data.frame(
-        Source = row.names(x$p.value),
-        Format2(
-          as.data.frame(x$p.value),
-          digits = 3 ,
-          lead.zero = FALSE
-        )
-      ),
-      caption = paste(x$data.name, x$method, "(p-Value)", caption),
-      ...
-    )
-  }
 
 
 
