@@ -801,8 +801,19 @@ Prozent2default <-
            n = length(x),
            exclude = NA,
            max_factor_length = 25) {
-    if (!is.factor(x))
-      x <- factor(x)
+    
+    
+    
+    if (is.logical(x)) {
+      x <- factor(x, c(TRUE, FALSE), c("true", "false"))
+      is_not_logical <- FALSE
+    }
+    else {
+      if (!is.factor(x))
+        x <- factor(x)
+      is_not_logical <- TRUE
+    }
+    
 
   #  x_NA <- x
   #  N    <- length(x)
@@ -831,12 +842,19 @@ Prozent2default <-
         rndr_percent(as.vector(prop.table(ans)) * 100, as.vector(ans))
 
     }
+    
+    res<-
     data.frame(
       lev = names(ans),
       n = c(n, rep("", length(ans) - 1)),
       m = as.vector(result),
       stringsAsFactors = FALSE
     )
+    
+    if(is_not_logical){ res }
+    else{res[1, ]}
+    
+    
   }
 
 
