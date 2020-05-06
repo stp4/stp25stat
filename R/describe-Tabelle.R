@@ -279,41 +279,53 @@ calculate_tabelle2 <- function(X,
                                fun = NULL,
                                digits = digits,
                                measure.name = "value") {
-  res <- NULL #ergebnis liste
-
-  if(type[1] =="2") type <- "auto_long"
-  else if( type[1] == "1")  type <- "auto_kurz"
-  else if( type[1] == "custom_fun")  X$measure <- rep("custom_fun", length(X$measure))
+  res <- NULL
+  
+  if (type[1] == "2")
+    type <- "auto_long"
+  else if (type[1] == "1")
+    type <- "auto_kurz"
+  else if (type[1] == "custom_fun")
+    X$measure <- rep("custom_fun", length(X$measure))
   else{
-
-    if(type %in% c("mean", "median", "factor", "freq")){
-      type[which(type=="freq")] <- "factor"
-
-    if(length(type) != length(X$measure)) X$measure  <- rep(type[1], length(X$measure))
-    else X$measure  <-  type
-    } else warning("Der gewaehlte type ", type[1], " ist nicht implementiert.")
-
+    if (type %in% c("mean", "median", "factor", "freq")) {
+      type[which(type == "freq")] <- "factor"
+      if (length(type) != length(X$measure))
+        X$measure  <- rep(type[1], length(X$measure))
+      else
+        X$measure  <-  type
+    } else
+      warning("Der gewaehlte type ", type[1], " ist nicht implementiert.")
     type <- "auto_kurz"
   }
-
-
+  
   for (i in seq_len(length(X$measure))) {
-    #-- Labels ----------------------------------
-    if (X$measure[i] == "factor"){
-      if( !is.factor(  X$data[[X$measure.vars[i]]])  ) {
-
+    
+   
+    
+    if (X$measure[i] == "factor") {
+      if (!is.factor(X$data[[X$measure.vars[i]]])) {
         X$data[[X$measure.vars[i]]] <- factor(X$data[[X$measure.vars[i]]])
         warning("Konvertiere die Variable ", X$measure.vars[i], " zu Factor!")
       }
       X$row_name[i] <- paste0(X$row_name[i], " (",
-                                paste0(levels(X$data[[X$measure.vars[i]]]), 
-                                       collapse = "/"), ")")}
+                              paste0(levels(X$data[[X$measure.vars[i]]]),
+                                     collapse = "/"), ")")
+    }
     else if (X$measure[i] == "mean")
-        X$row_name[i] <- paste0(X$row_name[i], " (mean)")
+      X$row_name[i] <- paste0(X$row_name[i], " (mean)")
     else if (X$measure[i] == "median")
-        X$row_name[i] <- paste0(X$row_name[i], " (median)")
-
-
+      X$row_name[i] <- paste0(X$row_name[i], " (median)")
+    else if(X$measure[i] == "logical"){  
+      X$data[[X$measure.vars[i]]] <- 
+        factor(X$data[[X$measure.vars[i]]], c(TRUE, FALSE) )
+      X$measure[i] <- "factor"
+       X$row_name[i] <- paste0(X$row_name[i], " (",
+                              paste0(levels(X$data[[X$measure.vars[i]]]),
+                                     collapse = "/"), ")")
+      }
+    
+    
     res[[X$measure.vars[i]]]  <-
       berechne_all(
         X$data,
@@ -322,17 +334,19 @@ calculate_tabelle2 <- function(X,
         X$measure[i],
         type,
         fun = fun,
-        digits =  if (is.null(digits))  X$digits[i] else digits,
+        digits =  if (is.null(digits))
+          X$digits[i]
+        else
+          digits,
         measure.name = measure.name
       )
   }
-
+  
   df <- plyr::ldply(res)
   df[, 1] <- factor(df[, 1], names(X$row_name), X$row_name)
-
+  
   prepare_output(df, caption, note, nrow(X$data), NA)
 }
-
 
 
 
