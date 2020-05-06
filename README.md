@@ -13,7 +13,1091 @@ which_output()
 
     ## [1] "markdown_html"
 
-Artificial data
+## Artificial data
+
+``` r
+require(wakefield)
+```
+
+    ## Loading required package: wakefield
+
+``` r
+set.seed(0815)
+DF <- r_data_frame(
+  n = 30,
+  id,
+  race,
+  age(x = 8:14),
+  sex,
+  hour,
+  iq,
+  height(mean = 50, sd = 10),
+  died,
+  Smoker = valid,
+  likert,
+  date_stamp(prob = probs(12))
+) %>% clean_names()
+
+
+
+DF %>% Tabelle2(age, sex, height,
+                race, died, smoker,
+                likert,
+                by =  ~ sex,
+                APA = TRUE)
+```
+
+<table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
+
+<thead>
+
+<tr>
+
+<td colspan="7" style="text-align: left;">
+
+Tab 1: Sex Charakteristik
+
+</td>
+
+</tr>
+
+<tr>
+
+<th colspan="1" style="font-weight: 900; border-top: 2px solid grey; text-align: center;">
+
+</th>
+
+<th style="border-top: 2px solid grey;; border-bottom: hidden;">
+
+ 
+
+</th>
+
+<th colspan="2" style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+
+ Male
+
+</th>
+
+<th style="border-top: 2px solid grey;; border-bottom: hidden;">
+
+ 
+
+</th>
+
+<th colspan="2" style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+
+ Female
+
+</th>
+
+</tr>
+
+<tr>
+
+<th style="border-bottom: 1px solid grey; text-align: center;">
+
+Item
+
+</th>
+
+<th style="border-bottom: 1px solid grey;" colspan="1">
+
+ 
+
+</th>
+
+<th style="border-bottom: 1px solid grey; text-align: center;">
+
+n
+
+</th>
+
+<th style="border-bottom: 1px solid grey; text-align: center;">
+
+m
+
+</th>
+
+<th style="border-bottom: 1px solid grey;" colspan="1">
+
+ 
+
+</th>
+
+<th style="border-bottom: 1px solid grey; text-align: center;">
+
+n
+
+</th>
+
+<th style="border-bottom: 1px solid grey; text-align: center;">
+
+m
+
+</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Age (mean)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+10.00 (1.83)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+11.06 (1.78)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Sex 
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Male
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13 (100%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Female
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17 (100%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Height (mean)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+48.46 (8.32)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+51.76 (7.60)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Race 
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ White
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+7 (54%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+12 (71%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Hispanic
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+2 (15%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+3 (18%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Black
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+3 (23%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+2 (12%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Asian
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+1 (8%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Bi-Racial
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Native
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Other
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Hawaiian
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Died true
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+6 (46%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+12 (71%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Smoker true
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+9 (69%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+5 (29%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+Likert 
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Strongly Disagree
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+1 (8%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+3 (18%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Disagree
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+3 (23%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+5 (29%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Neutral
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+4 (31%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+4 (24%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ Agree
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+4 (31%)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+4 (24%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+
+ Strongly Agree
+
+</td>
+
+<td style="border-bottom: 2px solid grey;" colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+
+1 (8%)
+
+</td>
+
+<td style="border-bottom: 2px solid grey;" colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+
+1 (6%)
+
+</td>
+
+</tr>
+
+</tbody>
+
+<tfoot>
+
+<tr>
+
+<td colspan="7">
+
+</td>
+
+</tr>
+
+</tfoot>
+
+</table>
 
 ``` r
     population.model <- '
@@ -64,7 +1148,7 @@ Artificial data
 
 <td colspan="3" style="text-align: left;">
 
-Tab 1: Characteristics
+Tab 2: Characteristics
 
 </td>
 
@@ -130,7 +1214,7 @@ sex 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-50 (50%)
+29 (29%)
 
 </td>
 
@@ -150,7 +1234,7 @@ sex 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-50 (50%)
+71 (71%)
 
 </td>
 
@@ -172,7 +1256,7 @@ age (mean)
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-43.46 (11.24)
+49.38 (10.65)
 
 </td>
 
@@ -212,7 +1296,7 @@ edu 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-11 (11%)
+10 (10%)
 
 </td>
 
@@ -232,7 +1316,7 @@ edu 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-69 (69%)
+51 (51%)
 
 </td>
 
@@ -252,7 +1336,7 @@ edu 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-20 (20%)
+39 (39%)
 
 </td>
 
@@ -310,7 +1394,7 @@ beruf 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-44 (44%)
+34 (34%)
 
 </td>
 
@@ -330,7 +1414,7 @@ beruf 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-56 (56%)
+66 (66%)
 
 </td>
 
@@ -370,7 +1454,7 @@ single 
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-40 (40%)
+29 (29%)
 
 </td>
 
@@ -390,7 +1474,7 @@ single 
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-60 (60%)
+71 (71%)
 
 </td>
 
@@ -424,7 +1508,7 @@ APA_Correlation(~o1+o2+o3+o4+o5+c1+c2+c3, DF)
 
 <td colspan="9" style="text-align: left;">
 
-Tab 2: Korrelation
+Tab 3: Korrelation
 
 </td>
 
@@ -508,43 +1592,43 @@ Quelle
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.50\*\*\*
+.57\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.53\*\*\*
+.55\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.50\*\*\*
+.60\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.53\*\*\*
+.52\*\*\*
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.19
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+.04
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
 \-.03
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-\-.15
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-.06
 
 </td>
 
@@ -570,31 +1654,31 @@ Quelle
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.52\*\*\*
+.45\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.62\*\*\*
+.60\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.54\*\*\*
+.45\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-.01
+\-.04
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-.18
+\-.06
 
 </td>
 
@@ -630,31 +1714,31 @@ Quelle
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.50\*\*\*
+.61\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.48\*\*\*
+.51\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-.05
+.20\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-.09
+.06
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-.13
+.01
 
 </td>
 
@@ -688,25 +1772,25 @@ Quelle
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.56\*\*\*
+.55\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.12
+.11
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-.13
+.02
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.10
+.01
 
 </td>
 
@@ -744,19 +1828,19 @@ Quelle
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.07
+.10
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-.06
+.04
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.05
+.08
 
 </td>
 
@@ -798,13 +1882,13 @@ Quelle
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.45\*\*\*
+.49\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.52\*\*\*
+.34\*\*\*
 
 </td>
 
@@ -850,7 +1934,7 @@ Quelle
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-.36\*\*\*
+.46\*\*\*
 
 </td>
 
@@ -939,7 +2023,7 @@ pearson
 
 <td colspan="8" style="text-align: left;">
 
-Tab 3: Standardized loadings (pattern matrix) based upon correlation
+Tab 4: Standardized loadings (pattern matrix) based upon correlation
 matrix
 
 </td>
@@ -1006,13 +2090,13 @@ h2
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-a5
+o4
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-25
+ 4
 
 </td>
 
@@ -1058,25 +2142,19 @@ a5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-a3
+o1
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-23
+ 1
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 0.81
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
+ 0.82
 
 </td>
 
@@ -1100,7 +2178,13 @@ a3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.67
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.72
 
 </td>
 
@@ -1110,25 +2194,19 @@ a3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-a4
+o3
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-24
+ 3
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 0.81
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
+ 0.78
 
 </td>
 
@@ -1152,7 +2230,13 @@ a4
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.65
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.62
 
 </td>
 
@@ -1162,25 +2246,19 @@ a4
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-a2
+o2
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-22
+ 2
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 0.80
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
+ 0.76
 
 </td>
 
@@ -1204,7 +2282,13 @@ a2
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.70
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.59
 
 </td>
 
@@ -1214,19 +2298,19 @@ a2
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-a1
+o5
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-21
+ 5
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 0.77
+ 0.74
 
 </td>
 
@@ -1266,25 +2350,13 @@ a1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-n5
+a2
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-20
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.82
+22
 
 </td>
 
@@ -1296,6 +2368,18 @@ n5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
+ 0.83
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
  
 
 </td>
@@ -1308,7 +2392,7 @@ n5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.70
+0.71
 
 </td>
 
@@ -1318,25 +2402,13 @@ n5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-n3
+a4
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-18
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.82
+24
 
 </td>
 
@@ -1348,6 +2420,18 @@ n3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
+ 0.81
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
  
 
 </td>
@@ -1360,7 +2444,7 @@ n3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.69
+0.68
 
 </td>
 
@@ -1370,13 +2454,175 @@ n3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-n1
+a3
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-16
+23
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 0.78
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.63
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+a1
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+21
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 0.74
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.55
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+a5
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+25
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 0.68
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.52
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+e1
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+11
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
 
 </td>
 
@@ -1406,12 +2652,6 @@ n1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
 0.65
 
 </td>
@@ -1422,169 +2662,13 @@ n1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-n2
+e3
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-17
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.79
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.62
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-n4
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-19
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.79
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.67
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-o4
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 4
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.82
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.69
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-o5
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 5
+13
 
 </td>
 
@@ -1620,7 +2704,7 @@ o5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.64
+0.66
 
 </td>
 
@@ -1630,65 +2714,13 @@ o5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-o2
+e4
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 2
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.79
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.65
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-o1
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 1
+14
 
 </td>
 
@@ -1734,13 +2766,65 @@ o1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-o3
+e5
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 3
+15
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 0.76
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.60
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+e2
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+12
 
 </td>
 
@@ -1776,7 +2860,7 @@ o3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.61
+0.60
 
 </td>
 
@@ -1786,13 +2870,13 @@ o3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-c1
+n2
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 6
+17
 
 </td>
 
@@ -1828,7 +2912,7 @@ c1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.67
+0.71
 
 </td>
 
@@ -1838,13 +2922,13 @@ c1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-c5
+n5
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-10
+20
 
 </td>
 
@@ -1880,7 +2964,7 @@ c5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.60
+0.62
 
 </td>
 
@@ -1890,13 +2974,13 @@ c5
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-c4
+n3
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 9
+18
 
 </td>
 
@@ -1932,7 +3016,7 @@ c4
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.58
+0.60
 
 </td>
 
@@ -1942,13 +3026,65 @@ c4
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-c3
+n1
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 8
+16
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 0.73
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.57
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+n4
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+19
 
 </td>
 
@@ -1994,117 +3130,13 @@ c3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-c2
+c4
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- 7
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.71
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.54
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-e5
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-15
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.78
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.65
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-e1
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-11
+ 9
 
 </td>
 
@@ -2140,7 +3172,7 @@ e1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.69
+0.62
 
 </td>
 
@@ -2150,13 +3182,117 @@ e1
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-e3
+c3
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-13
+ 8
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 0.76
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.60
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+c2
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 7
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+ 0.75
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.59
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+c5
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+10
 
 </td>
 
@@ -2192,59 +3328,7 @@ e3
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.58
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-e2
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-12
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
- 0.72
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.55
+0.59
 
 </td>
 
@@ -2254,13 +3338,13 @@ e2
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-e4
+c1
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-14
+ 6
 
 </td>
 
@@ -2296,7 +3380,7 @@ e4
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-0.47
+0.54
 
 </td>
 
@@ -2326,7 +3410,7 @@ e4
 
 <td colspan="2" style="text-align: left;">
 
-Tab 4: Standardized loadings (pattern matrix) based upon correlation
+Tab 5: Standardized loadings (pattern matrix) based upon correlation
 matrix
 
 </td>
@@ -2395,7 +3479,7 @@ RMSR
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.05
+0.06
 
 </td>
 
@@ -2411,7 +3495,7 @@ empirical chi square
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-X2=163.15, p=.875
+X2=182.28, p=.543
 
 </td>
 
@@ -2441,7 +3525,7 @@ X2=163.15, p=.875
 
 <td colspan="2" style="text-align: left;">
 
-Tab 5: Standardized loadings (pattern matrix) based upon correlation
+Tab 6: Standardized loadings (pattern matrix) based upon correlation
 matrix
 
 </td>
@@ -2494,7 +3578,7 @@ Bartlett’s test of sphericity
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-X2(300)=1086.03, p\<.001
+X2(300)=1037.47, p\<.001
 
 </td>
 
@@ -2542,7 +3626,7 @@ X2(300)=1086.03, p\<.001
 
 <td colspan="10" style="text-align: left;">
 
-Tab 6:
+Tab 7:
 
 </td>
 
@@ -2638,13 +3722,13 @@ Openness
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.00
+0.04
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1.15
+1.22
 
 </td>
 
@@ -2656,25 +3740,25 @@ Openness
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-4.86; 5.29
+\-3.96; 3.78
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.23
+0.06
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.48
+\-0.18
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-W=0.99, p=.667
+W=0.99, p=.502
 
 </td>
 
@@ -2702,43 +3786,43 @@ Conscientiousness
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.13
+0.08
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1.00
+0.97
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.81
+0.80
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-3.45; 4.32
+\-4.47; 3.55
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.04
+\-0.13
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.16
+\-0.21
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-W=1.00, p=.992
+W=0.99, p=.671
 
 </td>
 
@@ -2766,43 +3850,43 @@ Extraversion
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.12
+0.10
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1.01
+1.09
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.80
+0.84
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-4.27; 3.00
+\-4.51; 4.12
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.42
+\-0.16
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.58
+0.20
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-W=0.98, p=.112
+W=0.99, p=.499
 
 </td>
 
@@ -2830,43 +3914,43 @@ Neuroticism
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.04
+\-0.15
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1.21
+1.06
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.87
+0.81
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-5.21; 4.59
+\-4.11; 4.85
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.22
+0.27
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.62
+\-0.56
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-W=0.97, p=.048
+W=0.98, p=.257
 
 </td>
 
@@ -2894,43 +3978,43 @@ Agreeableness
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\-0.04
+0.03
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-1.26
+1.12
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-0.87
+0.84
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\-4.71; 3.64
+\-4.54; 4.23
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\-0.22
+0.19
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\-0.60
+\-0.30
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-W=0.99, p=.337
+W=0.99, p=.527
 
 </td>
 
@@ -2981,7 +4065,7 @@ mean_sd$sex %>% Output( "Mittelwerte")
 
 <td colspan="5" style="text-align: left;">
 
-Tab 7: Mittelwerte
+Tab 8: Mittelwerte
 
 </td>
 
@@ -3061,19 +4145,19 @@ m
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-50
+29
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-2102.4
+2323.36
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-485.98
+594.87
 
 </td>
 
@@ -3095,19 +4179,19 @@ f
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-50
+71
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-1947.15
+2124.77
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-395.59
+401.93
 
 </td>
 
@@ -3145,7 +4229,7 @@ APA2(effects::Effect("sex", fit))
 
 <td colspan="4" style="text-align: left;">
 
-Tab 8: Effekte: Effect
+Tab 9: Effekte: Effect
 
 </td>
 
@@ -3193,19 +4277,19 @@ m
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-2080.63
+2398.31
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-2000.45
+2268.58
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-2160.81
+2528.04
 
 </td>
 
@@ -3221,19 +4305,19 @@ f
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-1968.92
+2094.16
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-1888.75
+2012.93
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-2049.10
+2175.39
 
 </td>
 
@@ -3267,7 +4351,7 @@ APA2(visreg::visreg(fit, "sex", plot=FALSE))
 
 <td colspan="9" style="text-align: left;">
 
-Tab 9: Einkommen
+Tab 10: Einkommen
 
 </td>
 
@@ -3345,49 +4429,49 @@ m
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-43.4549708930786
+49.5034145628059
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.155174813756757
+0.0257084929372925
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.111487965611448
+0.131716153092842
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.0862089974845101
+0.196639846431887
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-0.00104498769617332
+\-0.203510181429749
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.0363865109370558
+\-0.0629899907928555
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-2087.12
+2420.51
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[2005.86, 2168.39\]
+\[2288.67, 2552.35\]
 
 </td>
 
@@ -3403,49 +4487,49 @@ f
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-43.4549708930786
+49.5034145628059
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\-0.155174813756757
+0.0257084929372925
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-0.111487965611448
+0.131716153092842
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\-0.0862089974845101
+0.196639846431887
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\-0.00104498769617332
+\-0.203510181429749
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-0.0363865109370558
+\-0.0629899907928555
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-1975.42
+2116.36
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
 
-\[1895.35, 2055.48\]
+\[2035.63, 2197.09\]
 
 </td>
 
@@ -3473,6 +4557,11 @@ f
 APA_Table(fit, include.se=FALSE, include.ci=TRUE)
 ```
 
+    ## Warning: The `x` argument of `as_tibble.matrix()` must have column names if `.name_repair` is omitted as of tibble 2.0.0.
+    ## Using compatibility `.name_repair`.
+    ## This warning is displayed once every 8 hours.
+    ## Call `lifecycle::last_warnings()` to see where this warning was generated.
+
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
 
 <thead>
@@ -3481,7 +4570,7 @@ APA_Table(fit, include.se=FALSE, include.ci=TRUE)
 
 <td colspan="3" style="text-align: left;">
 
-Tab 10:
+Tab 11:
 
 </td>
 
@@ -3533,13 +4622,13 @@ Parameter
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1799\*\*\*
+2181\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[2045, 1552\]
+\[2529, 1833\]
 
 </td>
 
@@ -3555,13 +4644,13 @@ sexf
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-112
+\-304\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[2.51, -226\]
+\[-148, -460\]
 
 </td>
 
@@ -3577,13 +4666,13 @@ age
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-6.67\*
+3.22
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[11.9, 1.41\]
+\[ 10, -3.55\]
 
 </td>
 
@@ -3599,13 +4688,13 @@ O
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-41.7
+25.1
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[9.75, -93.2\]
+\[82.9, -32.7\]
 
 </td>
 
@@ -3621,13 +4710,13 @@ C
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
- -24
+\-17.7
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[ 33, -81\]
+\[53.5, -88.9\]
 
 </td>
 
@@ -3643,13 +4732,13 @@ E
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-90.3\*\*
+ 122\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[ 147, 33.1\]
+\[ 185, 58\]
 
 </td>
 
@@ -3665,13 +4754,13 @@ N
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\-254\*\*\*
+\-299\*\*\*
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[-206, -302\]
+\[-232, -366\]
 
 </td>
 
@@ -3687,13 +4776,13 @@ A
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-64.3\*\*
+49.4
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-\[ 110, 18.4\]
+\[ 111, -12.2\]
 
 </td>
 
@@ -3719,7 +4808,7 @@ r.squared
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.63
+0.52
 
 </td>
 
@@ -3739,7 +4828,7 @@ adj.r.squared
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.60
+0.48
 
 </td>
 
@@ -3759,7 +4848,7 @@ AIC
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1422.78
+1459.01
 
 </td>
 
@@ -3779,7 +4868,7 @@ BIC
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1446.22
+1482.46
 
 </td>
 
@@ -3799,7 +4888,7 @@ RMSE
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-271.77
+325.75
 
 </td>
 
@@ -3859,7 +4948,7 @@ Obs
 
 <td colspan="2" style="text-align: left;">
 
-Tab 11: Testing Regression Models
+Tab 12: Testing Regression Models
 
 </td>
 
@@ -3895,7 +4984,7 @@ F-Statistic
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-F(7, 92)=22.17, p\<.001
+F(7, 92)=14.14, p\<.001
 
 </td>
 
@@ -3911,7 +5000,7 @@ Deviance Residuals
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-7385824.9
+10611275.3
 
 </td>
 
@@ -3927,7 +5016,7 @@ R-Squared
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-R<sup>2</sup>=.63, adj.R<sup>2</sup>=.60
+R<sup>2</sup>=.52, adj.R<sup>2</sup>=.48
 
 </td>
 
@@ -3943,7 +5032,7 @@ Heteroskedasticity (Breusch-Pagan)
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-BP(7)=20.87, p=.004
+BP(7)=10.05, p=.186
 
 </td>
 
@@ -3959,7 +5048,7 @@ Autocorrelation (Durbin-Watson)
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-DW=1.94, p=.383
+DW=2.11, p=.702
 
 </td>
 
@@ -3975,7 +5064,7 @@ Shapiro-Wilk normality test
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-W=0.95, p=.002
+W=0.90, p\<.001
 
 </td>
 
@@ -3991,7 +5080,7 @@ AIC
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1422.8
+1459.0
 
 </td>
 
@@ -4007,7 +5096,7 @@ BIC
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1446.2
+1482.5
 
 </td>
 
@@ -4023,7 +5112,7 @@ Var: Residual
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-80280.71
+115339.95
 
 </td>
 
@@ -4065,7 +5154,7 @@ Obs.
 library(units)
 ```
 
-    ## udunits system database from C:/Users/wpete/OneDrive/Dokumente/R/win-library/3.6/units/share/udunits
+    ## udunits system database from C:/Users/wpete/OneDrive/Dokumente/R/win-library/4.0/units/share/udunits
 
 ``` r
 dat<- data.frame(

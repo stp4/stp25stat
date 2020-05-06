@@ -36,7 +36,41 @@ which_output()
 ```
 
 
-Artificial data
+## Artificial data
+
+
+
+```{r, results='asis'}
+ 
+require(wakefield)
+
+
+set.seed(0815)
+DF <- r_data_frame(
+  n = 30,
+  id,
+  race,
+  age(x = 8:14),
+  sex,
+  hour,
+  iq,
+  height(mean = 50, sd = 10),
+  died,
+  Smoker = valid,
+  likert,
+  date_stamp(prob = probs(12))
+) %>% clean_names()
+
+
+
+DF %>% Tabelle2(age, sex, height,
+                race, died, smoker,  
+                iq, likert,
+                by =  ~ sex,
+                APA = TRUE)
+
+```
+
 
 ```{r}
     population.model <- '
