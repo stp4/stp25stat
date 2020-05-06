@@ -126,7 +126,7 @@ APA_R2 <- function(..., caption, note) {
 # 
 # r.squaredLR(fm0)
 # r.squaredLR(fm1) 
-# psycho::R2_nakagawa(fit)
+# #  psycho::R2_nakagawa(fit)
 # rockchalk::getDeltaRsquare(fm0) 
 #'
 #' @export

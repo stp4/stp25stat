@@ -33,14 +33,14 @@ library(psycho)
  #df <- standardize(df)  # Standardize all numeric variables
 
  fit <- lm(Age ~ Salary, data=df)  # Fit a Bayesian linear model
- results <- analyze(fit)  # Format the output
- APA2(results )
+ # results <- analyze(fit)  # Format the output
+ #APA2(results )
 
 
 
  library(lmerTest)
  fit <- lmerTest::lmer(Sepal.Length ~ Sepal.Width + (1|Species), data=iris)
 
- results <- analyze(fit)
- APA2(results)
+ #results <- analyze(fit)
+ #APA2(results)
 }

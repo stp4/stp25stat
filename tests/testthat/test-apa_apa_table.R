@@ -131,10 +131,11 @@ test_that("APA2 estimate Output",
 
             # median( hyper$chol0)
 
+            hyper$hcol_230 <- (hyper$chol0 > 230)
             fit2 <-
-              glm(chol0 > 230 ~  ak + rrs0 + med + g, hyper, family =  binomial)
+              glm( hcol_230~  ak + rrs0 + med + g, hyper, family =  binomial)
             estimate_glm <-  APA2(fit2, output = FALSE)[, 2]
-
+            
             expect_true(is.character(estimate_glm$estimate))
 
 
