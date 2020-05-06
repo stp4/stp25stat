@@ -299,7 +299,8 @@ APA2.coxph <- function(x,
       "AIC" = c(Format2(AIC(x), 2), NA, NA),
       "BIC" = c(Format2(BIC(x), 2), NA, NA)
     )
-    
+    colnames(tst)[3]<- "p.value" 
+  #  print(tst)
     tst <- fix_to_data_frame(tst)
     
     Output(tst,
@@ -444,29 +445,34 @@ Coxph_Test <- function(...,
 #' summary(survfit(Surv(futime, fustat) ~ ecog.ps +rx , data = ovarian), times = c(180, 360))
 #' 
 #'   
-Summary_Surv<- function(...){
+Summary_Surv <- function(...) {
   UseMethod("Summary_Surv")
 }
 
 #' @rdname Kaplan_Meier
 #' @export
-#' 
-Summary_Surv.list<- function(fits, times = 1,
-                             digits = 0,
-                             percent = FALSE,
-                             names_time = c("n (% [95% CI])", "n (est [95% CI])"), 
-                             caption = "",
-                             note="",
-                             output = which_output()){  
+#'
+Summary_Surv.list <- function(fits,
+                              times = 1,
+                              digits = 0,
+                              percent = FALSE,
+                              names_time = c("n (% [95% CI])", "n (est [95% CI])"),
+                              caption = "",
+                              note = "",
+                              output = which_output()) {
   result <- NULL
-  for( i in fits){
-    res<-   Summary_Surv(i, times,
-                         digits,  percent,
-                         names_time,
-                         cleanup_names=FALSE,
-                         caption,
-                         note,
-                         output=FALSE )
+  for (i in fits) {
+    res <- Summary_Surv(
+      i,
+      times,
+      digits,
+      percent,
+      names_time,
+      cleanup_names = FALSE,
+      caption,
+      note,
+      output = FALSE
+    )
     
     result <- rbind(result, res)
     
@@ -483,13 +489,13 @@ Summary_Surv.survfit <-
            times = 1,
            digits = 0,
            percent = FALSE,
-           names_time = c("n (% [95% CI])", "n (est [95% CI])"), 
-           cleanup_names= FALSE,
+           names_time = c("n (% [95% CI])", "n (est [95% CI])"),
+           cleanup_names = FALSE,
            caption = "",
-           note= "",
-           output = which_output()
-  ) {
+           note = "",
+           output = which_output()) {
     sum_surv <- summary(x, times)
+    
     n <- cbind(Source = names(x$strata), N = x$n)
     
     include <- c(
@@ -509,63 +515,65 @@ Summary_Surv.survfit <-
       result$surv <- result$surv * 100
       result$lower <- result$lower * 100
       result$upper <- result$upper * 100
-      names_time<- names_time[1]
-      prc<- "% "
+      names_time <- names_time[1]
+      prc <- "% "
     }
     else{
-      names_time<- names_time[2]
+      names_time <- names_time[2]
       prc <- " "
     }
     
     result$value <-
-      ifelse(
-        result$n.even == 0,
+      #ifelse(
+      # result$n.even == 0,
+      # result$n.even,
+      paste0(
         result$n.even,
-        paste0(
-          result$n.even,
-          " (",
-          rndr_percent_CI(result$surv, 
-                          result$lower, result$upper, 
-                          prc=prc,
-                          digits = digits),
-          ")"
-        )
+        " (",
+        rndr_percent_CI(
+          result$surv,
+          result$lower,
+          result$upper,
+          prc = prc,
+          digits = digits
+        ),
+        ")"
       )
-    
+    # )
     
     if ("strata" %in% names(sum_surv)) {
-      result <- cbind(Source = sum_surv$strata,
-                      result)
+      result <- cbind(Source = sum_surv$strata, result)
     }
-    # "n.risk",
+    
     result <-
-      stp25aggregate::Wide(result[order(result$time),
-                                  c("Source", "time", "value")]
-                           , time, value)
+      stp25aggregate::Wide(
+        result[order(result$time), c("Source", "time", "value")], time, value)
     
-    result <-  merge(n, result, by = "Source", all.x = TRUE)
+    result <- merge(n, result, by = "Source", all.x = TRUE)
     
-    if(cleanup_names){
+    if (cleanup_names) {
       sour_name <- str_split(result$Source, "=")
-      result$Source <-  sapply(sour_name, "[", 2)
-      names(result)[1] <- sour_name[[1]][1]}
+      result$Source <- sapply(sour_name, "[", 2)
+      names(result)[1] <- sour_name[[1]][1]
+    }
+    
+    result <- tibble::as_tibble(result)
     
     names(result)[3:ncol(result)] <-
       paste0(names_time, "_",   names(result)[3:ncol(result)])
-    
-    result <- dapply1(result,
-                      function(x) {
-                        if (is.factor(x))
-                          as.character(x)
-                        else
-                          x
-                      })
+    # print(str(result))
+    # result <- stp25stat:::dapply1(result,
+    #                   function(x) {
+    #                     if (is.factor(x))
+    #                       as.character(x)
+    #                     else
+    #                       x
+    #                   })
     
     
     Output(result, caption = caption, output = output)
     invisible(result)
   }
-
 
 
 
