@@ -657,8 +657,10 @@ errate_statistik3 <-
   }
 
 
-
-
+#' measure.vars nach groesse ordnen
+#' 
+#' @noRd
+#'
 order_by_mean <- function(X) {
   if (length(X$yname) == 1) {
     return(X)
