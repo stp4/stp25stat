@@ -77,7 +77,7 @@ APA2.loglm <- function(x,
   res <-
     prepare_output(fix_data_frame2(Test = rownames(ts.array), ts.array), caption, note)
 
-  Output(res, output=output)
+  Output(res, output=output, note=note)
   invisible(res)
 }
 
@@ -186,16 +186,25 @@ APA2.xtabs  <- function(x,
     caption = caption
   )
   Output(res$x_tab, 
-         output = output)
+         output = output,
+         note=note)
   
  
   #  print(class(res))
   if (include.test) {
+    Text("Funktion  include.test  noch nicht fertig")
+    
     dimension <- length(dimnames(x))
+    
+    
+    print(dimension)
+   # Text(dimension)
+    
     if (dimension == 1) {
       # Proportion
       Text("Funktion  Proportion noch nicht fertig")
     } else if (dimension == 2 & length(x) == 4) {
+      Text("Funktion  fisher_test noch nicht fertig")
       fisher_test <- fisher.test(x)
       fisher_test <- prepare_output(
         data.frame(
@@ -210,6 +219,7 @@ APA2.xtabs  <- function(x,
              output = output)
     }
     else{
+      Text("Funktion  chisq_tests noch nicht fertig")
       res$chisq_tests <-  vcd::assocstats(xtabs)
       res$chisq_tests <- prepare_output(
         data.frame(
@@ -320,6 +330,7 @@ APA_Xtabs.glm <- function(x,
 APA_Xtabs.formula <- function(x,
                               data = NULL,
                               caption = "",
+                              note="",
                               output = stp25output::which_output(),
                               labels = TRUE,
                               addNA = FALSE,
@@ -397,10 +408,11 @@ APA_Xtabs.formula <- function(x,
   #   McN <- mcnemar.test(x, correct = FALSE)
   # }
   
-  #cat("\n vor APA")
+  cat("\n vor APA")
   APA2.xtabs(x, 
              caption = caption, 
              output = output, 
+             note=note,
              ...)
 }
 
