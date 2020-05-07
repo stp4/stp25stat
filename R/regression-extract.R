@@ -15,7 +15,6 @@
 #' broom::glance(fit)
 #'
 #' summary(fit)
-#' Ordnen(fit)
 #' extract_param(fit)
 #' APA_Table(fit)
 #' APA_Table(fit, type="long")

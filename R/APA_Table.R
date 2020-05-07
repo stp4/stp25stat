@@ -457,12 +457,9 @@ type_default <- function(x,
                          caption = NULL, output=NA,
                          note = NULL,
                          custom.model.names = NULL,
-                         test.my.fun=FALSE,
                          ...) {
- #  if(test.my.fun) cat("\n  -> type_default()")
- # # print(list(...))
-  res <-  Ordnen(x, test.my.fun = test.my.fun, ... ) # ist das gleiche wie broom::tidy(x)
-  if(test.my.fun) cat("\n    res:", class(res))
+ 
+  res <-  Ordnen(x,  ... ) # ist das gleiche wie broom::tidy(x)
 
   if (is.null(caption))
     caption <- paste(attr(res, "caption"),
@@ -478,7 +475,6 @@ type_default <- function(x,
     note = note,
     output=output )
 
-#  if(test.my.fun) cat("\n  <- type_default()")
   res
 }
 

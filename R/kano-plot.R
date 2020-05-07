@@ -390,7 +390,7 @@ kano_plot <- function(x,
 #' @param prop.table Prozent oder Anzahl
 #' @param include.Q,include.R Q und R anzeigen
 #' @param include.n Ueberschrift mit N=
-#' @param levels Levels haendisch anordnen
+#' @param levels Levels haendisch sortieren
 #' @param ... an lattice
 #'
 #' @return Tabelle als data.frame

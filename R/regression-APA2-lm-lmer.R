@@ -459,64 +459,8 @@ APA2.lmerMod <- function(x,
 }
 
 
-# @rdname APA2
-# @export
-# APA2.glmerMod <- function(x,
-#                          caption = NULL ,
-#                          note = NULL,
-#                          output = stp25output::which_output(),
-#                          col_names = NULL,
-#                          include.random.effects = TRUE,
-#                          include.odds=TRUE,
-#                          ...){
-#   APA2.merModLmerTest(x,
-#                       caption=caption,
-#                       note=note, output = output ,
-#                       col_names = col_names,
-#                       include.random.effects=include.random.effects,
-#                       include.odds= include.odds,
-#                       ...
-#                       )
-# }
-
-
-# @rdname APA2
-# @export
-# @examples
-#
-#' fm1 <- lmer(Reaction ~ Days + (Days|Subject), sleepstudy)
-# APA2(fm1)
-
-# APA2.merModLmerTest <- function(x,
-#                                 caption = NULL ,
-#                                 note = NULL,
-#                                 output = stp25output::which_output(),
-#                                 col_names = NULL,
-#                                 include.random.effects = TRUE,
-#                                 include.odds=FALSE,
-#
-#                                 ...) {
-#    res <- Ordnen.merModLmerTest(x,
-#                                 include.odds=include.odds,
-#                                 ...)
-#
-#    if (is.null(caption))
-#      caption <- paste(attr(res, "caption"),
-#                       "Obs: ", attr(res, "N"))
-#
-#    Output(fix_format(res),
-#      caption =  caption, note = note, output=output, col_names=col_names)
-#
-#    if (include.random.effects){
-#      coef_ran <- broom::tidy(x)
-#      coef_ran<- coef_ran[(nrow(res)+1):nrow(coef_ran), -c(3:4) ]
-#
-#      Output(fix_format(coef_ran), caption="random effects", output=output)
-#      }
-#
-#    invisible(res)
-# }
-
+ 
+ 
 
 
 GOF_LMER <- function(x){

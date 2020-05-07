@@ -59,8 +59,8 @@ APA2.polr <- function(x,
 
 
 
-#' @rdname Ordnen
-#' @export
+
+
 Ordnen.polr <- function(x,
                         digits = 2,
                         include.b = TRUE,
@@ -92,7 +92,6 @@ Ordnen.polr <- function(x,
     stringsAsFactors = FALSE
   )
 
-
   n1 <- nrow(ctable)
   n2 <- length(Intercepts)
 
@@ -104,7 +103,6 @@ Ordnen.polr <- function(x,
   b.interc <- intercepts[, 2, drop = FALSE]
   stat.coef <- coefficients[, 3:5, drop = FALSE]
   stat.interc <- intercepts[, 3:5, drop = FALSE]
-
 
   if (include.ci) {
     x <- update(x, Hess = TRUE)

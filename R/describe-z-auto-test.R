@@ -657,7 +657,7 @@ errate_statistik3 <-
   }
 
 
-#' measure.vars nach groesse ordnen
+#' measure.vars nach groesse sortieren
 #' 
 #' @noRd
 #'

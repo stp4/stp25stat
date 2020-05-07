@@ -54,23 +54,3 @@ transpose3 <- function(x) {
   # kontrolle cbind(x, transposed)
   as.data.frame(transposed) 
 }
-# 
-# transpose_old <- function(x) {
-#   
-#   
-#   print(str(x))
-#   
-#   
-#   last <- nrow(x)
-#   x <- cbind(x, id = 1:last)
-#   last_column <- ncol(x)
-# 
-#   x <- stp25aggregate::Melt2(x,
-#                              id.vars = last_column,
-#                              key = "variable",
-#                              value = "rang")
-# 
-#   x <- tidyr::spread(na.omit(x), rang, variable)
-#   dapply1(x[-1])
-# 
-# }

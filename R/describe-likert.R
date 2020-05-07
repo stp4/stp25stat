@@ -284,7 +284,7 @@ Likert.formula<- function(x,
   result <- NULL
   if(is.null(grouping_vars)){
       xans<-  Melt2(cbind(my_id_nr=1:nrow(items),items), id.vars=1) #    Melt2(items)
-    xans$value <- factor(xans$value, levels=first_levels) # levels ordnen
+    xans$value <- factor(xans$value, levels=first_levels) # levels 
     names(xans)[which(names(xans)=="variable")] <- "Item"
 
     xans_num <- xans

@@ -161,47 +161,7 @@ APA_Table_Anova <- function(myfits,
         include.meansq = include.meansq
       )
     }
-    # Error bei dreifach-Interaktionen
-    
-    # else if (is(myfits[[i]], "aov")
-    #          | is(myfits[[i]], "anova")) {
-    #   cat("\naov")
-    #   APA2(
-    #     myfits[[i]],
-    #     caption = caption,
-    #     note = note,
-    #     output = output,
-    #     include.eta = include.eta,
-    #     include.sumsq = include.sumsq ,
-    #     include.meansq = include.meansq
-    #   )
-    # }
-    
-    
-    
-    # res <- Ordnen(
-    #   car::Anova(myfits[[i]]),
-    #   include.eta = include.eta,
-    #   include.sumsq = include.sumsq,
-    #   include.meansq = include.meansq
-    # )
-    # if (!is.null(caption)) {
-    #   if (!is.null(names))
-    #     caption <-  names[i]
-    #   else
-    #     caption <-  attr(res, "caption")
-    # }
-    #
-    # if (is.null(note))
-    #   note <- attr(res, "note")
-    #
-    # res <-  stp25output::fix_format(res)
-    #
-    # stp25output::Output(res,
-    #        caption = caption,
-    #        note = note,
-    #        output = output)
-    # result[[i]] <- res
+ 
     
     
     
