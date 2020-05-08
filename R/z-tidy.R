@@ -218,7 +218,11 @@ Ordnen.default <- function(x,  ...) {
 
 #' @rdname Ordnen
 #' @export
-Ordnen.anova <- function(x, ...) Ordnen.aov(x, ...)
+Ordnen.anova <- function(..., output=FALSE){
+  res <- APA2.lm(..., output=output)
+  res
+}
+#Ordnen.anova <- function(x, ...) Ordnen.aov(x, ...)
 
 
 
@@ -228,36 +232,40 @@ Ordnen.anova <- function(x, ...) Ordnen.aov(x, ...)
 #'
 #' @rdname Ordnen
 #' @export
-Ordnen.aov <- function(x,
-                       include.eta = TRUE,
-                       include.sumsq = TRUE,
-                       include.meansq = FALSE, test.my.fun=FALSE,
-                       ...){
-  if(test.my.fun) cat("\n   -> Ordnen.aov()")
-  info <- model_info(x)
-  AV <-
-    ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
-  res <- broom::tidy(x)
-
-  if (include.eta) {
-    if( is(x, "lm") | is(x, "anova") ){
-    k <- ncol(res)
-    res <-
-      cbind(res[, -k], etaSquared2(x, 2, FALSE), res[k])
-    }else cat("\nWarnung: include.eta geht nur bei aov\n")
-  }
-  if (!include.sumsq){
-    res <-  res[, names(res) != "sumsq"]
-  }
-  if (!include.meansq){
-    res <-  res[, names(res) != "meansq"]
-  }
-  prepare_output(res,
-                 paste0("AV: ", AV),
-                 paste0("Model: ", info$family[1]),
-                 info$N,
-                 info$labels)
+Ordnen.aov <- function(..., output=FALSE){
+  res <- APA2.lm(..., output=output)
+  res
 }
+# Ordnen.aov <- function(x,
+#                        include.eta = TRUE,
+#                        include.sumsq = TRUE,
+#                        include.meansq = FALSE, test.my.fun=FALSE,
+#                        ...){
+#   if(test.my.fun) cat("\n   -> Ordnen.aov()")
+#   info <- model_info(x)
+#   AV <-
+#     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
+#   res <- broom::tidy(x)
+# 
+#   if (include.eta) {
+#     if( is(x, "lm") | is(x, "anova") ){
+#     k <- ncol(res)
+#     res <-
+#       cbind(res[, -k], etaSquared2(x, 2, FALSE), res[k])
+#     }else cat("\nWarnung: include.eta geht nur bei aov\n")
+#   }
+#   if (!include.sumsq){
+#     res <-  res[, names(res) != "sumsq"]
+#   }
+#   if (!include.meansq){
+#     res <-  res[, names(res) != "meansq"]
+#   }
+#   prepare_output(res,
+#                  paste0("AV: ", AV),
+#                  paste0("Model: ", info$family[1]),
+#                  info$N,
+#                  info$labels)
+# }
 
 
 #' @description Regression - Methode ueber basr::summary (lm und glm)
@@ -268,41 +276,46 @@ Ordnen.aov <- function(x,
 #'
 #' @rdname Ordnen
 #' @export
-Ordnen.lm <- function(x,
-                      include.b = TRUE,
-                      include.se = TRUE,
-                      include.beta = FALSE,
-                      include.ci = FALSE,
-                      include.r = TRUE,
-                      include.ftest = FALSE,
-                      ci.level = .95,
-                      test.my.fun=FALSE,
-                      ...
-                      ){
- 
-  info <- model_info(x)
-  AV <- ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
-  note <-  paste0("Model: ", info$family[1])
-  if (include.ftest)
-    note <- paste(note, APA(x, FALSE))
-  if (include.r) {
-    r2 <- R2(x)
-    note <- paste(note, "\nr-squared:", rndr_r2(r2))
-  }
-
-  prepare_output(extract_param(x,
-                                 include.b,
-                                 include.se,
-                                 include.beta,
-                                 include.ci,
-                                 ci.level=ci.level, 
-                                 ...),
-                 paste0("AV: ", AV),
-                 note=note,    #  paste0("Model: ", info$family[1]),
-                 info$N,
-                 info$labels)
- 
+Ordnen.lm <- function(..., output=FALSE){
+  res <- APA2.lm(..., output=output)
+  res
 }
+
+# Ordnen.lm <- function(x,
+#                       include.b = TRUE,
+#                       include.se = TRUE,
+#                       include.beta = FALSE,
+#                       include.ci = FALSE,
+#                       include.r = TRUE,
+#                       include.ftest = FALSE,
+#                       ci.level = .95,
+#                       test.my.fun=FALSE,
+#                       ...
+#                       ){
+#  
+#   info <- model_info(x)
+#   AV <- ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
+#   note <-  paste0("Model: ", info$family[1])
+#   if (include.ftest)
+#     note <- paste(note, APA(x, FALSE))
+#   if (include.r) {
+#     r2 <- R2(x)
+#     note <- paste(note, "\nr-squared:", rndr_r2(r2))
+#   }
+# 
+#   prepare_output(extract_param(x,
+#                                  include.b,
+#                                  include.se,
+#                                  include.beta,
+#                                  include.ci,
+#                                  ci.level=ci.level, 
+#                                  ...),
+#                  paste0("AV: ", AV),
+#                  note=note,    #  paste0("Model: ", info$family[1]),
+#                  info$N,
+#                  info$labels)
+#  
+# }
 
 
 
@@ -310,126 +323,131 @@ Ordnen.lm <- function(x,
 #' @param rr RR Relatives Risiko
 #' @param include.b.ci,include.odds,include.rr.ci 95 Konfidenzintervalle
 #' @export
-Ordnen.glm <- function(x,
-                       include.b = TRUE,
-                       include.se = TRUE,
-                       include.ci = FALSE,
-                       include.odds = TRUE,
-                       include.odds.ci= include.ci,
-                       include.rr=FALSE,
-                       include.rr.ci=include.ci,
-                       include.b.ci = include.ci,
-                       include.test = "lrt",
-                       #"wald"  bei SPSS wird der Wald-Test verwendet, ich verwende den LRT
-                       include.r = TRUE,
-                       include.pseudo = include.r,
-
-                       include.loglik = TRUE,
-                       ci.level = .95,digits = 2,
-                       test.my.fun=FALSE,
-                        ...
-                       ){
-  info <- model_info(x)
-
-  note <-  paste0("Model: ", info$family[1])
-  if (include.loglik)
-    note <- paste(note, APA(x))
-  if (include.pseudo) {
-    r2 <- R2(x)
-    note <-
-      paste(note, "\npseudo r-squared:", rndr_r2pseudo(r2))
-  }
-
-
-  AV <-
-    ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
-
-  coefs <- data.frame(summary(x)$coef)
-  names(coefs) <- c("b", "SE", "LR.Test", "p.value")
-
-  if ( include.test != "lrt"){
-
- #   car::Anova(x, type = "III", test.statistic = "Wald")
-    coefs$LR.Test <- (coefs$b/coefs$SE)^2
-    names(coefs)[3]<- "Wald"
-  }
-
-  include.intercept <- rownames(coefs)[1] == "(Intercept)"
-
-  if (include.ci) {
-    # likelihood ratio test  oder  Wald test
-    if (include.test == "lrt")
-      cis <- confint(x, level = ci.level)
-    else
-      cis <- confint.default(x, level = ci.level)
-
-    if (!is.matrix(cis))
-      cis <- matrix(cis, ncol = 2)
-
-  }
-
-  # SPSS gibt keine CIs hier aus
-  if (include.b & include.b.ci ) {
-    coefs <- cbind(coefs[, 1, drop = FALSE],
-                   CI = rndr_CI(cis),
-                   coefs[,-1, drop = FALSE])
-
-    if (include.intercept)
-      coefs$CI[1] <- ""
-  } else {
-    coefs <- coefs
-  }
-
-  if (include.odds) {
-    if (include.odds.ci) {
-      coefs$OR <- rndr_ods(as.vector(exp(coefs[, 1])))
-      coefs$OR.CI <- rndr_ods_CI(exp(cis))
-
-      if (include.intercept)  {
-        coefs$OR[1] <- NA
-        coefs$OR.CI[1] <- ""
-      }
-    }
-    else{
-      coefs$OR <- rndr_ods(as.vector(exp(coefs[, 1])))
-      if (include.intercept)
-        coefs$OR[1] <- NA
-    }
-  }
-
-
-
-  # Relaltv-Risk   include.rr
-  if (include.rr) {
-    rr <-  sjstats::odds_to_rr(x)
-    rr <- data.frame(RR = rndr_ods(rr[, 1]),
-                     RR.CI = rndr_ods_CI(rr[, 2:3]))
-
-    if (include.intercept)
-      rr[1, 1:2] <- NA
-
-    if (include.rr.ci)
-      coefs <- cbind(coefs, rr)
-    else
-      coefs <- cbind(coefs, rr[, 1])
-  }
-
-  if (!include.se) {
-    coefs <-  coefs[, colnames(coefs) != "SE"]
-  }
-
-  if (!include.b) {
-    coefs <-  coefs[,  colnames(coefs) != "b"]
-  }
-
-  prepare_output(
-    fix_format(cbind(source = rownames(coefs), coefs)),
-    paste0("AV: ", AV),
-    note=note,
-    info$N,
-    info$labels
-  )
+Ordnen.glm <- function(..., output=FALSE){
+ res <- APA2.glm(..., output=output)
+ res
 }
+
+# Ordnen.glm <- function(x,
+#                        include.b = TRUE,
+#                        include.se = TRUE,
+#                        include.ci = FALSE,
+#                        include.odds = TRUE,
+#                        include.odds.ci= include.ci,
+#                        include.rr=FALSE,
+#                        include.rr.ci=include.ci,
+#                        include.b.ci = include.ci,
+#                        include.test = "lrt",
+#                        #"wald"  bei SPSS wird der Wald-Test verwendet, ich verwende den LRT
+#                        include.r = TRUE,
+#                        include.pseudo = include.r,
+# 
+#                        include.loglik = TRUE,
+#                        ci.level = .95,digits = 2,
+#                        test.my.fun=FALSE,
+#                         ...
+#                        ){
+#   info <- model_info(x)
+# 
+#   note <-  paste0("Model: ", info$family[1])
+#   if (include.loglik)
+#     note <- paste(note, APA(x))
+#   if (include.pseudo) {
+#     r2 <- R2(x)
+#     note <-
+#       paste(note, "\npseudo r-squared:", rndr_r2pseudo(r2))
+#   }
+# 
+# 
+#   AV <-
+#     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
+# 
+#   coefs <- data.frame(summary(x)$coef)
+#   names(coefs) <- c("b", "SE", "LR.Test", "p.value")
+# 
+#   if ( include.test != "lrt"){
+# 
+#  #   car::Anova(x, type = "III", test.statistic = "Wald")
+#     coefs$LR.Test <- (coefs$b/coefs$SE)^2
+#     names(coefs)[3]<- "Wald"
+#   }
+# 
+#   include.intercept <- rownames(coefs)[1] == "(Intercept)"
+# 
+#   if (include.ci) {
+#     # likelihood ratio test  oder  Wald test
+#     if (include.test == "lrt")
+#       cis <- confint(x, level = ci.level)
+#     else
+#       cis <- confint.default(x, level = ci.level)
+# 
+#     if (!is.matrix(cis))
+#       cis <- matrix(cis, ncol = 2)
+# 
+#   }
+# 
+#   # SPSS gibt keine CIs hier aus
+#   if (include.b & include.b.ci ) {
+#     coefs <- cbind(coefs[, 1, drop = FALSE],
+#                    CI = rndr_CI(cis),
+#                    coefs[,-1, drop = FALSE])
+# 
+#     if (include.intercept)
+#       coefs$CI[1] <- ""
+#   } else {
+#     coefs <- coefs
+#   }
+# 
+#   if (include.odds) {
+#     if (include.odds.ci) {
+#       coefs$OR <- rndr_ods(as.vector(exp(coefs[, 1])))
+#       coefs$OR.CI <- rndr_ods_CI(exp(cis))
+# 
+#       if (include.intercept)  {
+#         coefs$OR[1] <- NA
+#         coefs$OR.CI[1] <- ""
+#       }
+#     }
+#     else{
+#       coefs$OR <- rndr_ods(as.vector(exp(coefs[, 1])))
+#       if (include.intercept)
+#         coefs$OR[1] <- NA
+#     }
+#   }
+# 
+# 
+# 
+#   # Relaltv-Risk   include.rr
+#   if (include.rr) {
+#     rr <-  sjstats::odds_to_rr(x)
+#     rr <- data.frame(RR = rndr_ods(rr[, 1]),
+#                      RR.CI = rndr_ods_CI(rr[, 2:3]))
+# 
+#     if (include.intercept)
+#       rr[1, 1:2] <- NA
+# 
+#     if (include.rr.ci)
+#       coefs <- cbind(coefs, rr)
+#     else
+#       coefs <- cbind(coefs, rr[, 1])
+#   }
+# 
+#   if (!include.se) {
+#     coefs <-  coefs[, colnames(coefs) != "SE"]
+#   }
+# 
+#   if (!include.b) {
+#     coefs <-  coefs[,  colnames(coefs) != "b"]
+#   }
+# 
+#   prepare_output(
+#     fix_format(cbind(source = rownames(coefs), coefs)),
+#     paste0("AV: ", AV),
+#     note=note,
+#     info$N,
+#     info$labels
+#   )
+# }
 
 
 
@@ -535,9 +553,9 @@ Ordnen.lmerModLmerTest<- function(x,
                                   #  include.aic = TRUE,
                                   #  include.bic = include.aic,
                                   ci.level = .95,
-                                  test.my.fun=FALSE,
+                                 
                                   ...){
-  if(test.my.fun) cat("\n   -> Ordnen.lmer()")
+ 
 #  cat("\n In Ordnen.lmerModLmerTest \n")
   info <- model_info(x)
   AV <-

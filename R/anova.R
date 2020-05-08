@@ -1,37 +1,64 @@
 #' @rdname APA2
 #' @export
 APA2.anova <- function(x,
-                       caption = gsub("\\n", "", paste(attr(x, "heading"), collapse =
-                                                         ", ")),
-                       note = paste("contrasts: ", paste(options()$contrasts, collapse =
-                                                           ", ")),
+                       caption = "ANOVA",
+                       note = paste("contrasts: ",
+                                    paste(options()$contrasts, collapse = ", ")),
                        output = stp25output::which_output(),
-                       include.eta = FALSE,
+                       include.eta = TRUE,
                        include.sumsq = TRUE,
                        include.meansq = FALSE,
                        ...) {
-  res <-  Ordnen(
-    x,
-    include.eta = include.eta,
-    include.sumsq = TRUE,
-    include.meansq = FALSE
-  )
+  info <- model_info(x)
+  res <-  broom::tidy(x)
+  if(include.eta) res <-  tibble::as_tibble(cbind(res[-ncol(res)],  
+                               etaSquared2(x),
+                               res[ncol(res)]
+                               ))
+  res <-  prepare_output(fix_format(res),
+                         caption,
+                         note,
+                         info$N,
+                         info$labels)
   
-  if (include.meansq) {
-    res <-
-      cbind(res[1:2], meansq = res$sumsq / res$df, res[3:ncol(res)])
-  }
-  if (!include.sumsq)
-    res <- res[-2]
   
-  res <-  stp25output::fix_format(res)
-  stp25output::Output(res,
-                      caption = caption,
-                      note = note,
-                      output = output)
+  if (!is.logical(output))
+    Output(res, output = output, ...)
+  
   invisible(res)
-
 }
+# APA2.anova <- function(x,
+#                        caption = gsub("\\n", "", paste(attr(x, "heading"), collapse =
+#                                                          ", ")),
+#                        note = paste("contrasts: ", paste(options()$contrasts, collapse =
+#                                                            ", ")),
+#                        output = stp25output::which_output(),
+#                        include.eta = FALSE,
+#                        include.sumsq = TRUE,
+#                        include.meansq = FALSE,
+#                        ...) {
+#   res <-  Ordnen(
+#     x,
+#     include.eta = include.eta,
+#     include.sumsq = TRUE,
+#     include.meansq = FALSE
+#   )
+#   
+#   if (include.meansq) {
+#     res <-
+#       cbind(res[1:2], meansq = res$sumsq / res$df, res[3:ncol(res)])
+#   }
+#   if (!include.sumsq)
+#     res <- res[-2]
+#   
+#   res <-  stp25output::fix_format(res)
+#   stp25output::Output(res,
+#                       caption = caption,
+#                       note = note,
+#                       output = output)
+#   invisible(res)
+# 
+# }
 
 
 #' @rdname APA2
@@ -49,15 +76,20 @@ APA2.anova <- function(x,
 #'
 APA2.aov <- function(x,
                      caption = "ANOVA",
-                     note = paste("contrasts: ", paste(options()$contrasts, collapse =", ")),
+                     note = paste("contrasts: ", 
+                                  paste(options()$contrasts, collapse =", ")),
                      output = stp25output::which_output(),
-                     col_names = NULL,
+                     include.eta = TRUE,
+                     include.sumsq = TRUE,
+                     include.meansq = FALSE,
                      ...) {
   APA2.lm(x,
           caption,
           note,
-          output =  output ,
-          col_names = col_names,
+          output =  output,
+          include.eta = include.eta,
+          include.sumsq = include.sumsq,
+          include.meansq = include.meansq,
           ...)
 }
 

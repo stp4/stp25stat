@@ -199,12 +199,8 @@ APA2_list <-
                                include.nobs=include.nobs,
                                fix_format = TRUE ))
         
-        
-     #   cat(" --> in for extract_gof")
         model <- dplyr::tibble(term = rownames(model),
                                model = model[, 1])
-        
-      #  cat(" --> in for tibble")
         if (i == 1) {
           gofs <- model
           gofs.order <- unique(model$term)
@@ -249,7 +245,7 @@ APA2_list <-
         empty_gofs <-
           tibble::as_tibble(matrix(rep(NA, n_row * n_col),
                                    nrow = n_row),
-                            .name_repair = NULL)
+                            .name_repair = "minimal")
         gofs <- append(unclass(gofs), empty_gofs, after = j)
         j <- n_col + j
       }

@@ -1,6 +1,4 @@
-# "Thu Nov 08 06:40:25 2018"
-#  manova OK
-#  lda OK
+#  Manova
 
  
 

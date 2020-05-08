@@ -2,13 +2,13 @@
 #'
 #' Ergebnis fuer Output vorbereiten
 #'
-#' @param x Objekt Vector oder auch Formel
-#' @param caption bei verwendung von Formeln
-#' @param note Fehlende Werte
+#' @param x data.frame
+#' @param caption Uberschrift
+#' @param note Anmerkung
 #' @param N Dezimalstellen bei zB Mean2
-#' @param labels Grenzen der Konfidenzintervalle
+#' @param labels Label
 #' @param ... Weitere Argumente
-#' @return data.frame mit attributen
+#' @return tibble mit attributen
 #' @export
 prepare_output<- function(x, #Objekt Liste oder df
                           caption=NULL,
@@ -18,6 +18,17 @@ prepare_output<- function(x, #Objekt Liste oder df
                           ...
 
 ){
+  
+  # if (is.data.frame(x) & (!tibble::is_tibble(x))) {
+  #   x<- tibble::as_tibble()
+  # }
+  #  
+  # 
+  # 
+ # if (!tibble::is_tibble(x)) {
+  #  x<- tibble::as_tibble()
+   #}
+  
  if(is.null(caption)) caption<- ""
  if(is.null(note)) note<- ""
  if(is.null(N)) N <- model_info(x)[["N"]]
@@ -29,4 +40,6 @@ prepare_output<- function(x, #Objekt Liste oder df
 
   x
 }
+
+
 

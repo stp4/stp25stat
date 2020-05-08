@@ -259,15 +259,15 @@ etaSquared2 <-
         eta <- sjstats::eta_sq(x)
         eta_p <-  sjstats::eta_sq(x, partial = TRUE)
 
-        if (nrow(eta) == 1) {
+      #  if (nrow(eta) == 1) {
           res <- rbind(cbind(eta[, 2],
                              eta_p[, 2]), NA)
           rownames(res)  <- c(unlist(eta[, 1]), "Residuals")
-        } else{
-          res <- rbind(cbind(eta[-nrow(eta), 2],
-                             eta_p[-nrow(eta), 2]), NA)
-          rownames(res)  <- c(unlist(eta[-1, 1]), "Residuals")
-        }
+       # } else{
+        #  res <- rbind(cbind(eta[-nrow(eta), 2],
+       #                      eta_p[-nrow(eta), 2]), NA)
+        #  rownames(res)  <- c(unlist(eta[-1, 1]), "Residuals")
+        #}
         colnames(res) <-  c("eta.sq", "eta.sq.part")
 
 

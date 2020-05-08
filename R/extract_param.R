@@ -49,18 +49,12 @@ extract_param  <- function(x,
                           digits.beta = 2,
                           format="fg",
                           conf.style.1 = FALSE,
-                          test.my.fun=FALSE,
                           ...) {
-  # "term","estimate", "beta","std.error" ,"statistic","p.value","stars","conf.high","conf.low","odds","odds.conf.low","odds.conf.high","df","group"
-#cat("\n in extract_param()\n")
-#print(class(x))
-#S3-Methode geht nicht
 
   if (inherits(x, "aov")) return(extract_param_aov(x,
                                               include.eta ,
                                               include.sumsq ,
                                               include.meansq ,
-                                              test.my.fun,
                                               fix_format ,
                                               digits.test,
                                               format="f"))
@@ -259,16 +253,6 @@ extract_param  <- function(x,
 
 
 
-
-
-
-
-
-
-
-
-
-
 #' @description Metode fuer ANOVA-Modelle
 #' @rdname extract_param
 #'
@@ -276,68 +260,60 @@ extract_param_aov <- function(x,
                               include.eta = TRUE,
                               include.sumsq = TRUE,
                               include.meansq = FALSE,
-                              test.my.fun = FALSE,
                               fix_format = FALSE,
                               digits.test = 2,
                               format = "f",
                               ...) {
-  if (test.my.fun)
-    cat("\n   -> extract_param.aov()")
   param <- "term"
   res <- broom::tidy(x)
-
-
+  
   if (!include.sumsq) {
     param <- c(param, "sumsq")
     if (fix_format)
       res$sumsq <-
         stp25rndr::Format2(res$sumsq, digits = 2, format = format)
   }
-
+  
   if (!include.meansq) {
     param <- c(param, "meansq")
     if (fix_format)
       res$meansq <-
         stp25rndr::Format2(res$meansq, digits = 2, format = format)
   }
-
+  
   param <- c(param, c("df", "statistic"))
-    if (include.eta) {
+  if (include.eta) {
     if (is(x, "lm") | is(x, "anova")) {
       param <- c(param, c("eta.sq", "eta.sq.part"))
       k <- ncol(res)
       myeta <-  etaSquared2(x, 2, FALSE)
-
+      
       if (nrow(myeta) != nrow(res))
         stop(
-          "extract_param_aov mit etaSquared
-          eventuell liefert car:Anova(lm(...)) das richtige Ergebniss"
+          "extract_param_aov mit etaSquared eventuell liefert car:Anova(lm(...)) das richtige Ergebniss"
         )
-      res <- cbind(res[, -k], myeta , res[k])
-
+      res <- cbind(res[,-k], myeta , res[k])
+      
       if (fix_format) {
         res$eta.sq <-
           stp25rndr::Format2(res$eta.sq,
-                                      digits = digits.test, format = format)
+                             digits = digits.test, format = format)
         res$eta.sq.part <-
           stp25rndr::Format2(res$eta.sq.part,
-                                      digits = digits.test,
-                                      format = format)
-
+                             digits = digits.test,
+                             format = format)
       }
     }
   }
-
+  
   param <- c(param, "p.value")
-
-
-
-
+  
   if (fix_format) {
     res$statistic <-
       stp25rndr::Format2(res$statistic, digits = digits.test, format = format)
     
-    res$p.value <- stp25rndr::rndr_P(res$p.value, symbol.leading = c("", "<"))
+    res$p.value <-
+      stp25rndr::rndr_P(res$p.value, symbol.leading = c("", "<"))
     res$df <-
       stp25rndr::Format2(res$df, digits = 0, format = format)
   }
@@ -499,96 +475,3 @@ tidy_lmer <- function(x,
   return(plyr::rbind.fill(ret_list))
 }
 
-
-
-
-
-
-#' extract_gof
-#'
-#' @param x objekt
-#' @param include.r,include.pseudo,include.rmse,include.sigma,include.variance,include.devianze,include.loglik,include.aic,include.bic,include.nobs Alles wie bei APA_TAble
-#' @param digits nachkommastellen
-#' @param ... extra Argumente
-#' @return tibble
-#' @export
-#'
-#' @examples
-#'
-#'
-extract_gof <- function(x,
-                        include.r = TRUE,include.pseudo = TRUE,
-                        include.rmse = TRUE,include.sigma = FALSE,include.variance = FALSE,
-                        include.devianze = FALSE,
-                        include.loglik = FALSE,
-                        include.test=FALSE,
-                        include.aic = TRUE,include.bic = include.aic,
-                        include.nobs = TRUE,
-                        digits = 2,
-                        fix_format=FALSE,
-                        ...) {
-
-
-  res <-  broom::glance(x)
-  param <-  "term"
-
-  if (include.r | include.pseudo) {
-    if( any(names(res) %in% "r.squared")){
-      param <- c(param, c("r.squared", "adj.r.squared"))
-    }else{  ans_r <- R2(x)
-    res <- cbind(res, ans_r)
-    param <- c(param, names(ans_r))
-    }
-  }
-
-
-  if (include.aic)
-    param <- c(param, "AIC")
-
-  if (include.bic)
-    param <- c(param, "BIC")
-
-  if (include.rmse) {
-    param <- c(param, "RMSE")
-    res <- cbind(res, RMSE(x)[2])
-  }
-
-  if (include.loglik)
-    param <- c(param, "logLik")
-  if (include.devianze)
-    param <- c(param, "deviance")
-  if (include.sigma)
-    param <- c(param, "sigma")
-
-
-  if (fix_format) {
-    res <- dplyr::tbl_df(
-      plyr::llply(res,
-                  function(z)
-                    formatC(z,
-                            digits = digits,
-                            format = "f")))
-    if (include.test) {
-      param <- c(param, "Test")
-      res$Test <- "nicht implementiert"
-    }
-
-    if (include.nobs) {
-      param <- c(param, "Obs")
-      res$Obs <- formatC(nobs(x), digits = 0, format = "f")
-    }
-  }
-  else{
-    res <- round(res, digits = digits)
-    if (include.test) {
-      param <- c(param, "Test")
-      res$Test <- "nicht implementiert"
-    }
-    if (include.nobs) {
-      param <- c(param, "Obs")
-      res$Obs <- nobs(x)
-    }
-  }
-  param <- intersect(names(res), param)
-  tibble::as_tibble(res[param])
-}

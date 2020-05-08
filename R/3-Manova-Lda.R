@@ -69,4 +69,3 @@
 #' #+ results='asis'
 #' APA2(Anova(fit2, test = "Pillai"))
 "_PACKAGE"
-
