@@ -1,7 +1,6 @@
 
 #' Ordnen (Tidy)
 #'
-#' Diese Funktion meine Version von tidy.
 #' @rdname Ordnen
 #' @name Ordnen
 #'
@@ -14,32 +13,6 @@
 Ordnen <- function(x, ...) {
   UseMethod("Ordnen")
 }
-
-
-
-# Ordnen.prototyp <- function(x,
-#                        include.etwas = TRUE,
-#                        include.column=FALSE,
-#                        ...){
-#   info <- model_info(x)
-#   AV   <- ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
-#   res <-  broom::tidy(x)
-#   k <- ncol(res)
-#   if (include.etwas) {
-#     res <-
-#         cbind(res[, -k], etwas=NA, res[k])
-#     }
-#   if (!include.column){
-#     res <-  res[, names(res) != "name der Spalte"]
-#   }
-#
-#
-#   prepare_output(res,
-#                  paste0("AV: ", AV),
-#                  paste0("Model: ", info$family[1]),
-#                  info$N,
-#                  info$labels)
-# }
 
 
 
@@ -187,44 +160,13 @@ Ordnen.default <- function(x,  ...) {
 
 
 
-
-# include.b = TRUE,
-# include.se = TRUE,
-# include.beta = FALSE,
-# include.eta = TRUE,
-# include.odds = FALSE,
-# include.ci = FALSE,
-#
-#
-# #Fehler abfangeb
-# include.p = FALSE,
-# include.stars = if (include.p) FALSE  else TRUE,
-#
-# include.variance = TRUE,
-# include.r = TRUE,
-# include.pseudo = FALSE,
-# # noch nicht fertig
-# include.ftest = FALSE,
-# include.loglik = FALSE,
-# # noch nicht fertig
-#
-# include.custom = NULL,
-#
-# include.aic = TRUE,
-# include.bic = include.aic,
-#
-# ci.level = .95,
-
-
 #' @rdname Ordnen
 #' @export
 Ordnen.anova <- function(..., output=FALSE){
   res <- APA2.lm(..., output=output)
   res
 }
-#Ordnen.anova <- function(x, ...) Ordnen.aov(x, ...)
-
-
+ 
 
 #' @description ANOVA - Methode ueber broom::tidy
 #' @param include.eta  Eta Quadrat
@@ -236,6 +178,31 @@ Ordnen.aov <- function(..., output=FALSE){
   res <- APA2.lm(..., output=output)
   res
 }
+#' @description Regression - Methode ueber basr::summary (lm und glm)
+#' @param include.b Estimate
+#' @param include.se  SE Standardfehler
+#' @param include.beta  standartisiertes beta
+#' @param include.ci,ci.level  95-CI mit ci-Level
+#'
+#' @rdname Ordnen
+#' @export
+Ordnen.lm <- function(..., output=FALSE){
+  res <- APA2.lm(..., output=output)
+  res
+}
+
+#' @rdname Ordnen
+#' @param rr RR Relatives Risiko
+#' @param include.b.ci,include.odds,include.rr.ci 95 Konfidenzintervalle
+#' @export
+Ordnen.glm <- function(..., output=FALSE){
+  res <- APA2.glm(..., output=output)
+  res
+}
+
+
+
+
 # Ordnen.aov <- function(x,
 #                        include.eta = TRUE,
 #                        include.sumsq = TRUE,
@@ -268,18 +235,6 @@ Ordnen.aov <- function(..., output=FALSE){
 # }
 
 
-#' @description Regression - Methode ueber basr::summary (lm und glm)
-#' @param include.b Estimate
-#' @param include.se  SE Standardfehler
-#' @param include.beta  standartisiertes beta
-#' @param include.ci,ci.level  95-CI mit ci-Level
-#'
-#' @rdname Ordnen
-#' @export
-Ordnen.lm <- function(..., output=FALSE){
-  res <- APA2.lm(..., output=output)
-  res
-}
 
 # Ordnen.lm <- function(x,
 #                       include.b = TRUE,
@@ -319,14 +274,7 @@ Ordnen.lm <- function(..., output=FALSE){
 
 
 
-#' @rdname Ordnen
-#' @param rr RR Relatives Risiko
-#' @param include.b.ci,include.odds,include.rr.ci 95 Konfidenzintervalle
-#' @export
-Ordnen.glm <- function(..., output=FALSE){
- res <- APA2.glm(..., output=output)
- res
-}
+
 
 # Ordnen.glm <- function(x,
 #                        include.b = TRUE,

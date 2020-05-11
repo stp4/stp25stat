@@ -41,8 +41,8 @@ DF <- r_data_frame(
 
 
 DF %>% Tabelle2(age, sex, height,
-                race, died, smoker,
-                likert,
+                race, died, smoker,  
+                iq, likert,
                 by =  ~ sex,
                 APA = TRUE)
 ```
@@ -826,6 +826,52 @@ Smoker true
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
 5 (29%)
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+IQ (mean)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+13
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+97.85 (8.98)
+
+</td>
+
+<td style colspan="1">
+
+ 
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+17
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+101.06 (14.77)
 
 </td>
 
