@@ -1,7 +1,6 @@
 #' Tabelle
 #'
-#'  Einfache deskriptive Tabelle die in medizinischen Arbeiten
-#' verwendet werden.
+#' Einfache deskriptive Tabelle verwendet werden.
 #' Die Funktion arbeitet Intern mit \code{aggregate} bzw. mit  berechne_default()
 #' also aggregate(formula, data,FUN).
 #'
@@ -44,52 +43,9 @@ Tabelle <- function(...,
 }
 
 
-# Tabelle.formula <- function(x, data, ..., subset){
-#   
-#   r <- if (missing(subset)) 
-#     rep_len(TRUE, nrow(data))
-#   else {
-#     e <- substitute(subset)
-#     r <- eval(e, data, parent.frame())
-#     if (!is.logical(r)) 
-#       stop("'subset' must be logical")
-#     r & !is.na(r)
-#   }
-#  
-#   data[r, vars, drop = FALSE]
-#   
-#   
-#   # mf <- match.call(expand.dots = FALSE)
-#   # print(mf)
-#   # m <-  match(c(  "data", "subset" ),
-#   #             names(mf), 0L)
-#   # mf <- mf[c(1L, m)]
-#   # message("An model.frame")
-#   # print(class(mf))
-#   # 
-#   # 
-#   # return( list( formula=NULL))
-#   # frml <- get_meta_formula(formula, groups)
-#   # 
-#   # 
-#   # mf$formula<- frml$all.vars
-#   # mf$drop.unused.levels <- TRUE
-#   # 
-#   # return(NULL)
-#   # mf[[1L]] <- quote(stats::model.frame)
-#   # mf <- eval(mf, parent.frame()) #evaluate call
-#   Tabelle.default(x, data, ...)
-#   
-# }
-# Tabelle.data.frame <- function(data, ... , select){
-#   
-#   Tabelle.default(x, data, ...)
-# }
-
-
 
 #' @rdname Tabelle
-#' @description Tabelle2:  html-Output Tabelle(...) %>% Output()
+#' @description Tabelle2: Tabelle(...) %>% Output()
 #' @export
 #' @examples
 #'
@@ -128,7 +84,7 @@ Tabelle.NULL <- function(){
 #' @rdname Tabelle
 #'
 #' @param ...   Die auszuwertenden Variablen  sex, age="mean", usw
-#' @param type 1 oder 2 1 ist kurzes Format 2 int lang
+#' @param type 1 oder 2  2=auto_lang 44.56 (SD 18.10, range 25.00 to 70.00) 1= auto_kurz 44.56 (18.10)
 #' @param formula An dcast Gruppe ~ .id ist zum Zeilen und Spalten vertauschen
 #' @param fun Eigene Function am Berechne
 #' @param digits Kommastellen
@@ -147,15 +103,15 @@ Tabelle.NULL <- function(){
 #' @param max_factor_length Fehler bei langen Faktoren abfangen
 #'
 #' @param APA APA2 Style TRUE/FALSE
+#' @param   stat  fuer type="describe" c("vars","n","mean","sd" ,"median","trimmed","mad","min","max","range","skew","kurtosis","se" ,
 #'
 #' @export
 Tabelle.default <- function(...,
                             formula = NULL,
                             fun = NULL,
                             type = c(
-                              "2", # "auto_lang" ## 44.56 (SD 18.10, range 25.00 to 70.00)
-                              "1", # "auto_kurz" ## 44.56 (18.10)
-                             # "auto",
+                              "2", 
+                              "1", 
                               "freq","freq.ci",
                               "mean", "median", "ci","cohen.d","effsize",
                               "multiresponse",
@@ -177,19 +133,27 @@ Tabelle.default <- function(...,
                             include.test = test,
                             exclude.level=NULL,
 
-                          #  include.p = TRUE,
-                           # include.stars = FALSE,
-                          #  include.mean=FALSE,  # fuer Correlation
-                          #  corr_test = "pearson",
-                          #  cor_diagonale_up = TRUE,
                             max_factor_length = 35,
                             order = FALSE,
-                          #  decreasing = FALSE,
-                         #   useconTest = FALSE,
-                           # normality.test = FALSE
-                         measure.name = "value"
+                            measure.name = "value",
+                            describe = c("n", "mean", "sd", "min", "max")
                           ) {
-  type <-  match.arg(type, several.ok = TRUE)[1]
+  type <-  match.arg(type, several.ok = TRUE)
+  type<- type[1]
+
+  if ("describe" %in% type)
+    return(
+      Describe2(
+        ...,
+        by = by,
+        caption = caption,
+        note = note,
+        stat = describe,
+        output = output,
+        digits = if (is.null(digits)) 2 else digits
+      )
+    )
+
 
   if(!is.null(fun)) type <- "custom_fun"
 
@@ -348,32 +312,18 @@ calculate_tabelle2 <- function(X,
   prepare_output(df, caption, note, nrow(X$data), NA)
 }
 
-
-
-
-
-
-
-
-# Describe <-  function(x, ...) {
-#   fix_format(broom::tidy(x))
-# }
-
-
-
-#' @rdname Tabelle
+ 
+#' @noRd
 #' @description Describe2: workaraond fuer  psych::describe()
 #' @param stat result von psych kann "n", "mean", "sd",
 #' "median", "trimmed", "mad", "min" ,
 #' "max", "range", "skew", "kurtosis" ,"se"
-#' @export
+ 
 Describe2 <- function(...,
                     output = FALSE) {
   UseMethod("Describe2")
 }
 
-#' @rdname Tabelle
-#' @export
 Describe2.data.frame <- function(data,
                                  ...,
                                  by = NULL,
@@ -407,8 +357,6 @@ Describe2.data.frame <- function(data,
  
 }
 
-#' @rdname Tabelle
-#' @export
 Describe2.formula <- function(x,
                               data,
                               by = NULL,
@@ -441,8 +389,7 @@ Describe2.formula <- function(x,
     data <- data[vars]
     result <-  as.data.frame(psych::describe(data),
                              stringsAsFactors = FALSE)
-    # stat <- c(names(result), stat)
-    # stat <- unique(stat[duplicated(stat)])
+ 
     
     which_class <- sapply(data, class)
     result <- cbind(Item = GetLabelOrName(data),
@@ -477,14 +424,10 @@ Describe2.formula <- function(x,
   }
   
   
-  
-  res  <-
+ 
     prepare_output(res,
                    caption,
                    note,
                    nrow(data))
-  
-  Output(res, output = output)
-  
-  invisible(result)
+ 
 }

@@ -41,9 +41,6 @@ function (x, ...){
 
 
 
-#' @rdname APA
-#' @export
-APA2.psychobject <- function(x, ...){ x$text }
 
 
 #' @rdname APA
