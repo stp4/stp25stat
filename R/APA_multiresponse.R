@@ -2,7 +2,7 @@
 #' @description  Wird in APA2 verwendet Tabelle Arbeitet mit Multi2default()
 #' und hat anderen Rueckgabewert als Tabelle (Mittelverte vs String)
 #' @export
-APA2_multiresponse<- function(Formula,
+APA_multiresponse<- function(Formula,
                               data,
                               caption="",note="",
                               test=FALSE,

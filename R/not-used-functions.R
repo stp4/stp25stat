@@ -1,6 +1,120 @@
 #  # not-used-functions
 
 
+# berecne -----------------------------------------------------------------
+
+# roxygen   16-10-2018
+
+# berechneMean <- function(data = NULL,
+#                          measurevar,
+#                          by = NULL,
+#                          na.rm = TRUE,
+#                          conf.interval = .95,
+#                          .drop = TRUE) {
+#   Text("berechneMean: Achtung die Funktion wird bals geloescht!")
+#   # This does the summary. For each group's data frame, return a vector with
+#   # N, mean, and sd
+#   if (length(measurevar) != 1)
+#     return(measurevar)
+#   
+#   datac <- plyr::ddply(
+#     data,
+#     by,
+#     .fun = function(xx, col) {
+#       c(
+#         variable = NA,
+#         N    = length2(xx[[col]], na.rm = na.rm),
+#         mean = mean   (xx[[col]], na.rm = na.rm),
+#         sd   = sd     (xx[[col]], na.rm = na.rm),
+#         min  = min    (xx[[col]], na.rm = na.rm),
+#         max  = max    (xx[[col]], na.rm = na.rm)
+#       )
+#     },
+#     measurevar,
+#     .drop = .drop
+#   )
+#   
+#   # Rename the "mean" column
+#   #  datac <- plyr::rename(datac, c("mean" = measurevar))
+#   datac$se <-
+#     datac$sd / sqrt(datac$N)  # Calculate standard error of the mean
+#   
+#   # Confidence interval multiplier for standard error
+#   # Calculate t-statistic for confidence interval:
+#   # e.g., if conf.interval is .95, use .975 (above/below), and use df=N-1
+#   ciMult <- qt(conf.interval / 2 + .5, datac$N - 1)
+#   datac$ci <- datac$se * ciMult
+#   datac$ci.low <-    datac$mean - datac$ci
+#   datac$ci.hig <-    datac$mean + datac$ci
+#   datac$variable <- GetLabelOrName(data[measurevar])
+#   return(datac)
+# }
+
+#  #   berechne: berechne Mittelwerte
+#  #'
+#  #   Die Lagemasse werden ueber die Standard-Funktionen berechnet unterschied ist nur dass
+#  #   Faktoren zu Zahlen transformiert werden und das \code{na.rm=TRUE} gesetzt wird.
+#  #   CI = Hmisc::smean.cl.normal
+#  #'
+#  #'
+#  #   @return  ein dataframe Objekt oder ein Character-String
+#  #   @param ... alles weitere
+#  #   @export
+#   
+#   berechne <- function(...) {
+#     UseMethod("berechne")
+#   }
+#   
+#  #   @rdname berechne
+#  #   @param na.rm NAs
+#  #   @param conf.interval,ci Grenzen der Konfidenzintervalle CIs
+#  #   @param .drop anplyr::ddply
+#  #   @export
+#  #'
+#  #   @examples
+#  #   # erlaubt:  varana %>% berechne(4, 5, by= ~geschl )
+#  #   #  berechne(hyper, "chol0" )
+#  #   #  names(hyper)
+#  #   #  hyper %>% berechne(chol0,chol1,chol6,chol12, by=~med+g)
+#   berechne.data.frame <- function(data,
+#                                   ...,
+#                                   by = "1",
+#                                   type = 1,
+#                                   na.rm = TRUE,
+#                                   conf.interval = .95,
+#                                   .drop = TRUE) {
+#     measure <-
+#       sapply(lazyeval::lazy_dots(...), function(x) {
+#         as.character(x[1])
+#       })
+#     
+#     meAsNum <- grep("^[[:digit:]]", measure)
+#     if (length(meAsNum) != 0) {
+#       measure[meAsNum] <- names(data[as.numeric(measure[meAsNum])])
+#     }
+#     
+#     if (is_formula2(by))
+#       by <- all.vars(by)
+#     
+#     
+#     res <- NULL
+#     for (i in measure) {
+#       res <- rbind(
+#         res,
+#         berechneMean(
+#           data,
+#           i,
+#           by,
+#           na.rm = na.rm,
+#           conf.interval = conf.interval,
+#           .drop = .drop
+#         )
+#       )
+#     }
+#     res$variable <- factor(res$variable, unique(res$variable))
+#     
+#     res
+#   }
 # library(psycho) ---------------------------------------------------------
 
 

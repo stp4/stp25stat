@@ -34,7 +34,7 @@ APA2.polr <- function(x,
                       include.ci = FALSE,
                       include.odds = TRUE,
                       ...) {
-  res <- Ordnen(
+  res <- extract(
     x,
     include.b = include.b,
     include.se = include.se,
@@ -61,7 +61,7 @@ APA2.polr <- function(x,
 
 
 
-Ordnen.polr <- function(x,
+extract.polr <- function(x,
                         digits = 2,
                         include.b = TRUE,
                         include.se = TRUE,
@@ -69,7 +69,7 @@ Ordnen.polr <- function(x,
                         include.odds = TRUE,
                       #  test.my.fun=FALSE,
                         ...){
- # if(test.my.fun) cat("\n   -> Ordnen.polr()")
+ # if(test.my.fun) cat("\n   -> extract.polr()")
 
   info <- model_info(x)
   AV <-

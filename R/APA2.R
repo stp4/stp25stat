@@ -169,7 +169,7 @@ APA2.formula <- function(x,
       direction = direction,
       ...
     ),
-    multiresponse =  APA2_multiresponse(
+    multiresponse =  APA_multiresponse(
       x,
       data,
       caption = caption,

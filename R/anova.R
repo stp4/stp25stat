@@ -37,7 +37,7 @@ APA2.anova <- function(x,
 #                        include.sumsq = TRUE,
 #                        include.meansq = FALSE,
 #                        ...) {
-#   res <-  Ordnen(
+#   res <-  extract(
 #     x,
 #     include.eta = include.eta,
 #     include.sumsq = TRUE,
@@ -155,7 +155,6 @@ APA2.aovlist <- function(x,
 
 #' @rdname APA_Table
 #' @description \code{type="anova"} Anova (car::Anova) 
-#' Funktionen aus APA_Table(..., include.anova=TRUE)
 #' 
 #' @export
 APA_Table_Anova <- function(myfits,
@@ -168,17 +167,13 @@ APA_Table_Anova <- function(myfits,
                             include.meansq = FALSE,
                             ...)
 {
-  #cat("\nAPA_Table_Anova()\n")
+
   result <- list()
-  # print(names(myfits))
+
   for (i in seq_len(length(myfits)))  {
     my_input <- model_info(myfits[[i]])
-    
-    #   cat("\nclass:", class(myfits[[i]]))
     if (!is.null(names))
       caption <- paste(caption, names[i])
-    
-    
     if (length(my_input$x) == 0) {
       result[[i]] <- "Null-Model"
     }
@@ -193,10 +188,6 @@ APA_Table_Anova <- function(myfits,
         include.meansq = include.meansq
       )
     }
- 
-    
-    
-    
-  } # -end for
+  } 
   result
 }

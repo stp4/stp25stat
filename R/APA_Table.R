@@ -459,7 +459,7 @@ type_default <- function(x,
                          custom.model.names = NULL,
                          ...) {
  
-  res <-  Ordnen(x,  ... ) # ist das gleiche wie broom::tidy(x)
+  res <-  extract(x,  ... ) # ist das gleiche wie broom::tidy(x)
 
   if (is.null(caption))
     caption <- paste(attr(res, "caption"),

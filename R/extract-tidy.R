@@ -1,8 +1,8 @@
 
-#' Ordnen (Tidy)
+#' extract (Tidy)
 #'
-#' @rdname Ordnen
-#' @name Ordnen
+#' @rdname extract
+#' @name extract
 #'
 #' @param x Objekt
 #' @param ... weitere Objekte nicht benutzt
@@ -10,15 +10,15 @@
 #' und notes
 #' @export
 #'
-Ordnen <- function(x, ...) {
-  UseMethod("Ordnen")
+extract <- function(x, ...) {
+  UseMethod("extract")
 }
 
 
 
-#' @rdname Ordnen
+#' @rdname extract
 #' @export
-Ordnen.polr <- function(x,
+extract.polr <- function(x,
                         digits = 2,
                         include.b = TRUE,
                         include.se = TRUE,
@@ -26,7 +26,7 @@ Ordnen.polr <- function(x,
                         include.odds = TRUE,
                         #  test.my.fun=FALSE,
                         ...){
-  # if(test.my.fun) cat("\n   -> Ordnen.polr()")
+  # if(test.my.fun) cat("\n   -> extract.polr()")
   
   info <- model_info(x)
   AV <-
@@ -121,9 +121,9 @@ Ordnen.polr <- function(x,
   
 }
 
-#' @rdname Ordnen
+#' @rdname extract
 #' @export
-Ordnen.default <- function(x,  ...) {
+extract.default <- function(x,  ...) {
 
   info <- model_info(x)
   AV <-
@@ -160,9 +160,9 @@ Ordnen.default <- function(x,  ...) {
 
 
 
-#' @rdname Ordnen
+#' @rdname extract
 #' @export
-Ordnen.anova <- function(..., output=FALSE){
+extract.anova <- function(..., output=FALSE){
   res <- APA2.lm(..., output=output)
   res
 }
@@ -172,9 +172,9 @@ Ordnen.anova <- function(..., output=FALSE){
 #' @param include.eta  Eta Quadrat
 #' @param include.sumsq,include.meansq  Quadrat- Summen
 #'
-#' @rdname Ordnen
+#' @rdname extract
 #' @export
-Ordnen.aov <- function(..., output=FALSE){
+extract.aov <- function(..., output=FALSE){
   res <- APA2.lm(..., output=output)
   res
 }
@@ -184,18 +184,18 @@ Ordnen.aov <- function(..., output=FALSE){
 #' @param include.beta  standartisiertes beta
 #' @param include.ci,ci.level  95-CI mit ci-Level
 #'
-#' @rdname Ordnen
+#' @rdname extract
 #' @export
-Ordnen.lm <- function(..., output=FALSE){
+extract.lm <- function(..., output=FALSE){
   res <- APA2.lm(..., output=output)
   res
 }
 
-#' @rdname Ordnen
+#' @rdname extract
 #' @param rr RR Relatives Risiko
 #' @param include.b.ci,include.odds,include.rr.ci 95 Konfidenzintervalle
 #' @export
-Ordnen.glm <- function(..., output=FALSE){
+extract.glm <- function(..., output=FALSE){
   res <- APA2.glm(..., output=output)
   res
 }
@@ -203,12 +203,12 @@ Ordnen.glm <- function(..., output=FALSE){
 
 
 
-# Ordnen.aov <- function(x,
+# extract.aov <- function(x,
 #                        include.eta = TRUE,
 #                        include.sumsq = TRUE,
 #                        include.meansq = FALSE, test.my.fun=FALSE,
 #                        ...){
-#   if(test.my.fun) cat("\n   -> Ordnen.aov()")
+#   if(test.my.fun) cat("\n   -> extract.aov()")
 #   info <- model_info(x)
 #   AV <-
 #     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
@@ -236,7 +236,7 @@ Ordnen.glm <- function(..., output=FALSE){
 
 
 
-# Ordnen.lm <- function(x,
+# extract.lm <- function(x,
 #                       include.b = TRUE,
 #                       include.se = TRUE,
 #                       include.beta = FALSE,
@@ -276,7 +276,7 @@ Ordnen.glm <- function(..., output=FALSE){
 
 
 
-# Ordnen.glm <- function(x,
+# extract.glm <- function(x,
 #                        include.b = TRUE,
 #                        include.se = TRUE,
 #                        include.ci = FALSE,
@@ -404,9 +404,9 @@ Ordnen.glm <- function(..., output=FALSE){
 
 # Alte Version kommentar siehe unten
 
-#' @rdname Ordnen
+#' @rdname extract
 #' @export
-Ordnen.merModLmerTest <- function(x,
+extract.merModLmerTest <- function(x,
                       # custom.model.names = NULL,
                       # digits = 2,
                       include.b = TRUE,
@@ -422,7 +422,7 @@ Ordnen.merModLmerTest <- function(x,
                       #  include.bic = include.aic,
                       ci.level = .95,
                       ...) {
-  cat("\n In Ordnen.merModLmerTest \n")
+  cat("\n In extract.merModLmerTest \n")
   info <- model_info(x)
   AV <-
     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
@@ -481,12 +481,12 @@ Ordnen.merModLmerTest <- function(x,
 
 
 
-#' @rdname Ordnen
+#' @rdname extract
 #' @description lmerTest::lmer returns an object of class 'lmerModLmerTest' (previously 'merModLmerTest')
 #' to clarify that 'lmerModLmerTest' extends  'lmerMod' – not 'merMod'. The merMod class includes generalized
 #' and nonlinear mixed models and lmerTest is only designed for linear mixed models.
 #' @export
-Ordnen.lmerModLmerTest<- function(x,
+extract.lmerModLmerTest<- function(x,
                                   # custom.model.names = NULL,
                                   # digits = 2,
                                   include.b = TRUE,
@@ -504,7 +504,7 @@ Ordnen.lmerModLmerTest<- function(x,
                                  
                                   ...){
  
-#  cat("\n In Ordnen.lmerModLmerTest \n")
+#  cat("\n In extract.lmerModLmerTest \n")
   info <- model_info(x)
   AV <-
     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])

@@ -1,9 +1,9 @@
-#' @rdname SEM
-#' @title SEM
-#' @name SEM
+#' @rdname APA_SEM
+#' @title APA_SEM
+#' @name APA_SEM
 #' @description Struckturgleichungs Modelle mit lavaan. Die Funktionen sind Kopieen von lavaan
 #' und helfen den Output zu erstellen.
-#' SEM ist davei einfach lavaan::sem(x, ...)
+#' APA_SEM ist davei einfach lavaan::sem(x, ...)
 #' mehr unter \link{http://www.understandingdata.net/2017/03/22/cfa-in-lavaan/}
 #'
 #' \subsection{APA2.lavaan}{Ueber APA2 wird die Ausgabe formatiert. Ausgegeben werden die Guetemasse und der ModelFit.
@@ -80,17 +80,24 @@
 #' #semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
 #' #title("Std", line = 3)
 #' @export
-SEM <- function(x, ...) {
-  UseMethod("SEM")
+APA_SEM <- function(x, ...) {
+  UseMethod("APA_SEM")
 }
 
-#' @rdname SEM
+#' @rdname APA_SEM
 #' @export
-SEM.default <- function(x, ...) {
+APA_SEM.default <- function(x, ...) {
   lavaan::sem(x, ...)
 }
 
-#' @rdname SEM
+#' @export
+ SEM <- function(...) {
+  APA_SEM(...)
+}
+
+
+
+#' @rdname APA_SEM
 #' @param include.ci,include.varianz,include.latent,include.model,include.loading was soll ausgegeben werden
 #' @export
 APA2.lavaan <- function(x,

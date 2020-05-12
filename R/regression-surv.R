@@ -611,17 +611,4 @@ fix_format_p <- function(x,
 #' @param prc,sep,sep_1,sep_2 Formatierungs-Symbole
 #' @return string
 
-rndr_percent_CI <-
-  function(x, low, upr,
-           digits = 0,
-           prc="% ", sep = ", ", sep_1 = "[", sep_2 = "]") {
-    paste0(
-      stp25rndr::Format2(x, digits),
-      prc,
-      sep_1,
-      stp25rndr::Format2(low, digits),
-      sep,
-      stp25rndr::Format2(upr, digits),
-      sep_2
-    )
-  }
+

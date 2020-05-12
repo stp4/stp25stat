@@ -17,25 +17,19 @@ errate_statistik2 <- function(Formula,
 
                               note = "note",
                               type = NULL,
-                              #"auto",
-                              # test = FALSE,
+ 
                               na.action = na.pass,
                               exclude = NA,
-                              #neu damit besser leslich
                               include.n = TRUE,
                               include.all.n = NULL,
-                              # print.n,
                               include.header.n = TRUE,
                               include.total = FALSE,
-                              # total,
                               include.test = FALSE,
-                              # test,
                               include.p = TRUE,
                               include.stars = FALSE,
                               corr_test = "pearson",
                               cor_diagonale_up = TRUE,
                               max_factor_length = 35,
-                              # total=FALSE,
                               order = FALSE,
                               decreasing = FALSE,
                               useconTest = FALSE,
@@ -43,11 +37,8 @@ errate_statistik2 <- function(Formula,
                               digits.mean = options()$stp25$apa.style$m$digits,
                               digits.percent = options()$stp25$apa.style$prozent$digits[1],
                               test_name = "Hmisc",
-                              # auto_wrap = NULL, #-- neu Zeilenumbruch
                               ...)
 {
-
-  #-- Statistik Berechnen ---------------------------------
   Stat_Mean_Freq <- function(x, ...,
                              default_numeric = "mean") {
     index_zaeler <<- index_zaeler + 1
@@ -92,8 +83,6 @@ errate_statistik2 <- function(Formula,
     if (all(is.na(x)))
       type_switch <- "all_NA"
 
-    #cat(type_switch,"\n")
-
     result <- switch(
       type_switch,
       mean = mydf(n, Mean2(x, digits = digits.mean, ...), "(mean)"),
@@ -107,16 +96,13 @@ errate_statistik2 <- function(Formula,
       all_NA =  mydf(0, "n.a."),
       mydf(n, class(x)) # nur eine Zeile ausgeben# Fehler abfangen
     )
-
-
-
     if (include.all.n)
       result
     else
       result[,-2, drop = FALSE]
   }
 
-  #-- Liste zu Dataframe -----------------
+  # Liste zu Dataframe 
   return_data_frame <- function(ans) {
     ANS <- NULL
       for (var in names(ans)) {
@@ -136,7 +122,7 @@ errate_statistik2 <- function(Formula,
   }
 
 
-  #- Start der Funktion ------------------------------------
+  # Start der Funktion 
   X      <- Formula_Data(Formula, data, na.action = na.action)
   N      <- nrow(data)
 
@@ -157,9 +143,9 @@ errate_statistik2 <- function(Formula,
   if (is.null(digits.mean))  digits.mean <- X$digits
   if (!is.null(X$condition)) {warning("errate_statistik2: condition weden noch nicht unterstuetzt")}
 
-  # Beginn der Auswertung -----------------------------------------------------
+  # Beginn der Auswertung
   if (is.null(include.all.n)) {
-    # Automatisch N auswahlen
+
     if (is.null(X$X_data)) {
       if (!any(is.na(X$Y_data)))
         include.all.n <- FALSE
@@ -181,7 +167,7 @@ errate_statistik2 <- function(Formula,
     X$Y_data <- X$Y_data[, my_order, drop = FALSE]
   }
 
-  # Einzelvergeich Pruefen ob Gruppe (also ~a+b+c oder a+b+c~d+e) -------------
+  # Einzelvergeich Pruefen ob Gruppe (also ~a+b+c oder a+b+c~d+e)
 
   if (is.null(X$xname)) {
     index_zaeler <- 0
@@ -211,22 +197,22 @@ errate_statistik2 <- function(Formula,
     ANS <- prepare_output(ANS, caption, note, N)
     return(ANS)
 
-    #- GRUPPENVERGLEICH ---------------------------------------------------
+    # GRUPPENVERGLEICH
   } else {
-    ANS_list <- list() #antwortliste
+    ANS_list <- list() # antwortliste
     for (ix in X$xname) {
        ANS <- NULL
-      #--  Mehere Gruppenvariablen aufschluesseln
+      #  Mehere Gruppenvariablen aufschluesseln
       caption <- paste(ix, caption)
       Xi <- X$X_data[, ix]  # Gruppe ist X'
-      x_name <- ifelse(is.null(attr(X$X_data, "label")), ix, attr(X$X_data, "label")) ## hmisc::LAbel
+      x_name <- ifelse(is.null(attr(X$X_data, "label")), ix, attr(X$X_data, "label")) 
       y_name <-  sapply(X$xname, function(y)
                                   ifelse(is.null(attr(X$Y_data, "label")),
                                   y, attr(X$Y_data, "label")))
       my_levels <- levels(Xi)
-      #-- Test ob Gruppen cat("\n\nAchtung Gruppe ist kein Factor!\n\n")
+      # Test ob Gruppen cat("\n\nAchtung Gruppe ist kein Factor!\n\n")
       if (is.null(my_levels)) {
-        #--Gruppe ist Numeric also Correlation
+        #  Gruppe ist Numeric also Correlation
         if (corr_test %in% c("pearson", "spearman")) {
           note <- paste(note, "Korrelation nach", Hmisc::upFirst(corr_test))
           ANS <- Corr2(X$Y_data, Xi, corr_test, include.stars)
@@ -239,16 +225,16 @@ errate_statistik2 <- function(Formula,
             ANS[, c(1, 2, 5)]
         }
       } else{
-        #-- Gruppe ist Faktor  also Freq oder Mean
+        # Gruppe ist Faktor  also Freq oder Mean
         Xi <- factor(Xi)
-        #-- sicherstellen das keine leeren Faktorstufen esistieren
+        # sicherstellen das keine leeren Faktorstufen esistieren
         tabel_header <-
           if (include.header.n)
             paste0(names(table(Xi)), " (n=", table(Xi), ")")
         else
           names(table(Xi))
         my_levels <- levels(Xi)
-        #-- alle Faktor-Stufen Auswerten mean/Freq
+        # alle Faktor-Stufen Auswerten mean/Freq
         for ( lev in seq_len(length(my_levels)) ) {
           index_zaeler <- 0
           my_subset <- which(Xi == my_levels[lev])
@@ -379,31 +365,17 @@ errate_statistik3 <-
             type = NULL, # "muliresponse" "pearson", "spearman"
             caption = "",
             note = "",
-          # digits = NULL,
-         #  test = FALSE,
             na.action = na.pass,
             exclude = NA,
-
             include.n = TRUE,     # Anzahl bei Gruppe je Spalte
             include.nr = FALSE,   # erste zeile Anzahl der Gruppen
             include.total = FALSE,# Total Anzahl + Statistik bei Gruppe
-
             include.test = test,
             exclude.level=NULL,
-          #  include.p = TRUE,
-         #   include.stars = FALSE,
-         #   include.mean=FALSE,  # fuer Correlation
-         #   corr_test = "pearson",
-          #  cor_diagonale_up = TRUE,
-
             max_factor_length = 35,
             order = FALSE
-         #   decreasing = FALSE,
-           # useconTest = FALSE,
-        #    normality.test = FALSE
          )
   {
-
     mySep<-  stp25rndr::symbol_nbsp()
     mySep2  <-  paste0(mySep,mySep)
  
@@ -413,8 +385,7 @@ errate_statistik3 <-
                                            stringsAsFactors = FALSE)}
 
     Mittelwert_Einzel <- function(i, x) {
-      
-     # cat("\nin Mittelwert_Einzel\n")
+
       x  <- na.omit(x)
       n  <- length(x)
       rr <- NULL
@@ -445,11 +416,10 @@ errate_statistik3 <-
         res$n <- ""
         x1 <- cbind(Item = mySep2, res)
         if (!is.null(exclude.level) & length(x1$lev) == 2) {
-          #print(x1$lev %in% exclude.level)
+
           excld <- which(x1$lev %in% exclude.level)
           if (length(excld) > 0)
             x1 <- x1[-excld, ]
-          
         }
         
         rr <- rbind(x0, x1)
@@ -533,13 +503,13 @@ errate_statistik3 <-
         " "
       }
     }
-   # cat("\n errate_stat3 Vorbereiten\n")
-    #-- Vorbereiten der Daten
+
+    # Vorbereiten der Daten
     ANS <- NULL
     X <- prepare_data2(..., na.action = na.action)
     if(order){X<- order_by_mean( X )}
     
-   # cat("\nnach prepare_data2\n")
+
     group.vars   <- X$group.vars
     measure.vars <- X$measure.vars
     N            <- nrow(data)
@@ -570,9 +540,9 @@ errate_statistik3 <-
     if (type[1] == "multiresponse")
       X$measure <- rep("multi", length(X$measure))
 
-    #-- Einzelvergleich -------------------------------
+    # Einzelvergleich
     if (is.null(group.vars)) {
-    #  cat(" Einzelvergleich ")
+
       if (include.nr)
         ANS <-
           data.frame(
@@ -602,7 +572,7 @@ errate_statistik3 <-
       else
         ANS <- prepare_output(ANS[-c(2, 3)], caption, note, N)
     }
-    #-- Gruppenvergleich
+    # Gruppenvergleich
     else{
       for (j in group.vars) {
         #- jeder Eintrg getrennt
@@ -613,7 +583,7 @@ errate_statistik3 <-
           if (include.nr) {
             ans_in <- Total_Gruppe(i, j)
             if (include.total)
-              #: Item|lev|n||All|G1_n|G1_m|G2_n|G2_m|.._n|.._m|
+              # Item|lev|n||All|G1_n|G1_m|G2_n|G2_m|.._n|.._m|
               ans_in <- cbind(ans_in[1:2],
                               "Total_n" = "",
                               "Total_m" = X$N,
@@ -688,4 +658,74 @@ order_by_mean <- function(X) {
   
   
   X
+}
+
+
+#' erate_statistik2
+#' 
+#' @noRd
+Prozent2APA <- function(x,
+                        exclude = NA,
+                        digits = 1,
+                        max_factor_length = 35,
+                        ...) {
+  Non_Factor_To_Factor <- function(x) {
+    if (is.logical(x)) {
+      x <- factor(x, c(TRUE, FALSE))
+    } else if (is.numeric(x)) {
+      if (is_all_0_1(x))
+        x <- factor(x, c(0, 1))
+      else{
+        x <- as.numeric(x)
+        xf <- factor(x)
+        if (nlevels(xf) > 7)
+          x <- cut(x, quantile(x, na.rm = TRUE))
+        else
+          x <- xf
+      }
+    } else
+      x <- rep(NA, length(x))
+    x
+  }
+  
+  if (!is.factor(x))
+    x <- Non_Factor_To_Factor(x)
+  
+  x_NA <- x  
+  x    <- na.omit(x)
+  n    <- length(x)
+  
+  if (n == 0) {
+    result <- ""
+    ans <- rep(NA, nlevels(x_NA))
+    names(ans) <- levels(x_NA)
+  } else {
+    if (is.null(exclude))
+      x <- x_NA
+    
+    
+    ans <- table(x, exclude = exclude)
+    
+    # seltener fall das sehr viele levels vorhanden sind
+    if (length(ans) > max_factor_length) {
+      naLev <- levels(x)[-(1:max_factor_length)]
+      Text("NA = ", paste(naLev, collapse = ", "))
+      
+      x <- factor(x, levels(x)[1:max_factor_length], exclude = NULL)
+      x <-
+        addNA(x)  #- addNA modifies a factor by turning NA into an extra level
+      n <- length(x)
+      ans <- table(x)
+    }
+    
+    result <-
+      rndr_percent(prop.table(ans) * 100, ans,  digits = digits)
+  }
+  
+  data.frame(
+    Characteristics = names(ans),
+    n = c(n, rep("", length(ans) - 1)),
+    Statistics = result,
+    stringsAsFactors = FALSE
+  )
 }
