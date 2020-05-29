@@ -212,6 +212,29 @@ Meanci2<- function(x, digits=NULL, ...){
 
 
 #' @rdname berechne
+#' @export
+#' @examples
+#'
+#' Medianci2(c(1,1,1,1,2,2,4,4,5,5,5))
+#'
+Medianci2<- function(x, digits=NULL, ...){
+  
+  if (length(x)<=0) return("NaN")
+  if(!is.numeric(x)) x <- as.numeric(x)
+  
+  #N <- length(x)
+  x <- na.omit(x)
+  # n <- length(x)
+  res <- Hmisc::smedian.hilow(x, ...)
+  
+  if(is.null(digits)) digits <- stp25rndr::countDigits(signif(res[1], 4))
+  
+  stp25rndr::rndr_mean_CI(res[1],
+                          cbind(res[2], res[3]), digits=digits[1])
+  
+}
+
+#' @rdname berechne
 #' @description
 #' Prozent:
 #' Interne Funktion um Prozent fuer die Tabellen zu berechnen.

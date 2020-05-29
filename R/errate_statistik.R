@@ -512,7 +512,7 @@ errate_statistik3 <-
 
     group.vars   <- X$group.vars
     measure.vars <- X$measure.vars
-    N            <- nrow(data)
+    N            <- nrow(X$data)
 
     if(is.character(include.test)){
      which_test <-  match.arg(include.test, c("wilcox.test",

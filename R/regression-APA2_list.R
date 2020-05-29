@@ -156,7 +156,7 @@ APA2_list <-
       }
 
      names(model) <- sapply(names(model),
-                             function(y) if (y %in% names(dictionary))   dictionary[y] else  y,
+                             function(y) if (y %in% names(dictionary)) dictionary[y] else  y,
                              USE.NAMES = FALSE)
 
       if (i == 1) {
@@ -184,20 +184,25 @@ APA2_list <-
       coefs <- coefs[order(match(coefs$term, coef.order)),]
     }
 
-   
-  #  cat(" --> vor include.gof")
     if (include.gof) {
       for (i in seq_len(n)) {
-        model <- t(extract_gof(x[[i]],
-                               include.r=include.r,include.pseudo=include.pseudo,
-                               include.rmse=include.rmse,include.sigma=include.sigma,
-                               include.variance=include.variance,
-                               include.devianze=include.devianze,
-                               include.loglik=include.loglik,
-                               include.test=include.test,
-                               include.aic=include.aic,include.bic=include.bic,
-                               include.nobs=include.nobs,
-                               fix_format = TRUE ))
+        model <- t(
+          extract_gof(
+            x[[i]],
+            include.r = include.r,
+            include.pseudo = include.pseudo,
+            include.rmse = include.rmse,
+            include.sigma = include.sigma,
+            include.variance = include.variance,
+            include.devianze = include.devianze,
+            include.loglik = include.loglik,
+            include.test = include.test,
+            include.aic = include.aic,
+            include.bic = include.bic,
+            include.nobs = include.nobs,
+            fix_format = TRUE
+          )
+        )
         
         model <- dplyr::tibble(term = rownames(model),
                                model = model[, 1])
@@ -208,22 +213,21 @@ APA2_list <-
         else {
           gofs.order <- unique(c(gofs.order, model$term))
           gofs <- merge(
-            gofs,  model,
-            by = 1, all = TRUE, suffixes = c("",  paste0("_", i))
+            gofs,
+            model,
+            by = 1,
+            all = TRUE,
+            suffixes = c("",  paste0("_", i))
           )
         }
       }
-
-      gofs <- gofs[order(match(gofs$term, gofs.order)), ]
-     # cat(" --> nach include.gof")
+      
+      gofs <- gofs[order(match(gofs$term, gofs.order)),]
       if (!is.null(include.custom)) {
         if (inherits(include.custom, "data.frame")) {
           names(include.custom) <- names(gofs)
           gofs <-  rbind(gofs, include.custom)
         }  else if (inherits(include.custom, "list")) {
-         # print(names(gofs))
-         # print(names(include.custom))
-     #     cat(" --> gofs " )
           gofs <-  rbind(gofs,
                          cbind(
                            term = names(include.custom),
@@ -236,7 +240,7 @@ APA2_list <-
                          ))
         }
       }
-
+      
       n_row <- nrow(gofs)
       j <- 1
       for (i in seq_len(n)) {
@@ -249,43 +253,41 @@ APA2_list <-
         gofs <- append(unclass(gofs), empty_gofs, after = j)
         j <- n_col + j
       }
-
+      
       gofs <-  dplyr::bind_cols(gofs)
       names(gofs) <-   names(coefs)
-
-      if (include.param){
-        result <- prepare_output(rbind(coefs, gofs), caption, note)
+      
+      if (include.param) {
+        result <-
+          prepare_output(rbind(coefs, gofs), caption, note, include.n = NULL)
         n.rgroup <- nrow(coefs)
       }
       else
-        {result <- prepare_output(gofs,
-                                  caption, note)
-        rgroup<- n.rgroup <- NULL
-        }
+      {
+        result <- prepare_output(gofs,
+                                 caption, note, include.n = NULL)
+        rgroup <- n.rgroup <- NULL
+      }
     } else if (include.param) {
-      result <- prepare_output(coefs, caption, note)
-
-      rgroup<- n.rgroup <- NULL
+      result <- prepare_output(coefs, caption, note, include.n = NULL)
+      
+      rgroup <- n.rgroup <- NULL
     }
     else{
       result <- NULL
     }
- 
-   # cat(" --> Output ", output)
-  #  print(class(result))
+
     if (!is.logical(output)) {
-      Output(result, output=output, col_names=col_names,
-             rgroup = rgroup,
-             n.rgroup = n.rgroup
-
-             )
+      Output(
+        result,
+        output = output,
+        col_names = col_names,
+        rgroup = rgroup,
+        n.rgroup = n.rgroup
+      )
     }
-
-    
-    
-    
     invisible(result)
-  }
+}
 
 
 

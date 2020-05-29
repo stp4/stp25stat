@@ -1,5 +1,7 @@
 #' @rdname APA2
+#' @description APA2.anova()  Ausgabe fuer car::Anova
 #' @export
+#' 
 APA2.anova <- function(x,
                        caption = "ANOVA",
                        note = paste("contrasts: ",
@@ -20,7 +22,6 @@ APA2.anova <- function(x,
                          note,
                          info$N,
                          info$labels)
-  
   
   if (!is.logical(output))
     Output(res, output = output, ...)
