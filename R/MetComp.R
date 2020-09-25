@@ -261,7 +261,7 @@ APA2.Kappa <- function(x, caption = "Kappa",
 
 
 #' @rdname MetComp
-#' @param ... an Formula_Data
+#' @param ... an prepare_data2
 #' @param X  Aufbereitete Daten aus prepare_data2
 #'
 #' @return list(stats, name, name.dif. met_A, met_B, groups)

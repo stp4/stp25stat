@@ -115,7 +115,8 @@ Tabelle.default <- function(...,
                               "freq","freq.ci",
                               "mean", "median", "ci","cohen.d","effsize",
                               "multiresponse",
-                              "describe", "correlation",
+                            #  "describe",
+                              "correlation",
                               "custom_fun"),
                             caption = "Charakteristik",
                             note = "",
@@ -135,24 +136,24 @@ Tabelle.default <- function(...,
 
                             max_factor_length = 35,
                             order = FALSE,
-                            measure.name = "value",
-                            describe = c("n", "mean", "sd", "min", "max")
+                            measure.name = "value"#,
+                            #describe = c("n", "mean", "sd", "min", "max")
                           ) {
   type <-  match.arg(type, several.ok = TRUE)
   type<- type[1]
 
-  if ("describe" %in% type)
-    return(
-      Describe2(
-        ...,
-        by = by,
-        caption = caption,
-        note = note,
-        stat = describe,
-        output = output,
-        digits = if (is.null(digits)) 2 else digits
-      )
-    )
+  # if ("describe" %in% type)
+  #   return(
+  #     Describe2(
+  #       ...,
+  #       by = by,
+  #       caption = caption,
+  #       note = note,
+  #       stat = describe,
+  #       output = output,
+  #       digits = if (is.null(digits)) 2 else digits
+  #     )
+  #   )
 
 
   if(!is.null(fun)) type <- "custom_fun"
@@ -168,7 +169,6 @@ Tabelle.default <- function(...,
       caption = caption,
       note = note,
     #  digits = digits,
-    #  test = test,
       na.action = na.action,
       exclude = exclude,
 
@@ -181,11 +181,7 @@ Tabelle.default <- function(...,
                                    #         "shapiro.test" "KS.test"
                                   #  Kolmogorov-Smirnov-Anpassungstest mit SPSS
       exclude.level=exclude.level,
-   #   include.p = include.p,
-   #   include.stars = include.stars,
-    #  include.mean=include.mean,
-   #   corr_test = corr_test,
-    #  cor_diagonale_up = cor_diagonale_up,
+
       max_factor_length = max_factor_length,
       order = order
     #  decreasing = decreasing,
@@ -313,121 +309,3 @@ calculate_tabelle2 <- function(X,
 }
 
  
-#' @noRd
-#' @description Describe2: workaraond fuer  psych::describe()
-#' @param stat result von psych kann "n", "mean", "sd",
-#' "median", "trimmed", "mad", "min" ,
-#' "max", "range", "skew", "kurtosis" ,"se"
- 
-Describe2 <- function(...,
-                    output = FALSE) {
-  UseMethod("Describe2")
-}
-
-Describe2.data.frame <- function(data,
-                                 ...,
-                                 by = NULL,
-                                 caption = "",
-                                 note = "",
-                                 stat = c("n", "mean", "sd", "min", "max"),
-                                 output = which_output(),
-                                 digits = 2) {
-  
-  measure <-
-    sapply(lazyeval::lazy_dots(...), function(x)
-      as.character(x[1]))
-  
-  if(length( measure)==0) measure<-names(data)
-   cat("\n Noch nicht getestet!\n")
-  
-  Describe2.formula(
-    formula(paste("~",
-                  paste(
-                    measure, collapse = "+"
-                  ))),
-    data = data,
-    by = by,
-    caption = caption,
-    note = note,
-    stat = stat,
-    output = output,
-    digits = digits
-  )
-  
- 
-}
-
-Describe2.formula <- function(x,
-                              data,
-                              by = NULL,
-                              caption = "",
-                              note = "",
-                              stat = c("n", "mean", "sd", "min", "max"),
-                              output = which_output(),
-                              digits = 2,
-                              ...) {
-  vars <- which(names(data) %in% all.vars(x))
-  stat <- c(
-    "vars",
-    "n",
-    "mean",
-    "sd" ,
-    "median",
-    "trimmed",
-    "mad",
-    "min",
-    "max",
-    "range",
-    "skew",
-    "kurtosis",
-    "se" ,
-    stat
-  )
-  stat <- unique(stat[duplicated(stat)])
-  
-  if (is.null(by)) {
-    data <- data[vars]
-    result <-  as.data.frame(psych::describe(data),
-                             stringsAsFactors = FALSE)
- 
-    
-    which_class <- sapply(data, class)
-    result <- cbind(Item = GetLabelOrName(data),
-                    class = which_class,
-                    result)
-
-    res <- result[c("Item", "class", stat)]
-    res[-1] <- Format2(res[-1], digits = digits)
-    
-    
-    
-    } else{
-    names_groups <- which(names(data) %in% all.vars(by))
-    groups <- data[names_groups]
-    if(ncol(groups)>1){
-      groups<- interaction(groups,  sep = " / ")
-    }
-    
-    data <- data[vars]
-    results_list <- psych::describeBy(data, groups)
-    result <- res <- NULL
-    
-    for (i in   names(results_list)) {
-      r1 <- as.data.frame(results_list[[i]],
-                          stringsAsFactors = FALSE)
-      
-      r1 <- cbind(Item = GetLabelOrName(data), Group = i, r1)
-      result <- rbind(result, r1)
-    }
-        res <- result[c("Item", "Group", stat)]
-    res[-c(1:3)] <- Format2(res[-c(1:3)], digits = digits)
-  }
-  
-  
- 
-    prepare_output(res,
-                   caption,
-                   note,
-                   nrow(data))
- 
-}

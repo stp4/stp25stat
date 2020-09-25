@@ -137,3 +137,29 @@ APA.formula <- function(x,
   res
 
 }
+#' @rdname APA
+#' @description APA.lm F-Test aus lm und Anova
+#' @param include.r APA.lm: R-Squar
+#' @export
+APA.lm <- function(x, include.r = TRUE) {
+  if (any(class(x) == "aov"))
+    x <- lm(x)
+  fitSummary <- summary(x)
+  fstats <- fitSummary$fstatistic
+  pValue <-  stats::pf(fstats[['value']],
+                       fstats[['numdf']],
+                       fstats[['dendf']], lower.tail = FALSE)
+  if (include.r)
+    rndr_lm(fstats[['value']] ,
+            fstats[['numdf']],
+            fstats[['dendf']],
+            pValue,
+            fitSummary$r.squared,
+            fitSummary$adj.r.squared)
+  else
+    rndr_F(fstats[['value']] ,
+           fstats[['numdf']],
+           fstats[['dendf']],
+           pValue)
+  
+}

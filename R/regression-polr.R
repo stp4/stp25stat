@@ -67,9 +67,8 @@ extract.polr <- function(x,
                         include.se = TRUE,
                         include.ci = FALSE,
                         include.odds = TRUE,
-                      #  test.my.fun=FALSE,
+                      
                         ...){
- # if(test.my.fun) cat("\n   -> extract.polr()")
 
   info <- model_info(x)
   AV <-

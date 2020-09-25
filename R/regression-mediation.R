@@ -93,7 +93,7 @@ Mediation <- function(y_x,
                       z.transform = TRUE,
                       treat = model_info(m_x)$x[1],
                       mediator = model_info(m_x)$y,
-                      type = "long2",
+                      type = "long",
                       ...) {
   if (inherits(y_x, "formula")) {
     data <- data[unique(c(

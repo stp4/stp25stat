@@ -182,8 +182,7 @@ APA2.principal <-
         caption <- paste(caption, "Factor Analysis using method = ", x$fm)
       }
     }
-    # cat("\nCall: ")
-    # print(x$Call)
+
     
     load <- x$loadings
     if (is.null(cut))
@@ -667,7 +666,6 @@ PCA.formula <- function(x,
 #' @param impute  Imputation default = "median" NA ist keine Imputation
 #' @param oblique.scores  default= TRUE
 #' @param method  default= "regression"
-#' @param sort  default= TRUE
 #' @param N ist nicht zu ändern
 #' @export
 #'
@@ -684,11 +682,11 @@ PCA.default <- function(data,
                         oblique.scores = TRUE,
                         method = "regression",
                         #  type=c("pca", "plot", "kmo"), w=5, h=5,
-                        sort = TRUE,
+                       # sort = TRUE,
                         N = nrow(data),
                         caption = "Standardized loadings (pattern matrix) based upon correlation matrix",
                         ...) {
-  if (!is_all_identical2(data)) {
+  if (!stp25aggregate:::all_identical2(data)) {
     Text("Die Skalenniveaus sind gemischt daher ist die Berechnung nicht m?glich.")
     return(NULL)
   } else if (any(sapply(data, is.factor))) {

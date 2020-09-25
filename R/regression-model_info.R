@@ -1,6 +1,8 @@
 #' model_info
 #'
 #' Extrahiert die Variablen namen die Labels und die Daten
+#' 
+#' 
 #'
 #' @name model_info
 #'
@@ -15,6 +17,16 @@
 #' model_info(t.test(mpg ~ vs, mtcars))
 #'
 model_info <- function(x) {
+  
+  
+  # Alternative ist die Library insight 
+  # mit zb der Funktion 
+  # model_info(m4<-Hmisc::spearman2(mpg ~ factor(vs), mtcars))
+  # insight::model_info(m2)
+  # insight::find_response(m4)
+  # insight::find_predictors(m4)
+  # aber es gehen noch nicht so viel Modelle
+  
   UseMethod("model_info")
 }
 
@@ -202,6 +214,27 @@ model_info_lmer <- function(x) {
   )
 
 }
+
+#' @rdname model_info
+#' @export
+model_info.lme <- function(x) {
+    fm <-  insight::model_info(x)
+  
+  xn <- fm$model_terms$conditional
+  yn <-   fm$model_terms$response
+
+  list(
+    class = class(x) ,
+    family = fm$family ,
+    y = yn,
+    x =  xn,
+    labels = GetLabelOrName(insight::get_data(x)[-1]),
+    N = fm$n_obs
+  )
+  
+}
+
+
 
 #' @rdname model_info
 #' @export

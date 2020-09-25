@@ -17,9 +17,7 @@ APA2 <- function(x,
 #' @export
 APA2.NULL <- function(x,
                       ...) {
- 
-  
-  res<- Info_Statistic(
+ Info_Statistic(
     c("catTest", "conTest", "Wilkox", "Kruskal",
       "ANOVA",
       "T Test"),
@@ -35,20 +33,37 @@ APA2.NULL <- function(x,
       "t.test"
     ), paste(methods("APA2"), collapse=", ")
   )
-  
-  Output(res)
-  invisible( res)
 }
-
-
 
 
 #' @rdname APA2
 #' @export
+APA2.formula <- function(...) {
+  Tabelle2(...)
+}
+
+#' @rdname APA2
+#' @export
 APA2.default <- function(x,
+                         caption = NULL,  note = NULL, output=which_output(),
+                         custom.model.names = NULL,
                          ...) {
-  Text("Keine Methode fuer ", class(x) ," vorganden!")
-  invisible(data.frame())
+ 
+    rslt <-  extract(x, ...)
+    
+    if (is.null(caption))
+      caption <- paste(attr(rslt, "caption"),
+                       "Obs: ", attr(rslt, "N"))
+    if (is.null(note))
+      note <- attr(rslt, "note")
+    if( !is.logical(output) )
+      Output(
+        fix_format(rslt),
+        caption = paste(custom.model.names, caption),
+        note = note,
+        output=output)
+    
+    invisible(rslt)
 }
 
 
@@ -96,176 +111,14 @@ APA2.default <- function(x,
 #' APA2(~chol0+chol1+chol6+chol12, hyper, caption="Korrelation", test=TRUE, stars=FALSE)
 #'
 #'
+#' #varana <- varana %>% Label(m1="Mesung1", m2="BMI")
+#' x<-APA2( ~m1,varana)
+#' x<-APA2( ~m1+m2,varana)
 #'
-APA2.formula <- function(x,
-                         data = NULL,
-                         caption = "",
-                         fun = NULL,
-                         type = c(
-                           "auto",
-                           "freq",
-                           "mean",
-                           "median",
-                           "ci",
-                           "multiresponse",
-                           "cohen.d",
-                           "effsize",
-                           "freq.ci",
-                           "describe"
-                         ),
-                         note = "",
-                         na.action = na.pass,
-                         test = FALSE,
-                         corr_test = "pearson",
-                         cor_diagonale_up = TRUE,
-                         direction = "long",
-                         order = FALSE,decreasing = TRUE,
-
-                         use.level = 1,
-                         include.n = TRUE,
-                         include.all.n = NULL,
-                         include.header.n = TRUE,
-                         include.total = FALSE,
-                         include.test = test,
-                         include.p = FALSE,
-                         include.stars = TRUE,
-                         include.names = FALSE,
-                         include.labels = TRUE,
-                         digits = NULL,
-                         digits.mean = if (!is.null(digits)) c(digits, digits)  else  NULL,
-                         digits.percent = if (is.null(digits))  options()$stp25$apa.style$prozent$digits else c(digits, 0),
-                         output = which_output(),
-                         ...) {
-
-  if (include.names & include.labels) {
-    nms <- names(data)
-    lbl <- GetLabelOrName(data)
-    lbl <- paste(nms, lbl)
-    names(lbl) <- nms
-    data <- label_data_frame(data, lbl)
-  } else if (!include.labels) {
-    nms <- names(data)
-    names(nms) <- nms
-    data <- label_data_frame(data, nms)
-  }
-
-
-
-  type <-  match.arg(type, several.ok = TRUE)
-  if (!is.null(fun))
-    type <-  "recast"
-  if (length(type) > 2)
-    type <- type[1] # Fehler abfangen
-  #cat("\n APA2(..., type =", type, ")\n")
-  result <- switch(
-    type[1],
-    recast = Recast2_fun(
-      x,
-      data,
-      caption,
-      fun,
-      note = note,
-      include.n = include.n,
-      direction = direction,
-      ...
-    ),
-    multiresponse =  APA_multiresponse(
-      x,
-      data,
-      caption = caption,
-      note = note,
-      test = test,
-      order = order,
-      decreasing = decreasing,
-      na.action = na.action,
-      use.level = use.level,
-      output=FALSE
-    )$tab,
-    cohen.d = cohen_d_formula(x, data, ...),
-    # effsize = Effsize( x, data, ..., type="cohen.d"),
-    describe = Describe2(x, data, stat = c("n", "mean", "sd", "min", "max")),
-    errate_statistik2(
-      x,
-      data = as.data.frame(data),
-      caption = caption,
-      note = note,
-      na.action = na.action,
-      type = if (length(type) > 1 | type[1] != "auto") type else NULL,
-      include.n = include.n,
-      include.all.n = include.all.n,
-      include.header.n = include.header.n,
-      include.total = include.total,
-      include.test = include.test,
-      include.p = include.p,
-      include.stars = include.stars,
-      order = order,
-      decreasing = decreasing,
-      corr_test = corr_test,
-      cor_diagonale_up = cor_diagonale_up,
-
-      digits.mean = digits.mean,
-      digits.percent = digits.percent,
-      ...
-    )
-  )
- 
-
-    if (is.data.frame(result))
-      Output(result, output=output)
-    else if (is.list(result))
-      for (rst in result)
-        Output(rst, output=output)
-    else
-      Text(Tab(), class(result), " ", result)
-
-  invisible(result)
-}
-
-
-
-
-
-#- Interne Recast-Function
-#' @rdname APA2
-#' @param direction long or wide
-Recast2_fun <- function(x,
-                        data,
-                        caption = "",
-                        fun,
-                        direction = "long",
-                        note = "",
-                        include.n = FALSE,
-                        ...) {
-  ANS <-  Recast2(x,
-                  data,
-                  fun,
-                  drop = FALSE)
-  if (include.n) {
-    ans_n <-
-      Recast2(
-        x,
-        data,
-        fun = function(x)
-          length(na.omit(x)),
-        drop = FALSE
-      )
-    ANS <- data.frame(ANS[-ncol(ANS)],
-                 n = ans_n$value,
-                 value = ANS[, ncol(ANS)])
-  }
-  ANS <- prepare_output(ANS,
-                        caption, note, nrow(data))
-
-  if (direction != "long")
-    prepare_output(reshape2::dcast(ANS,
-                                   as.formula(paste(
-                                     "variable", paste(x[-2], collapse = "")
-                                   )))
-                   , caption, note, nrow(data))
-  else
-    ANS
-
-}
-
- 
+#' x<-APA2( m1~geschl,varana)
+#' x<-APA2( m1+m2~alter,varana)
+#' x<-APA2( m1+m2+geschl~alter,varana, include.test = TRUE)
+#' x<-APA2( ~m1+m2+m3+m4,varana, test=TRUE)
+#' 
+APA2.formula<- function(..., APA=TRUE) Tabelle2(..., APA=APA)
 

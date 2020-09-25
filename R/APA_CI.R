@@ -51,7 +51,7 @@ APA_CI <- function(x,
     } else{
       res <- ci_binom(x, digits = digits, conf.level, sides, "wilson")
     }
-  } else if (is.data.frame(x) | is_formula2(x)) {
+  } else if (is.data.frame(x) | inherits(x, "formula")) {
       X <- stp25formula::prepare_data2(x, ...)
       if (!is.null(X$group.vars)) stop("Gruppen sind noch nicht Implementiert!")
       

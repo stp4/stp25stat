@@ -133,6 +133,12 @@ return(res)
 }
 
 #' @rdname Klassifikation
+#' @export
+Klassifikation.table <- function(...) {
+  Klassifikation.xtabs(...)
+}
+
+#' @rdname Klassifikation
 #' @description xtabs-Objekt
 #' @export
 #' @examples
@@ -240,7 +246,9 @@ Klassifikation.xtabs<- function(x,
 #' 
 #' 
 APA2.epi.tests <-
-  function (x, ...)
+  function (x, 
+            caption=paste("Point estimates and", x$conf.level * 100, "%","CIs:"),
+            ...)
   {
     #    Output(cbind(Test= row.names( x$tab),  x$tab), ...)
     
@@ -274,7 +282,7 @@ APA2.epi.tests <-
     })
     
     Output(stat, 
-           caption=paste("Point estimates and", x$conf.level * 100, "%","CIs:"),
+           caption=caption,
            ...)
     
     invisible(stat)

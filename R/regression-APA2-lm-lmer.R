@@ -149,14 +149,10 @@ APA2.lmerMod <- function(x,
                          include.test = FALSE,
                          ci.level = .95,
                          conf.method = "Wald",
-                         test.my.fun = FALSE,conf.style.1 =TRUE,
+                        conf.style.1 =TRUE,
                          digits = 2,
                          ...) {
-  if (test.my.fun){
-    cat("\n    -> APA2.lmerMod() \n Input: ")
-    print(class(x))
-    cat("\n")
-    }
+ 
   info <- model_info(x)
   AV <-
     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
@@ -166,8 +162,7 @@ APA2.lmerMod <- function(x,
     if (include.test)
       note <- paste(note, APA(x, FALSE))
     if (include.r) {
-      if (test.my.fun)
-        cat("\n       include.r: R( )")
+ 
       r2 <- R2(x)
       note <-  paste(note, "\npseudo r-squared:", rndr_r2pseudo(r2))
     }

@@ -72,9 +72,102 @@
 #' APA2(Res1, ReferenceZero="-")
 #' APA2(Res2, ReferenceZero=3, na.exclude=TRUE, type="freq")
 #'
-Likert <- function(...) {
-  UseMethod("Likert")
+#'
+#'
+#'
+Likert <- function(...,
+                    labels = NULL,
+                    reverse.labels = FALSE) {
+  
+  if (!reverse.labels) {
+    if (is.null(labels)) {
+      results <- Summarise(
+        ...,
+        fun = function(x)
+          table(x, useNA = "always"),
+        key = "Item"
+      )
+    }
+    else {
+      results <- Summarise(
+        ...,
+        fun = function(x) {
+          levels(x) <- labels
+          table(x, useNA = "always")
+        },
+        key = "Item"
+      )
+    }
+    
+    item_mean <- Summarise(
+      ...,
+      fun = function(x)
+        mean(as.numeric(x), na.rm = TRUE),
+      key = "Item"
+    )$value
+    item_sd <- Summarise(
+      ...,
+      fun = function(x)
+        sd(as.numeric(x), na.rm = TRUE),
+      key = "Item"
+    )$value
+    
+  } else  {
+    results <-
+      Summarise(
+        ...,
+        fun = function(x) {
+          x <- factor(x, rev(levels(x)))
+          table(x, useNA = "always")
+        },
+        key = "Item"
+      )
+    item_mean <-
+      Summarise(
+        ...,
+        fun = function(x) {
+          mean(1 + nlevels(x) - as.numeric(x), na.rm = TRUE)
+        },
+        key = "Item"
+      )$value
+    item_sd <- Summarise(
+      ...,
+      fun = function(x) {
+        sd(1 + nlevels(x) - as.numeric(x), na.rm = TRUE)
+      },
+      key = "Item"
+    )$value
+  }
+  
+ 
+  nms <-  sapply(results, is.integer)
+  ncl <- ncol(results)
+  names(results)[ncl] <- "NA"
+ 
+  
+  
+  
+  rslt <- list(
+    results = results[-ncl],
+    names =  results[-c(which(nms), ncl)],
+    freq =    results[which(nms[-ncl])],
+    freq.na = results[which(nms)],
+    N =   sum(results[which(nms)]) / nlevels(results$Item),
+    n =   as.vector(rowSums(results[which(nms[-ncl])])),
+    m =   item_mean,
+    sd = item_sd,
+    Mittelwert =  stp25rndr::rndr_mean(item_mean, item_sd),
+    items =  data.frame(),
+    grouping = NULL,
+    nlevels = sum(nms) - 1,
+    levels =  names(nms[-ncl])[nms[-ncl]]  
+  )
+  class(rslt) <- c('likert', class(rslt))
+  rslt
 }
+# Likert <- function(...) {
+#   UseMethod("Likert")
+# }
 
 
 
@@ -153,14 +246,8 @@ APA2.likert <- function(x,
 
   results2Prozent <- x$freq / x$n * 100
 
-  #cat("\n")
-
-  #print(results2Prozent)
-
   if (type == "percent" |  type == 2)
-    x$freq <- rndr_percent2(results2Prozent, x$freq)
-
- # print( x$freq)
+    x$freq <- rndr_percent2(results2Prozent, x$freq)[-1]
 
   if (include.mean)
     ans <- cbind(x$names,
@@ -183,12 +270,9 @@ APA2.likert <- function(x,
       ans,
       caption = paste0(caption, " (N = ", x$N, ")")  ,
       note = note ,
-      N = x$N
-    )
-
-
-    Output(ans, output=output, ...)
-
+      N = x$N)
+  
+  Output(ans, output=output, ...)
   invisible(ans)
 }
 
@@ -204,7 +288,14 @@ APA_Likert <- function(...){
 }
 
 
-
+#' @rdname Likert
+#' @export
+print.likert<-function(x, ...){
+  cat("\nnames: ", paste(names(x), collapse=", "),"\n")
+  cat("\nresults:  \n ")
+  print( head(x$results))
+  cat("\nlevels: ", paste(x$levels, collapse=", "),"\n")
+}
 
 
 #' @rdname Likert
@@ -241,175 +332,225 @@ brewer_pal_likert <- function(n = 5,
 }
 
 
-#' @rdname Likert
-#' @param data Data.frame
-#' @param groups (optional) 
-#' @param ...  Variablennamen
-#' @export
-Likert.default <- function(data, ..., 
-                           groups = NULL, 
-                           labels=NULL,
-                           reverse.labels=FALSE
-                           ) {
-  X<-prepare_data2(data, ..., 
-                groups=groups)
- 
 
-  Likert.formula(X$formula,
-                 X$data,
-                 labels=labels,
-                 reverse.labels=reverse.labels)
-}
-
-
-#' @rdname Likert
-#' @param x Objekt Formula
-#' @param labels wenn die Labels anderst sein sollen
-#' @param reverse.labels Codierung umderehen
-#' @export
-Likert.formula<- function(x,
-                   data,
-                   labels=NULL,
-                   reverse.labels=FALSE
-                  ){
-  # umständlich sollte bald geändert werden auf prepare_data2
-  X<-Formula_Data(x, data)
-  grouping_vars<- X$xname
-  # Erstes Item muss stimmen
-  items <- clean_Likert_item(X$Y_data, labels, reverse.labels)
-  first_levels <- levels(items[,1])
-  nlevels<-length(first_levels)
-
-  N_all<- nrow(items)
-  result <- NULL
-  if(is.null(grouping_vars)){
-      xans<-  Melt2(cbind(my_id_nr=1:nrow(items),items), id.vars=1) #    Melt2(items)
-    xans$value <- factor(xans$value, levels=first_levels) # levels 
-    names(xans)[which(names(xans)=="variable")] <- "Item"
-
-    xans_num <- xans
-    xans_num$value <- as.numeric(xans_num$value)
-    fm1 <- Item ~ value
-    fm2 <- Item ~ .
-    result <- list(
-                     freq = reshape2::dcast(xans, fm1, 
-                                            length, drop=FALSE),
-                     n    = reshape2::dcast(xans_num, fm2, 
-                                            function(x) length(na.omit(x)), drop = FALSE ),
-                     m    = reshape2::dcast(xans_num, fm2, 
-                                            function(x) mean(x, na.rm=TRUE), drop = FALSE),
-                     sd   = reshape2::dcast(xans_num, fm2, 
-                                            function(x) sd(x, na.rm=TRUE), drop = FALSE),
-                     statistic = reshape2::dcast(xans_num, fm2, 
-                                                 function(x) rndr_mean(
-                                                   mean(x, na.rm=TRUE), 
-                                                   sd(x, na.rm=TRUE)), drop = FALSE)
-                )
-  }else{
-    xans <-  Melt2(cbind( X$X_data, items), id.vars=1:ncol(X$X_data))
-
-    xans$value <- factor(xans$value, levels=first_levels)
-    names(xans)[which(names(xans)=="variable") ] <- "Item"
-    xans_num <- xans
-
-    xans_num$value <- as.numeric(xans_num$value)
-    fm1<-paste(paste(grouping_vars, collapse="+"), "+ Item ~ value")
-    fm2<-paste(paste(grouping_vars, collapse="+"), "+ Item ~ .")
-    result <-list(
-                   freq = reshape2::dcast(xans, fm1, length, drop=FALSE),
-                   n    = reshape2::dcast(xans_num, fm2, 
-                                          function(x) length(na.omit(x)), drop = FALSE),
-                   m    = reshape2::dcast(xans_num, fm2, 
-                                          function(x) mean(x, na.rm=TRUE ), drop = FALSE),
-                   sd   = reshape2::dcast(xans_num, fm2, 
-                                          function(x) sd(x, na.rm=TRUE ), drop = FALSE),
-                   statistic = reshape2::dcast(xans_num, fm2, 
-                                               function(x) 
-                                                 rndr_mean( mean(x, na.rm=TRUE), 
-                                                            sd(x, na.rm=TRUE)), drop = FALSE)
-               )
-       }
-  results.with.na <- result$freq # sicherung mit NA
-
-  results.no.na  <- if( names(result$freq)[ncol(result$freq)] == "NA" )
-                         result$freq[,- ncol( result$freq )]
-                    else result$freq
-
-  Names<-  1:(ncol(results.no.na)- nlevels)
-
-  result <- list(results = results.no.na
-                ,names = if(length(Names)==1) results.no.na[Names] else results.no.na[, Names]
-                ,freq =  results.no.na[, -Names]
-                ,freq.na = results.with.na[, -Names]
-                ,N =   N_all ## summe aus n ist unlogisch sum(result$n[,ncol(result$n)])
-                ,n =   result$n[,ncol(result$n)]
-                ,m =   result$m[,ncol(result$m)]
-                ,sd =  result$sd[,ncol(result$sd)]
-                ,Mittelwert = result$statistic[,ncol(result$statistic)]
-                ,items = items
-                ,grouping = if(is.null(grouping_vars)) NULL else data[,grouping_vars]
-                ,nlevels = nlevels
-                ,levels=first_levels
-                )
-
-  class(result) <- c('likert', class(result))
-  
-  result
-}
-
-
-#' @rdname Likert
-#' @export
-print.likert<-function(x, ...){
-  cat("\nnames: ", paste(names(x), collapse=", "),"\n")
-    cat("\nresults:  \n ")
-    print( head(x$results))
-    cat("\nlevels: ", paste(x$levels, collapse=", "),"\n")
-}
-
-
-
-
-#-- Fuer Likert  as_identical_factor
-clean_Likert_item <- function(items,
-                              labels = NULL,
-                              reverse.labels=FALSE) {
-  #Test der Voraussetzung
-  if (all(sapply(items, is.factor))
-      & (diff(range(sapply(items, nlevels))) == 0))
-  {
-    if (!is.null(labels))
-      items<-dapply2(items,
-                     function(x) {
-                       x <- as.numeric(x)
-                       factor(x, 1:length(labels), labels)
-                     })
-    
-  } else if (all(sapply(items, is.numeric))) {
-    if (is.null(labels)) {
-      labels <-
-        unique(unlist(lapply(items, function(x)
-          levels(factor(
-            x
-          )))))
-
-      items <-dapply2(items, function(x) {factor(x, labels)})
-    } else
-      items<- dapply2(items, function(x) {factor(x, 1:length(labels), labels)})
-  } else{
-    message("Error gemischtes Skalenniveau!!")
-    print(sapply(items, nlevels))
-    print(head(items))
-
-    items <- dapply2(items, as.numeric)
-    labels <-
-      unique(unlist(lapply(items, function(x)
-        levels(factor(x )))))
-
-    items <- dapply2(items, function(x) {factor(x, labels)})
-  }
-  
-  if(!reverse.labels) items
-  else dapply2(items, function(x) factor(x, rev(levels(x))))
-  
-}
+### @rdname Likert
+### @param data Data.frame
+### @param groups (optional)
+### @param ...  Variablennamen
+### @export
+### Likert.default <- function(data, ..., 
+###                            groups = NULL, 
+###                            labels=NULL,
+###                            reverse.labels=FALSE
+###                            ) {
+###   X<-prepare_data2(data, ..., 
+###                 groups=groups)
+###  
+### 
+###   Likert.formula(X$formula,
+###                  X$data,
+###                  labels=labels,
+###                  reverse.labels=reverse.labels)
+### }
+### 
+### 
+### likert2 <- function(...,
+###                     labels = NULL,
+###                     reverse.labels = FALSE) {
+###   
+###   if (!reverse.labels) {
+###     results <- Summarise(...,
+###                          fun = function(x)
+###                            table(x, useNA = "always"),
+###                          key = "Item"
+###     )
+###     item_mean <- Summarise(...,
+###                            fun = function(x)
+###                              mean(as.numeric(x), na.rm = TRUE),
+###                            key = "Item")$value
+###     item_sd <- Summarise(...,
+###                          fun = function(x)
+###                            sd(as.numeric(x), na.rm = TRUE),
+###                          key = "Item")$value
+###     
+###   } else  {
+###     results <- 
+###       Summarise(...,
+###                 fun = function(x) {
+###                   x<- factor(x, rev(levels(x)))
+###                   table(x, useNA = "always")
+###                 }, key = "Item")
+###     item_mean <-
+###       Summarise(...,
+###                 fun = function(x) {
+###                   mean(1+ nlevels(x) - as.numeric(x), na.rm = TRUE)
+###                 },  key = "Item")$value
+###     item_sd <- Summarise(...,
+###                          fun = function(x) {
+###                            sd(1+ nlevels(x) - as.numeric(x), na.rm = TRUE)
+###                          }, key = "Item")$value
+###   }
+###   
+###   
+###   
+###   nms <-  sapply(results, is.integer)
+###   ncl <- ncol(results)
+###   names(results)[ncl] <- "NA"
+###   
+###   rslt <- list(
+###     results = results[-ncl],
+###     names =  results[-c(which(nms), ncl)],
+###     freq =    results[which(nms[-ncl])],
+###     freq.na = results[which(nms)],
+###     N =   sum(results[which(nms)]) / nlevels(results$Item),
+###     n =   as.vector(rowSums(results[which(nms[-ncl])])),
+###     m =   item_mean,
+###     sd = item_sd,
+###     Mittelwert =  stp25rndr::rndr_mean(item_mean, item_sd),
+###     items =  data.frame(),
+###     grouping = NULL,
+###     nlevels = sum(nms) - 1,
+###     levels = names(nms[-ncl])[nms[-ncl]]
+###   )
+###   class(rslt) <- c('likert', class(rslt))
+###   rslt
+### }
+### Likert.formula<- function(x,
+###                    data,
+###                    labels=NULL,
+###                    reverse.labels=FALSE
+###                   ){
+###   # umständlich sollte bald geändert werden auf prepare_data2
+###   X<-Formula_Data(x, data)
+###   grouping_vars<- X$xname
+###   # Erstes Item muss stimmen
+###   items <- clean_Likert_item(X$Y_data, labels, reverse.labels)
+###   first_levels <- levels(items[,1])
+###   nlevels<-length(first_levels)
+### 
+###   N_all<- nrow(items)
+###   result <- NULL
+###   if(is.null(grouping_vars)){
+###       xans<-  Melt2(cbind(my_id_nr=1:nrow(items),items), id.vars=1) #    Melt2(items)
+###     xans$value <- factor(xans$value, levels=first_levels) # levels 
+###     names(xans)[which(names(xans)=="variable")] <- "Item"
+### 
+###     xans_num <- xans
+###     xans_num$value <- as.numeric(xans_num$value)
+###     fm1 <- Item ~ value
+###     fm2 <- Item ~ .
+###     result <- list(
+###                      freq = reshape2::dcast(xans, fm1, 
+###                                             length, drop=FALSE),
+###                      n    = reshape2::dcast(xans_num, fm2, 
+###                                             function(x) length(na.omit(x)), drop = FALSE ),
+###                      m    = reshape2::dcast(xans_num, fm2, 
+###                                             function(x) mean(x, na.rm=TRUE), drop = FALSE),
+###                      sd   = reshape2::dcast(xans_num, fm2, 
+###                                             function(x) sd(x, na.rm=TRUE), drop = FALSE),
+###                      statistic = reshape2::dcast(xans_num, fm2, 
+###                                                  function(x) rndr_mean(
+###                                                    mean(x, na.rm=TRUE), 
+###                                                    sd(x, na.rm=TRUE)), drop = FALSE)
+###                 )
+###   }else{
+###     xans <-  Melt2(cbind( X$X_data, items), id.vars=1:ncol(X$X_data))
+### 
+###     xans$value <- factor(xans$value, levels=first_levels)
+###     names(xans)[which(names(xans)=="variable") ] <- "Item"
+###     xans_num <- xans
+### 
+###     xans_num$value <- as.numeric(xans_num$value)
+###     fm1<-paste(paste(grouping_vars, collapse="+"), "+ Item ~ value")
+###     fm2<-paste(paste(grouping_vars, collapse="+"), "+ Item ~ .")
+###     result <-list(
+###                    freq = reshape2::dcast(xans, fm1, length, drop=FALSE),
+###                    n    = reshape2::dcast(xans_num, fm2, 
+###                                           function(x) length(na.omit(x)), drop = FALSE),
+###                    m    = reshape2::dcast(xans_num, fm2, 
+###                                           function(x) mean(x, na.rm=TRUE ), drop = FALSE),
+###                    sd   = reshape2::dcast(xans_num, fm2, 
+###                                           function(x) sd(x, na.rm=TRUE ), drop = FALSE),
+###                    statistic = reshape2::dcast(xans_num, fm2, 
+###                                                function(x) 
+###                                                  rndr_mean( mean(x, na.rm=TRUE), 
+###                                                             sd(x, na.rm=TRUE)), drop = FALSE)
+###                )
+###        }
+###   results.with.na <- result$freq # sicherung mit NA
+### 
+###   results.no.na  <- if( names(result$freq)[ncol(result$freq)] == "NA" )
+###                          result$freq[,- ncol( result$freq )]
+###                     else result$freq
+### 
+###   Names<-  1:(ncol(results.no.na)- nlevels)
+### 
+###   result <- list(results = results.no.na
+###                 ,names = if(length(Names)==1) results.no.na[Names] else results.no.na[, Names]
+###                 ,freq =  results.no.na[, -Names]
+###                 ,freq.na = results.with.na[, -Names]
+###                 ,N =   N_all ## summe aus n ist unlogisch sum(result$n[,ncol(result$n)])
+###                 ,n =   result$n[,ncol(result$n)]
+###                 ,m =   result$m[,ncol(result$m)]
+###                 ,sd =  result$sd[,ncol(result$sd)]
+###                 ,Mittelwert = result$statistic[,ncol(result$statistic)]
+###                 ,items = items
+###                 ,grouping = if(is.null(grouping_vars)) NULL else data[,grouping_vars]
+###                 ,nlevels = nlevels
+###                 ,levels=first_levels
+###                 )
+### 
+###   class(result) <- c('likert', class(result))
+###   
+###   result
+### }
+### 
+### 
+### 
+### 
+### 
+### 
+### 
+###  
+### clean_Likert_item <- function(items,
+###                               labels = NULL,
+###                               reverse.labels=FALSE) {
+###   #Test der Voraussetzung
+###   if (all(sapply(items, is.factor))
+###       & (diff(range(sapply(items, nlevels))) == 0))
+###   {
+###     if (!is.null(labels))
+###       items<-dapply2(items,
+###                      function(x) {
+###                        x <- as.numeric(x)
+###                        factor(x, 1:length(labels), labels)
+###                      })
+###     
+###   } else if (all(sapply(items, is.numeric))) {
+###     if (is.null(labels)) {
+###       labels <-
+###         unique(unlist(lapply(items, function(x)
+###           levels(factor(
+###             x
+###           )))))
+### 
+###       items <-dapply2(items, function(x) {factor(x, labels)})
+###     } else
+###       items<- dapply2(items, function(x) {factor(x, 1:length(labels), labels)})
+###   } else{
+###     message("Error gemischtes Skalenniveau!!")
+###     print(sapply(items, nlevels))
+###     print(head(items))
+### 
+###     items <- dapply2(items, as.numeric)
+###     labels <-
+###       unique(unlist(lapply(items, function(x)
+###         levels(factor(x )))))
+### 
+###     items <- dapply2(items, function(x) {factor(x, labels)})
+###   }
+###   
+###   if(!reverse.labels) items
+###   else dapply2(items, function(x) factor(x, rev(levels(x))))
+###   
+### }

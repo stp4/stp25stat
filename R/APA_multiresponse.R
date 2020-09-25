@@ -1,110 +1,116 @@
+
+
 #' @rdname APA_
-#' @description  Wird in APA2 verwendet Tabelle Arbeitet mit Multi2default()
+#' @description Wird in APA2 verwendet Tabelle Arbeitet mit Multi2default()
 #' und hat anderen Rueckgabewert als Tabelle (Mittelverte vs String)
 #' @export
-APA_multiresponse<- function(Formula,
+#' @examples 
+#' 
+#' #' APA_multiresponse
+#' 
+#' DF <- data.frame(
+#'   Sex = gl(2, 10, labels = c("male", "femal")),
+#'   Magazines = c(0, 0, 0, 0, 0, 1, 0, 1, 1, 1,
+#'                 1, 0, 0, 1, 1, 1, 0, 0, 1, 0),
+#'   Comic.books = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+#'                   0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+#'   Fiction = c(1, 1, 1, 0, 1, 1, 1, 0, 1, 1,
+#'               1, 0, 0, 1, 1, 1, 0, 0, 1, 0),
+#'   Newspapers = c(0, 0, 0, 0, 0, 1, 1, 1, 1, 1,
+#'                  1, 0, 0, 1, 1, 1, 0, 0, 0, 1)
+#' )
+#' 
+#' 
+#' 
+#' APA_multiresponse( ~ Magazines + Comic.books + Fiction + Newspapers,
+#'                    DF,
+#'                    fun = Prozent)
+#' APA_multiresponse(
+#'   Magazines + Comic.books + Fiction + Newspapers ~ Sex,
+#'   DF,
+#'   fun = Prozent,
+#'   include.test = TRUE,
+#'   order = TRUE, include.total=TRUE
+#' )
+#' 
+#'  # das funktioniert mit X$measure = "multi"
+#'  DF %>% Tabelle(Magazines, Comic.books, Fiction, Newspapers, type="multiresponse" )
+#'  DF %>% Tabelle(Magazines, Comic.books, Fiction, Newspapers, by=~Sex, type="multiresponse" )
+#' 
+APA_multiresponse <- function(x,
                               data,
-                              caption="",note="",
-                              test=FALSE,
-
-                              order=FALSE, decreasing = TRUE,
-                              sig_test="fischer.test",
-                              na.action=na.pass,
-                              use.level=1,
-                              output=which_output(),
-                              ...  ){
-  myTest <- function () {
-    ix <- X$xname[1]
-    if(nlevels(X$X_data[, ix]) > 2) sig_test <- "chisq.test"
-    res <- NULL
-    for (y in X$yname) {
-      xtabx <- xtabs(formula(paste("~", y, "+", ix)),
-                     cbind(X$X_data,X$Y_data))
-      if(sig_test == "fischer.test"){
-        xtabx <- stats::fisher.test(xtabx)
-        res <- rbind(res,
-                     c(y, fischer.test = rndr_fischer(xtabx$estimate,
-                                                   xtabx$p.value)))
-      }else{
-        xtabx <- stats::chisq.test(xtabx)
-        res <- rbind(res,
-                     c(y, chisq.test = rndr_X(xtabx$statistic,
-                                           xtabx$parameter,NULL,
-                                           xtabx$p.value)))
-   }}
-  data.frame(res)
-  }
-
-  #-- Funktion --------
-  if(is.character(test) & test != "fischer.test") {
-    sig_test<-"chisq.test"
-    test <- TRUE
-  }
-
-  X <- Formula_Data(Formula, data, na.action=na.action)
-  if( is_all_dichotom(X$Y_data)){
-     if(is.factor(X$Y_data[,1])){
-       firstLevel<- levels(X$Y_data[,1])[use.level]
-       note <- paste0(note, "\nBenutze den ", use.level, " Level, (", firstLevel, ") als Zaehler. \n")
-       X$Y_data<- dapply2(X$Y_data, function(x) ifelse(x==firstLevel, 1 ,0))
-     }
-
-     }
-  else {
-    return(paste("Falsches Datenformat: ",
-                 paste(sapply(X$Y_data, class), collapse=", ")))
-    }
-
-  #- Formel(~a+s+d) -----
-  if(is.null(X$xname)){
-       ANS<- Recast2(Formula,
-                   data,
-                   fun=Prozent,
-                   X = X)
-       means<- Recast2(Formula,
-                     data,
-                     fun=mean2,
-                     X = X)
-       
-  }else{
-    #- Formel( a+s+d~gruppe) -----
-    if(length(X$xname)!=1){
-      Text("Achtung: Mehere y-Variablen werden nicht unterstuetzt")
-      X$xname<- X$xname[1]
-      }
-    formula<-paste0("variable~", X$xname)
-    ANS <-  Recast2(Formula, data, fun = Prozent,
-                            X = X, 
-                    #einfach an Recast2 weil sonst die fun mehrmals ausgefuert wird
-                            id.var = X$xname,
-                            formula = formula  ,
-                            labels = TRUE, drop = FALSE, margins = X$xname)
-    
-    means <- Recast2(Formula, data, fun = mean2,
-                     X = X, 
-                     #einfach an Recast2 weil sonst die fun mehrmals ausgefuert wird
-                     id.var = X$xname,
-                     formula = formula  ,
-                     labels = TRUE, drop = FALSE, margins = X$xname)
-
-    ncols <- ncol(ANS)
-    ANS <- ANS[, c(1, ncols, 2:(ncols-1))]
-    names(ANS)[-1] <- paste(names(ANS)[-1],
-                            c(paste0("(n=", nrow(X$X_data[1]), ")"),
-                              paste0("(n=", table(X$X_data[1], useNA = "ifany"), ")" )))
-
-    if(test) ANS <- cbind(ANS, myTest()[2])
-
-  }
-
-  if(order) {
-    my0rder<- Recast2(~., X$Y_data, fun=mean2)
-    my0rder<- order(my0rder$value, decreasing =decreasing)
-    ANS<- ANS[my0rder,]
-  }
-
-  ANS <- prepare_output(ANS, caption, note, nrow(X$Y_data))
-  Output(ANS, output=output)
+                              caption = "",
+                              note = "",
+                              output = which_output(),
+                              test = FALSE,
+                              na.action = na.pass,
+                              include.test = test,
+                              include.n = FALSE,
+                              include.nr = FALSE,
+                              include.total = FALSE,
+                              order = FALSE,
+                              decreasing = TRUE) {
+  rhs <- all.vars(x[-2])
+  lhs <- all.vars(x[-3])
   
-  invisible(list(tab=ANS, mean=means))
+  if (length(x) == 2) {
+    formula <- NULL
+    test <- FALSE
+    include.total <- FALSE
+  }
+  else {
+    formula <- formula(paste("variable~", rhs[1]))
+    if (is.logical(include.test)) {
+      if (include.test) {
+        include.test <- "chisq.test"
+        test <- TRUE
+      }
+    } else
+      test <- TRUE
+  }
+  
+  rslt <- Summarise(
+                    x,
+                    data = data,
+                    fun = Prozent_multi,
+                    na.action = na.action,
+                    formula = formula,
+                    margins = include.total)
+  
+  means <- Summarise(x,
+                     data = data,
+                     fun = mean2,
+                     na.action = na.action)
+  
+  if (test) {
+    ans <- NULL
+    for (i in lhs) {
+      fm <- formula (paste("~", i, "+", rhs))
+      ans <- c(ans,  catTest(fm, data))
+      }
+    rslt$statistics <- ans
+    }
+  
+  if (order) {
+    rslt <-
+      rslt[order(sapply(data[lhs], mean2), decreasing = decreasing),]
+  }
+  
+  rslt <- prepare_output(rslt, caption, note)
+  Output(rslt, output = output)
+  
+  invisible(list(tab = rslt, mean = means))
 }
+
+
+#' r1<-APA_multiresponse( ~ Magazines + Comic.books + Fiction + Newspapers,
+#'                    DF,
+#'                    fun = Prozent, output=FALSE)
+#' r2APA_multiresponse(
+#'   Magazines + Comic.books + Fiction + Newspapers ~ Sex,
+#'   DF,
+#'   fun = Prozent,
+#'   include.test = TRUE,
+#'   order = TRUE, include.total=TRUE,   output=FALSE
+#' )
+
