@@ -189,7 +189,7 @@ mean_sd$sex %>% Output( "Mittelwerte")
 
 APA2(effects::Effect("sex", fit))
 
-APA2(visreg::visreg(fit, "sex", plot=FALSE))
+APA2(visreg::visreg(fit, "sex", plot=FALSE), digits=1)
 
 ```
 

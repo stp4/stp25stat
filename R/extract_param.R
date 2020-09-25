@@ -1,6 +1,4 @@
-#' extract_param
-#'
-#' Summary fuer Regressionsmodelle. Kopie von broom::tidy
+#' @rdname extract
 #'
 #' @param x Objekt
 #' @param include.b,include.beta,include.ci,include.se,include.odds,include.odds.ci,include.statistic,include.p,include.stars,include.df,include.effects,conf.level,conf.method Parameter wie in APA_Tabelle beschrieben.
@@ -55,7 +53,7 @@ extract_param  <- function(x,
                                               include.eta ,
                                               include.sumsq ,
                                               include.meansq ,
-                                              fix_format ,
+                                              fix_format,
                                               digits.test,
                                               format="f"))
   param <-  "term"
@@ -84,8 +82,7 @@ extract_param  <- function(x,
       res$p.value <-NA
       res$p.value[which(res$group=="fixed")]<-
         as.vector(lmerTest:::summary.lmerModLmerTest(x)$coefficients[,5])
-    }
-    else{
+    } else{
       res <- broom::tidy(
       x,
       effects =  "fixed",
@@ -95,12 +92,12 @@ extract_param  <- function(x,
       res$group <- "fixed"
       res$df <- NA
     }
+    
     if (inherits(x, "lme")) {
       my_se <- sqrt(diag(vcov(x)))
       my_coef <- lme4::fixef(x)
-
-      res$conf.low =  my_coef  - 1.96 * my_se
-      res$conf.high =  my_coef + 1.96 * my_se
+      res$conf.low = my_coef - 1.96 * my_se
+      res$conf.high = my_coef + 1.96 * my_se
       warning("Eigene Methode: Assuming a normal approximation for the fixed effects (1.96*standard error).")
       }
     coefs <- res
@@ -159,54 +156,55 @@ extract_param  <- function(x,
       if (fix_format)
         coefs$beta <-
         stp25rndr::Format2(coefs$beta,
-                                    digits.beta,
-                                    format = "f")
-
-    }
-
+                           digits.beta,
+                           format = "f")
+      
+  }
+  
   if (include.se) {
     param <- c(param, "std.error")
     if (fix_format)
       coefs$std.error <-
         stp25rndr::Format2(res$std.error,
-                                    digits.param, format = format)
-
+                           digits.param, format = format)
+    
   }
-
+  
   if (include.statistic) {
     if (inherits(x, "glm") & conf.method == "Wald")
       coefs$statistic <- (res$estimate / res$std.error) ^ 2
-
-      param <- c(param, "statistic")
-      if (fix_format)
-        coefs$statistic <- stp25rndr::Format2(res$statistic,
-                                                     digits.test, format = "f")
-    }
-
+    
+    param <- c(param, "statistic")
+    if (fix_format)
+      coefs$statistic <- stp25rndr::Format2(res$statistic,
+                                            digits.test, format = "f")
+  }
+  
   if (include.odds & inherits(x, "glm")) {
     param <- c(param, "odds")
     if (fix_format)
-      coefs$odds <- stp25rndr::rndr_ods(exp(res$estimate),  digits.odds)
+      coefs$odds <-
+        stp25rndr::rndr_ods(exp(res$estimate),  digits.odds)
     else
       coefs$odds <- exp(res$estimate)
-
+    
     if (coefs[1, 1] == "(Intercept)")
       coefs$odds[1] <- NA
-
-    }
-
+    
+  }
+  
   if (include.odds.ci & inherits(x, "glm")) {
-
     coefs$odds.conf.low <-  res$odds.conf.low <- exp(res$conf.low)
-    coefs$odds.conf.high <-  res$odds.conf.high <- exp(res$conf.high)
-
+    coefs$odds.conf.high <-
+      res$odds.conf.high <- exp(res$conf.high)
+    
     if (fix_format) {
       if (conf.style.1) {
         param <- c(param, c("odds.conf"))
         coefs$odds.conf <-
-          stp25rndr::rndr_CI2(res[, c( "odds.conf.low","odds.conf.high")] ,
-                 digits= digits.odds,
-                 format="f")
+          stp25rndr::rndr_CI2(res[, c("odds.conf.low", "odds.conf.high")] ,
+                              digits = digits.odds,
+                              format = "f")
         if (res[1, 1] == "(Intercept)")
           coefs$odds.conf[1] <-  NA
       }
@@ -214,11 +212,11 @@ extract_param  <- function(x,
         param <- c(param, c("odds.conf.low", "odds.conf.high"))
         coefs$odds.conf.low <-
           stp25rndr::rndr_ods(coefs$odds.conf.low, digits.odds)
-
+        
         coefs$odds.conf.high <-
           stp25rndr::rndr_ods(coefs$odds.conf.high , digits.odds)
-
-
+        
+        
         if (res[1, 1] == "(Intercept)") {
           coefs$odds.conf.low[1] <-  NA
           coefs$odds.conf.high[1]  <- NA
@@ -231,22 +229,23 @@ extract_param  <- function(x,
         coefs$odds.conf.low[1] <-  NA
         coefs$odds.conf.high[1]  <- NA
       }
-
+      
     }
-
-      }
-
+    
+  }
+  
   if (include.stars) {
     param <- c(param, "stars")
     coefs$stars <- stp25rndr::rndr_Stars(res$p.value)
   }
-
+  
   if (include.p) {
     param <- c(param, "p.value")
     if (fix_format)
-      coefs$p.value <- stp25rndr::rndr_P(res$p.value, symbol.leading = c("", "<"))
+      coefs$p.value <-
+        stp25rndr::rndr_P(res$p.value, symbol.leading = c("", "<"))
   }
- 
+  
   tibble::as_tibble(coefs[param])
 }
 
@@ -254,7 +253,7 @@ extract_param  <- function(x,
 
 
 #' @description Metode fuer ANOVA-Modelle
-#' @rdname extract_param
+#' @rdname extract
 #'
 extract_param_aov <- function(x,
                               include.eta = TRUE,
@@ -328,7 +327,6 @@ extract_param_aov <- function(x,
 #' @param ... extra params
 #'
 #' @return data.frame tibble
-
 tidy_lmer <- function(x,
                       effects = c("ran_pars", "fixed"),
                       scales = NULL,

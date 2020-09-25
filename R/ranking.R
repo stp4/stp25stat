@@ -300,7 +300,7 @@ Rangreihe_default <- function (items,
   }
   
   
-  stp25output::Output(stp25stat::prepare_output(
+  stp25output::Output(prepare_output(
     res,
     caption = paste0(caption, " (N = ", N , ")"),
     note = note,
@@ -404,73 +404,6 @@ guess_input <- function(items) {
   )
 }
 
-
-
-
-
-# stp25stat:::guess_input
-# function(items,
-#          rankings = NULL,
-#          input = NULL) {
-#   
-#   
-#   if (!is.table(input)) {
-#     if (is.null(input)) {
-#       if (is.factor(items[, 1]) | is.character(items[, 1])) {
-#         RankByRow <- FALSE
-#         input <- "ordering"
-#         
-#       }
-#       else {
-#         RankByRow <- TRUE
-#         input <- "ranking"
-#       }
-#     } else {
-#       if (input == "ordering")
-#         RankByRow <- FALSE
-#       else
-#         RankByRow <- TRUE
-#     }
-#     if (RankByRow) {
-#       if (is.numeric(items[, 1])) {
-#         rankings <- unique(unlist(lapply(items,
-#                                          function(x)
-#                                            levels(factor(x))
-#         )))
-#       }
-#       else if (!is_all_identical2(items)) {
-#         rankings <- unique(unlist(lapply(items,
-#                                          function(x)
-#                                            levels(factor(x))
-#         )))
-#         warning(
-#           "Das Skalenniveau in der Rangreihe ist unterschiedlich. Moeglicherweise stimmen die Ergebnisse nicht!"
-#         )
-#       }
-#       else if (is.factor(items[, 1])) {
-#         rankings <- levels(items[, 1])
-#       }
-#       else{
-#         return (NULL)
-#       }
-#     }
-#     else
-#       rankings <- 1:ncol(items)
-#     
-#     
-#     #  print(items)
-#     if (!RankByRow)
-#       items <- transpose3(items) #eigene Funktion
-#     
-#   }
-#   
-#   
-#   list(
-#     items=items,
-#     RankByRow = RankByRow,
-#     rankings = rankings,
-#     input = input)
-# }
 
 
 

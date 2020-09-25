@@ -234,92 +234,85 @@ Medianci2<- function(x, digits=NULL, ...){
   
 }
 
-#' @rdname berechne
-#' @description
-#' Prozent:
-#' Interne Funktion um Prozent fuer die Tabellen zu berechnen.
-#' @param continuous,breaks,labels fuer cut
-#' @param count_factor für multi
-#' @param retur_tabel intern
-#' @export
-Prozent <- function (x,
-                     digits = 1,
-                     continuous = 3,
-                     breaks = NULL,
-                     labels = NULL,
-                     count_factor = c("yes", "ja", "T", "TRUE", 1),
-                     retur_tabel = FALSE) {
-
-  if (length(x) <= 0)
-    return("NaN") #-- fuer Melt2
-
-  calc_factor <- function(x) {
-    if (length(x) <= 0) {
-      ans <-  if (retur_tabel)
-        0
-      else
-        rndr_percent(0, 0)
-      names(ans) <-  names(x)
-    } else{
-      fq <- table(x)
-      prc <- prop.table(fq) * 100
-      ans <- if (retur_tabel)
-        fq
-      else
-        rndr_percent(prc, fq)
-      names(ans) <- row.names(fq)
-    }
-    ans
-  }
-
-
-  if (is.factor(x)) {
-    calc_factor(x)
-  }
-  else  if (is.logical(x) |
-            is_all_0_1((x))) {
-    rndr_percent(mean(x, na.rm = TRUE) * 100,  sum(x, na.rm = T))
-  }
-  else if (is.numeric(x)) {
-    xf <- factor(x)
-
-    if (nlevels(xf) > 7)
-      xf <- cut(x, quantile(x, na.rm = TRUE))
-    calc_factor(xf)
-  }
-  else {
-    # hier kommt alles aus Recast2 an weil recast Character weitergibt
-    xf <- factor(x)
-    lvls <- levels(xf)
-    n <- nlevels(xf)
-    if (n == 2 |  n == 1) {
-      if (any(tolower(lvls) %in% c("ja", "yes", "true", "1", "nein", "no", "false", "0"))) {
-        x <- ifelse(tolower(x) %in%  c("ja", "yes", "true", "1"), 1, 0)
-        if (retur_tabel) {
-          table(x)
-        }
-        else {
-          rndr_percent(mean(x, na.rm = TRUE) * 100, sum(x, na.rm = TRUE))
-        }
-      } else if (n == 2) {
-        x <- 2 - as.numeric(xf)   # erster Faktor wird gez?hlt
-        if (retur_tabel)  {
-          table(x)
-        }
-        else {
-          res <-
-            rndr_percent(mean(x, na.rm = TRUE) * 100, sum(x, na.rm = TRUE))
-          paste(lvls[1], res)#-- namen zu Variable
-        }
-      } else {
-        "nur eine Factorstufe"
-      }
-    } else{
-      "mehr als 2 Faktorstufen"
-    }
-
-  }
-}
+ 
+# Prozent <- function (x,
+#                      digits = 1,
+#                      continuous = 3,
+#                      breaks = NULL,
+#                      labels = NULL,
+#                      count_factor = c("yes", "ja", "T", "TRUE", 1),
+#                      retur_tabel = FALSE) {
+# 
+#   if (length(x) <= 0)
+#     return("NaN") #-- fuer Melt2
+# 
+#   calc_factor <- function(x) {
+#     if (length(x) <= 0) {
+#       ans <-  if (retur_tabel)
+#         0
+#       else
+#         rndr_percent(0, 0)
+#       names(ans) <-  names(x)
+#     } else{
+#       fq <- table(x)
+#       prc <- prop.table(fq) * 100
+#       ans <- if (retur_tabel)
+#         fq
+#       else
+#         rndr_percent(prc, fq)
+#       names(ans) <- row.names(fq)
+#     }
+#     ans
+#   }
+# 
+# 
+#   if (is.factor(x)) {
+#     calc_factor(x)
+#   }
+#   else  if (is.logical(x) |
+#             is_all_0_1((x))) {
+#     rndr_percent(mean(x, na.rm = TRUE) * 100,  sum(x, na.rm = T))
+#   }
+#   else if (is.numeric(x)) {
+#     xf <- factor(x)
+# 
+#     if (nlevels(xf) > 7)
+#       xf <- cut(x, quantile(x, na.rm = TRUE))
+#     calc_factor(xf)
+#   }
+#   else {
+#      
+#     xf <- factor(x)
+#     lvls <- levels(xf)
+#     n <- nlevels(xf)
+#     if (n == 2 |  n == 1) {
+#       if (any(tolower(lvls) %in% c("ja", "yes", "true", "1", "nein", "no", "false", "0"))) {
+#         x <- ifelse(tolower(x) %in%  c("ja", "yes", "true", "1"), 1, 0)
+#         if (retur_tabel) {
+#           table(x)
+#         }
+#         else {
+#           rndr_percent(mean(x, na.rm = TRUE) * 100, sum(x, na.rm = TRUE))
+#         }
+#       } else if (n == 2) {
+#         x <- 2 - as.numeric(xf)   # erster Faktor wird gez?hlt
+#         if (retur_tabel)  {
+#           table(x)
+#         }
+#         else {
+#           res <-
+#             rndr_percent(mean(x, na.rm = TRUE) * 100, sum(x, na.rm = TRUE))
+#           paste(lvls[1], res)#-- namen zu Variable
+#         }
+#       } else {
+#         "nur eine Factorstufe"
+#       }
+#     } else{
+#       "mehr als 2 Faktorstufen"
+#     }
+# 
+#   }
+# }
 
 
 
@@ -436,16 +429,67 @@ calc_mean <-  function(x,
 }
 
 
-# in Tabelle() verwendet ----------------------------------------------------
-# 
-# set_my_options(prozent = list(digits = 1,
-# style = 2,
-# null_percent_sign= "."))
-# Prozent2default(factor(c(1,2,3,3,3,5), 1:5))
-# x <- c(1, 1, 1, 0, 0, 0, 1, 1)
-#  set_my_options(prozent=list(include_name=FALSE))
-#  Multi2default(x)
-#  Prozent2default(x)
+
+
+
+
+
+
+#' @rdname berechne
+#' 
+#' @param x vector
+#' @param digits nachkommastellen digits = 0,
+#' @param n Anzahl 
+#' @param exclude,useNA an table
+#' @param max_factor_length lange Eintraege kuerzen
+#' @param return_data_frame,is_true_false  intern
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#'  x<- gl(2, 8, labels = c("Control", "Treat"))
+#' x[1]<- NA
+#' stp25stat:::Prozent2default(x)
+#' Prozent(x )
+#' Prozent(x, useNA ="always")
+#' 
+#' x<- as.numeric(x)
+#' stp25stat:::Prozent2default(x)
+#' Prozent(x)
+#' 
+#' x<- ifelse(x==1, TRUE, FALSE)
+#' 
+#' stp25stat:::Prozent2default(x)
+#' Prozent(x)
+#' Prozent(x, useNA ="always")
+#' 
+#' 
+#' # in Tabelle() verwendet 
+#' 
+#' set_my_options(prozent = list(digits = 1, style = 2, null_percent_sign= "."))
+#' Prozent2default(factor(c(1,2,3,3,3,5), 1:5))
+#' x <- c(1, 1, 1, 0, 0, 0, 1, 1)
+#'  set_my_options(prozent=list(include_name=FALSE))
+#'  stp25stat:::Multi2default(x)
+#'  stp25stat:::Prozent2default(x)
+#' 
+Prozent <- function (x,
+                     digits = 0,
+                     exclude = if (useNA == "no") c(NA, NaN),
+                     useNA = "no",
+                     max_factor_length = 25) {
+  Prozent2default(
+    x,
+    digits = digits,
+    exclude = exclude,
+    useNA = useNA,
+    max_factor_length = max_factor_length,
+    return_data_frame = FALSE
+  )
+  
+}
 
 #' @noRd
 #' @param n intern
@@ -455,26 +499,15 @@ Prozent2default <-
   function(x,
            digits = 0,
            n = length(x),
-           exclude = NA,
-           max_factor_length = 25) {
+           exclude = if (useNA == "no") c(NA, NaN),
+           max_factor_length = 25,
+           useNA = "no",
+           return_data_frame = TRUE,
+           is_true_false=FALSE) {
     
-    if (is.logical(x)) {
-      x <- factor(x, c(TRUE, FALSE), c("true", "false"))
-      is_not_logical <- FALSE
-    }
-    else {
-      if (!is.factor(x))
-        x <- factor(x)
-      is_not_logical <- TRUE
-    }
-
-    if (n == 0) {
-      result <- ""
-      ans <- rep(NA, nlevels(x))
-      names(ans) <- levels(x)
-    } else {
-      ans <- table(x, exclude = exclude)
-
+    
+    if (is.factor(x)) {
+      ans <- table(x, exclude = exclude, useNA=useNA)
       if (length(ans) > max_factor_length) {
         naLev <- levels(x)[-(1:max_factor_length)]
         Text("NA = ", paste(naLev, collapse = ", "))
@@ -483,29 +516,126 @@ Prozent2default <-
         x <-
           addNA(x)
         #- addNA modifies a factor by turning NA into an extra level
-        N <- length(x)
-        n <- length(x)
+        
         ans <- table(x)
+        
       }
-
-      result <-
-        rndr_percent(as.vector(prop.table(ans)) * 100, as.vector(ans))
-
+    } else if (is.logical(x)) {
+      x <- factor(x, c(TRUE, FALSE), c("true", "false"))
+      is_true_false <- TRUE
+      ans <- table(x, exclude = exclude, useNA=useNA )
+    }  else {
+      xt <- factor(x)
+      
+      if (nlevels(xt) > max_factor_length)
+        stop("class = ", class(xt), " nlevels = ", nlevels(xt))
+      else
+        ans <- table(xt, exclude = exclude, useNA=useNA )
     }
     
-    res<-
-    data.frame(
-      lev = names(ans),
-      n = c(n, rep("", length(ans) - 1)),
-      m = as.vector(result),
-      stringsAsFactors = FALSE
-    )
     
-    if(is_not_logical){ res }
-    else{res[1, ]}
+    if (n == 0) {
+      rslt <- ""
+      ans <- rep(NA, nlevels(x))
+      names(ans) <- levels(x)
+    } else {
+      rslt <-
+        rndr_percent(as.vector(prop.table(ans)) * 100, as.vector(ans))
+      
+    }
+    
+    
+    if (return_data_frame) {
+      rslt <-
+        data.frame(
+          lev = names(ans),
+          n = c(n, rep("", length(ans) - 1)),
+          m = as.vector(rslt),
+          stringsAsFactors = FALSE
+        )
+      rslt<- if (!is_true_false) rslt else rslt[1,]
+    } else{
+      names(rslt) <- names(ans)
+      rslt<- if (!is_true_false) rslt else rslt[1]
+    }
+    
+    rslt
   }
 
- 
+
+
+
+
+# Prozent2default <-
+#   function(x,
+#            digits = 0,
+#            n = length(x),
+#            exclude = NA,
+#            max_factor_length = 25) {
+#     
+#     if (is.logical(x)) {
+#       x <- factor(x, c(TRUE, FALSE), c("true", "false"))
+#       is_not_logical <- FALSE
+#     }
+#     else {
+#       if (!is.factor(x))
+#         x <- factor(x)
+#       is_not_logical <- TRUE
+#     }
+# 
+#     if (n == 0) {
+#       result <- ""
+#       ans <- rep(NA, nlevels(x))
+#       names(ans) <- levels(x)
+#     } else {
+#       ans <- table(x, exclude = exclude)
+# 
+#       if (length(ans) > max_factor_length) {
+#         naLev <- levels(x)[-(1:max_factor_length)]
+#         Text("NA = ", paste(naLev, collapse = ", "))
+#         x <-
+#           factor(x, levels(x)[1:max_factor_length], exclude = NULL)
+#         x <-
+#           addNA(x)
+#         #- addNA modifies a factor by turning NA into an extra level
+#         N <- length(x)
+#         n <- length(x)
+#         ans <- table(x)
+#       }
+# 
+#       result <-
+#         rndr_percent(as.vector(prop.table(ans)) * 100, as.vector(ans))
+# 
+#     }
+#     
+#     res<-
+#     data.frame(
+#       lev = names(ans),
+#       n = c(n, rep("", length(ans) - 1)),
+#       m = as.vector(result),
+#       stringsAsFactors = FALSE
+#     )
+#     
+#     if(is_not_logical){ res }
+#     else{res[1, ]}
+#   }
+
+ Prozent_multi<- function(x,
+                          digits = 0,
+                          use.level = 1) {
+   
+   if( is.logical(x)) {
+     res <- Prozent(x, digits)
+   } else if(is.factor(x)) {
+     res <- Prozent(ifelse( x == levels(x)[use.level], TRUE, FALSE), digits)
+
+   } else if(is.numeric(x)){
+     res <- Prozent(ifelse( x ==  use.level, TRUE, FALSE), digits)
+   } 
+   else(stop(class(x)))
+   
+   res
+ }
 
 #' @noRd
 #' @param use.level welcher level wir gezaelt
@@ -518,31 +648,47 @@ Multi2default <- function(x,
   if (is.null(include.level))
     include.level <- TRUE
 
-  if (is.factor(x) & nlevels(x) == 2) {
-    firstLevel <- levels(x)[use.level]
-    x <-
-      factor(ifelse(x == firstLevel, firstLevel, 0), c(firstLevel, 0))
-  }
-  else if (is.logical(x)) {
-    x <-  factor(x)
-  }
-  else if (is.numeric(x) | is.integer(x)) {
-    x <- factor(ifelse(x == use.level, 1, 0), 1:0)
-  } else {
-    return(data.frame(
-      lev = "",
-      n = n,
-      m = "n.a.",
-      stringsAsFactors = FALSE
-    ))
-  }
-
-  res <- Prozent2default(x, digits, n)[1,]
+  # if (is.factor(x) & nlevels(x) == 2) {
+  #   firstLevel <- levels(x)[use.level]
+  #   x <-
+  #     factor(ifelse(x == firstLevel, firstLevel, 0), c(firstLevel, 0))
+  # }
+  # else if (is.logical(x)) {
+  #   x <-  factor(x)
+  # }
+  # else if (is.numeric(x) | is.integer(x)) {
+  #   x <- factor(ifelse(x == use.level, 1, 0), 1:0)
+  # } else {
+  #   return(data.frame(
+  #     lev = "",
+  #     n = n,
+  #     m = "n.a.",
+  #     stringsAsFactors = FALSE
+  #   ))
+  # }
+  # 
+  # res <- Prozent2default(x, digits, n)[1,]
+  # 
+  
+  if( is.logical(x)) {
+    res <- Prozent2default(x, digits, n)
+  } else if(is.factor(x)) {
+    res <- Prozent2default(ifelse( x == levels(x)[use.level], TRUE, FALSE), digits, n)
+    res$lev <- levels(x)[use.level]
+  } else if(is.numeric(x)){
+    res <- Prozent2default(ifelse( x ==  use.level, TRUE, FALSE), digits, n)
+    res$lev <-use.level
+  } 
+  else(stop(class(x)))
+  
   if (!include.level)
     res$lev <- ""
-  res
-
+ 
+ 
+res
 }
+
+
 
 #' @noRd
 #' @export
@@ -594,7 +740,9 @@ Median2default <- function(x,
 
 
 #' Wird in Tabelle benutzt.
+#' 
 #' interne Funktion um Mittelwerte/Freq zu berechnen. 
+#' 
 #' @noRd
 #' @param x  measure.vars
 #' @param type mean, median

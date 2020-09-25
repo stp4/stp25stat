@@ -9,29 +9,35 @@
 #'
 #' @examples
 #'
+#' fit1 <- lm(sr ~ pop15 + pop75 + dpi + cut(ddpi, 3), data = LifeCycleSavings)
+#'extract_gof2(fit1)
+#'extract_gof2(fit1, fix_format = TRUE)
 #'
 extract_gof <- function(x,
-                        include.r = TRUE,include.pseudo = TRUE,
-                        include.rmse = TRUE,include.sigma = FALSE,include.variance = FALSE,
-                        include.devianze = FALSE,
-                        include.loglik = FALSE,
-                        include.test=FALSE,
-                        include.aic = TRUE,include.bic = include.aic,
-                        include.nobs = TRUE,
-                        digits = 2,
-                        fix_format=FALSE,
-                        ...) {
-  
-  
-  res <-  broom::glance(x)
+                         include.r = TRUE,
+                         include.pseudo = TRUE,
+                         include.rmse = TRUE,
+                         include.sigma = FALSE,
+                         include.variance = FALSE,
+                         include.devianze = FALSE,
+                         include.loglik = FALSE,
+                         include.test = FALSE,
+                         include.aic = TRUE,
+                         include.bic = include.aic,
+                         include.nobs = TRUE,
+                         digits = 2,
+                         fix_format = FALSE,
+                         ...) {
+  rslt <-  broom::glance(x)
   param <-  "term"
   
   if (include.r | include.pseudo) {
-    if( any(names(res) %in% "r.squared")){
+    if (any(names(rslt) %in% "r.squared")) {
       param <- c(param, c("r.squared", "adj.r.squared"))
-    }else{  ans_r <- R2(x)
-    res <- cbind(res, ans_r)
-    param <- c(param, names(ans_r))
+    } else{
+      ans_r <- R2(x)
+      rslt <- cbind(rslt, ans_r)
+      param <- c(param, names(ans_r))
     }
   }
   
@@ -44,7 +50,7 @@ extract_gof <- function(x,
   
   if (include.rmse) {
     param <- c(param, "RMSE")
-    res <- cbind(res, RMSE(x)[2])
+    rslt <- cbind(rslt, RMSE(x)[2])
   }
   
   if (include.loglik)
@@ -56,33 +62,48 @@ extract_gof <- function(x,
   
   
   if (fix_format) {
-    res <- dplyr::tbl_df(
-      plyr::llply(res,
-                  function(z)
-                    formatC(z,
-                            digits = digits,
-                            format = "f")))
+    rslt <- tibble::as_tibble(
+      plyr::llply(rslt,
+                  function(z) {
+                    if (!is.na(z)) {
+                      formatC(z, digits = digits, format = "f")
+                    } else {
+                      ""
+                    }
+                  }))
+    
     if (include.test) {
       param <- c(param, "Test")
-      res$Test <- "nicht implementiert"
+      rslt$Test <- "nicht implementiert"
+      
     }
     
     if (include.nobs) {
       param <- c(param, "Obs")
-      res$Obs <- formatC(nobs(x), digits = 0, format = "f")
+      rslt$Obs <- formatC(nobs(x), digits = 0, format = "f")
     }
   }
   else{
-    res <- round(res, digits = digits)
+    rslt <- tibble::as_tibble(
+      plyr::llply(rslt,
+                  function(z) {
+                    if (!is.na(z)) {
+                      round(z, digits = digits )
+                    } else {
+                      NA
+                    }
+                  }))
+    
     if (include.test) {
       param <- c(param, "Test")
-      res$Test <- "nicht implementiert"
+      rslt$Test <- "nicht implementiert"
     }
     if (include.nobs) {
       param <- c(param, "Obs")
-      res$Obs <- nobs(x)
+      rslt$Obs <- nobs(x)
     }
   }
-  param <- intersect(names(res), param)
-  tibble::as_tibble(res[param])
+  param <- intersect(names(rslt), param)
+  tibble::as_tibble(rslt[param])
 }
+

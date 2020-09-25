@@ -1,5 +1,19 @@
 # stp25stat 0.2.1
 
+## New functions
+
+
+
+## APA2 Methoden
+
+### Effectsize
+
+*emmeans: APA2.emm_list, APA2.emmGrid
+
+
+*  `Tbll()` Kombiniert APA2 und Tabelle. Ziel ist, einheitliche Namen fuer die Zukunft zu schaffen. `Tbll_desc()`,
+`Tbll_corr()`, `Tbll_xtabs` usw
+
 
 ## Changes to functions
 
@@ -17,7 +31,7 @@
 
  
 ## Changes to functions
-
+* In die Funktion `Likert()` wurde neu geschrieben.
 * In die Funktion `Tabelle()` wurde Describe2 integirert.
 * Rename `Ordnen()` to `extract()`
 * Loeschen der Funktionen  `berechne()`.

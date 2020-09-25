@@ -1,4 +1,3 @@
-
 #' extract (Tidy)
 #'
 #' @rdname extract
@@ -6,9 +5,9 @@
 #'
 #' @param x Objekt
 #' @param ... weitere Objekte nicht benutzt
-#' @return ein data.frame-Ojekt oder eine Liste von data.frames. Im Attribut N sind die Stichprobengroesse
+#' @return   data.frame mit dbl 
+#' Im Attribut N sind die Stichprobengroesse
 #' und notes
-#' @export
 #'
 extract <- function(x, ...) {
   UseMethod("extract")
@@ -17,17 +16,15 @@ extract <- function(x, ...) {
 
 
 #' @rdname extract
-#' @export
 extract.polr <- function(x,
                         digits = 2,
                         include.b = TRUE,
                         include.se = TRUE,
                         include.ci = FALSE,
                         include.odds = TRUE,
-                        #  test.my.fun=FALSE,
+
                         ...){
-  # if(test.my.fun) cat("\n   -> extract.polr()")
-  
+
   info <- model_info(x)
   AV <-
     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
@@ -121,39 +118,31 @@ extract.polr <- function(x,
   
 }
 
-#' @rdname extract
-#' @export
-extract.default <- function(x,  ...) {
 
+#' @rdname extract
+extract.default <- function(x, ...) {
   info <- model_info(x)
   AV <-
     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
-
-  df <- broom::tidy(x)
-  if(any(class(x) %in% "merModLmerTest")) {
-    df<- cbind(df[1:(ncol(df)-1)], p.value=NA, df[ncol(df)])
-    p_value<- lmerTest::summary(x)$coefficients[,5]
-    df$p.value[ 1:length(p_value)]<- p_value
+  
+  if (class(x) == "lme")
+    df <- broom.mixed::tidy(x)
+  else
+    df <- broom::tidy(x)
+  
+  if (any(class(x) %in% "merModLmerTest")) {
+    df <- cbind(df[1:(ncol(df) - 1)], p.value = NA, df[ncol(df)])
+    p_value <- lmerTest::summary(x)$coefficients[, 5]
+    df$p.value[1:length(p_value)] <- p_value
   }
-  # else if(class(x)=="lmerMod"){
-  #   Text(
-  #     "
-  #     ----
-  #     Achtung: Paket library(lmerTest) laden.
-  #     Bzw die update() Funktion nicht verwenden.
-  #     ----
-  #     "
-  #   )
-  # }
-  else {}
-  #attr(df,"class2") = info$class
+  
   attr(df, "caption") =  paste0("AV: ", AV)
   attr(df, "note") = paste0("Model: ", info$family[1])
   attr(df, "N") = info$N
   attr(df, "labels") = info$labels
-
+  
   df
-  }
+}
 
 
 
@@ -161,10 +150,9 @@ extract.default <- function(x,  ...) {
 
 
 #' @rdname extract
-#' @export
-extract.anova <- function(..., output=FALSE){
-  res <- APA2.lm(..., output=output)
-  res
+extract.anova <- function(... ){
+  extract_param(...,
+                fix_format = FALSE)
 }
  
 
@@ -173,10 +161,9 @@ extract.anova <- function(..., output=FALSE){
 #' @param include.sumsq,include.meansq  Quadrat- Summen
 #'
 #' @rdname extract
-#' @export
-extract.aov <- function(..., output=FALSE){
-  res <- APA2.lm(..., output=output)
-  res
+extract.aov <- function(... ){
+  extract_param(...,
+                fix_format = FALSE)
 }
 #' @description Regression - Methode ueber basr::summary (lm und glm)
 #' @param include.b Estimate
@@ -185,19 +172,21 @@ extract.aov <- function(..., output=FALSE){
 #' @param include.ci,ci.level  95-CI mit ci-Level
 #'
 #' @rdname extract
-#' @export
-extract.lm <- function(..., output=FALSE){
-  res <- APA2.lm(..., output=output)
-  res
+
+extract.lm <- function(... ){
+  extract_param(...,
+                fix_format = FALSE)
 }
 
 #' @rdname extract
 #' @param rr RR Relatives Risiko
 #' @param include.b.ci,include.odds,include.rr.ci 95 Konfidenzintervalle
-#' @export
-extract.glm <- function(..., output=FALSE){
-  res <- APA2.glm(..., output=output)
-  res
+extract.glm <- function(... ){
+  # res <- APA2.glm(..., output=output)
+  # res
+  
+  extract_param(...,
+                fix_format = FALSE)
 }
 
 
@@ -405,7 +394,6 @@ extract.glm <- function(..., output=FALSE){
 # Alte Version kommentar siehe unten
 
 #' @rdname extract
-#' @export
 extract.merModLmerTest <- function(x,
                       # custom.model.names = NULL,
                       # digits = 2,
@@ -422,7 +410,7 @@ extract.merModLmerTest <- function(x,
                       #  include.bic = include.aic,
                       ci.level = .95,
                       ...) {
-  cat("\n In extract.merModLmerTest \n")
+  #cat("\n In extract.merModLmerTest \n")
   info <- model_info(x)
   AV <-
     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
@@ -485,7 +473,6 @@ extract.merModLmerTest <- function(x,
 #' @description lmerTest::lmer returns an object of class 'lmerModLmerTest' (previously 'merModLmerTest')
 #' to clarify that 'lmerModLmerTest' extends  'lmerMod' – not 'merMod'. The merMod class includes generalized
 #' and nonlinear mixed models and lmerTest is only designed for linear mixed models.
-#' @export
 extract.lmerModLmerTest<- function(x,
                                   # custom.model.names = NULL,
                                   # digits = 2,
