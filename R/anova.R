@@ -76,17 +76,10 @@ APA_Table_Anova  <-
          #  white.adjust = c(FALSE, TRUE, "hc3", "hc0", "hc1", "hc2", "hc4"), 
           # vcov. = NULL, 
           # singular.ok
-           
-           
            type = "wide"
            )
   {
-    
-    
     fits <- list(...)
-    
- 
-    
     if( "list"  %in% class(fits[[1]]) ) fits<- fits[[1]]
     
     rslt <- NULL
@@ -109,7 +102,7 @@ APA_Table_Anova  <-
       else{
         if (class(fit)[1] == "lm") {
           rslt[[names[i]]] <-
-            APA2(
+            APA2.anova(
               car::Anova(fit, type = type.anova),
               caption = caption[i],
               note = note,
@@ -123,7 +116,7 @@ APA_Table_Anova  <-
         }
         else if (class(fit)[1] == "glm") {
           rslt[[names[i]]] <-
-            APA2(
+            APA2.anova(
               car::Anova(fit, type = type.anova),
               caption = caption[i],
               note = note,
@@ -137,7 +130,7 @@ APA_Table_Anova  <-
         }
         else if (class(fit)[1] == "anova") {
           rslt[[names[i]]] <-
-            APA2(
+            APA2.anova(
               fit,
               caption = caption[i],
               note = note,
@@ -151,7 +144,7 @@ APA_Table_Anova  <-
         }
         else if (class(fit)[1] == "aov") {
           rslt[[names[i]]] <-
-            APA2(
+            APA2.anova(
               car::Anova(fit, type = type.anova),
               caption = caption[i],
               note = note,
@@ -275,13 +268,12 @@ APA_Table_Anova  <-
 
 
 #' @rdname APA_Table_Anova
-#' @description APA2.anova()  Ausgabe fuer car::Anova
+#' @description APA2.anova() Ausgabe  alle anova  
 #' @export
 #' 
 APA2.anova <- function(x,
                        caption = "ANOVA",
-                       note = paste("contrasts: ",
-                                    paste(options()$contrasts, collapse = ", ")),
+                       note = paste("contrasts: ", paste(options()$contrasts, collapse = ", ")),
                        output = stp25output::which_output(),
                        include.eta = TRUE,
                        include.sumsq = TRUE,
@@ -290,9 +282,15 @@ APA2.anova <- function(x,
                        include.fvalue=TRUE,
                        ...) {
   info <- model_info(x)
-  rslt <-  broom::tidy(x)
+ # rslt <-  broom::tidy(x)
   
  # names(rslt)[4]<- "F.value"
+  rslt <- x # wegen eta2
+  nms<- gsub(" ", ".", names(x))
+  nms[grep('>', nms)] <- "p.value"
+  names(rslt) <- nms
+  rslt <-   tibble::as_tibble(cbind("term"= rownames(rslt), rslt))
+  
   
   if(include.eta) rslt <-  
     tibble::as_tibble(cbind(rslt[-ncol(rslt)],  
@@ -301,11 +299,11 @@ APA2.anova <- function(x,
   
   if(include.meansq) rslt <- 
     tibble::as_tibble(cbind(rslt[1],  
-                            meansq = rslt$sumsq/rslt$df,
+                            Mean.Sq = rslt$Sum.Sq/rslt$df,
                             rslt[-1] ))
     
-  if(!include.sumsq) rslt <- rslt[ -which(names(rslt)=="sumsq") ]
-  if(!include.df) rslt <- rslt[ -which(names(rslt)=="df") ]
+  if(!include.sumsq) rslt <- rslt[ -which(names(rslt)=="Sum.Sq") ]
+  if(!include.df) rslt <- rslt[ -which(names(rslt)=="Df") ]
   if(!include.fvalue) rslt <- rslt[ -which(names(rslt)=="F.value") ]
  #
  # rslt[ ncol(rslt)] <- stp25rndr::rndr_P(rslt[ ncol(rslt)],

@@ -241,12 +241,15 @@ calculate_tabelle2 <- function(X,
                                measure.name = "value") {
   res <- NULL
   
-  if (type[1] == "2")
+  if (type[1] == "2") {
     type <- "auto_long"
-  else if (type[1] == "1")
+  }
+  else if (type[1] == "1") {
     type <- "auto_kurz"
-  else if (type[1] == "custom_fun")
+  }
+  else if (type[1] == "custom_fun") {
     X$measure <- rep("custom_fun", length(X$measure))
+  }
   else{
     if (type %in% c("mean", "median", "factor", "freq")) {
       type[which(type == "freq")] <- "factor"
@@ -259,10 +262,8 @@ calculate_tabelle2 <- function(X,
     type <- "auto_kurz"
   }
   
+  
   for (i in seq_len(length(X$measure))) {
-    
-   
-    
     if (X$measure[i] == "factor") {
       if (!is.factor(X$data[[X$measure.vars[i]]])) {
         X$data[[X$measure.vars[i]]] <- factor(X$data[[X$measure.vars[i]]])
@@ -272,21 +273,22 @@ calculate_tabelle2 <- function(X,
                               paste0(levels(X$data[[X$measure.vars[i]]]),
                                      collapse = "/"), ")")
     }
-    else if (X$measure[i] == "mean")
+    else if (X$measure[i] == "mean") {
       X$row_name[i] <- paste0(X$row_name[i], " (mean)")
-    else if (X$measure[i] == "median")
+    }
+    else if (X$measure[i] == "median") {
       X$row_name[i] <- paste0(X$row_name[i], " (median)")
-    else if(X$measure[i] == "logical"){  
-      X$data[[X$measure.vars[i]]] <- 
-        factor(X$data[[X$measure.vars[i]]], c(TRUE, FALSE) )
+    }
+    else if (X$measure[i] == "logical") {
+      X$data[[X$measure.vars[i]]] <-
+        factor(X$data[[X$measure.vars[i]]], c(TRUE, FALSE))
       X$measure[i] <- "factor"
-       X$row_name[i] <- paste0(X$row_name[i], " (",
+      X$row_name[i] <- paste0(X$row_name[i], " (",
                               paste0(levels(X$data[[X$measure.vars[i]]]),
                                      collapse = "/"), ")")
-      }
+    }
     
-    
-    res[[X$measure.vars[i]]]  <-
+    res[[X$measure.vars[i]]] <-
       berechne_all(
         X$data,
         X$measure.vars[i],
@@ -294,10 +296,7 @@ calculate_tabelle2 <- function(X,
         X$measure[i],
         type,
         fun = fun,
-        digits =  if (is.null(digits))
-          X$digits[i]
-        else
-          digits,
+        digits = if (is.null(digits)) X$digits[i] else digits,
         measure.name = measure.name
       )
   }

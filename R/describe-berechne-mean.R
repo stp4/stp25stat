@@ -4,10 +4,31 @@
 #' @name berechne
 #' @export
 #' @examples
+#' 
 #' mean2(rnorm(100))
 #' sd2(rnorm(100))
 #' CI(rnorm(100))
 #'
+#'
+#' n<-30
+#' df<- data.frame(x=rnorm(n, 5,1.2), y=rpois(n,.7))
+#' df
+#' x<- rnorm(30)
+#' 
+#' stp25rndr::default_stp25("digits", "mittelwert")
+#' get_my_options()$apa.style$mittelwert$mean.style
+#' mean2(x)
+#' Mean2(x)
+#' Mean2default(x)
+#' 
+#' Mean2(x, digits=3, style=2)
+#' df %>% Tabelle(x,y )
+#' df %>% Tabelle(x,y, APA=TRUE)
+#' df %>% Tabelle(x,y, fun = function(x) Mean2(x))
+#' 
+#' df %>% Summarise(x,y, fun = function(x) c(n=length(x), mean=Mean2(x)))
+#' 
+#' 
 mean2 <-
   function(x, na.rm = TRUE, ...) {
     #- test_that
@@ -28,6 +49,12 @@ mean2 <-
       mean_factor(factor(x), na.rm = na.rm)
     }
   }
+
+
+
+
+
+
 
 
 #' @rdname berechne
@@ -113,7 +140,7 @@ Mean2.formula <-  function(x,
 
 #' @rdname berechne
 #' @export
-Mean2.default <- function(x, digits = NULL, ...) {
+Mean2.default <- function(x, ...) {
 
   if (length(x) <= 0)
     return("NaN")
@@ -161,10 +188,7 @@ Median2.formula<-  function(x, data, ...){
 
 #' @rdname berechne
 #' @export
-Median2.default<- function(x, 
-                           digits = NULL,
-                           median.style=get_my_options()$apa.style$mittelwert$median.style,
-                           ...) {
+Median2.default<- function(x, ...) {
 
   if (length(x) <= 0)
     return("NaN")
@@ -326,13 +350,13 @@ Medianci2<- function(x, digits=NULL, ...){
 #' intern in Median2default() und Median2()
 #' 
 #' @noRd
-#' @param median.style,mean.style 
+#' @param style 
 #'
 calc_median <-
   function(x,
            digits = 2,
            n = length(x),
-           median.style = get_my_options()$apa.style$mittelwert$median.style,
+           style = get_my_options()$apa.style$mittelwert$median.style,
            unit=NULL) {
     
     if(all(is.na(x))) return(NaN)
@@ -343,23 +367,23 @@ calc_median <-
       x <- units::drop_units(x)
     } 
     
-    if (is.null(median.style)) {
+    if (is.null(style)) {
       rndr_median_quant(quantile(x, na.rm = TRUE), 
                         digits=digits,
                         unit=unit)
     }
-    else if (median.style == 1) {
+    else if (style == 1) {
       rndr_median_quant(quantile(x, na.rm = TRUE), 
                         digits=digits,
                         unit=unit)
     }
-    else if (median.style == "IQR" | median.style == "IRQ") {
+    else if (style == "IQR" | style == "IRQ") {
       rndr_median(median(x), 
                   ifelse(n > 2, IQR(x), NA), 
                   digits=digits,
                   unit=unit)
     }
-    else if (median.style == "2" | median.style == "long") {
+    else if (style == "2" | style == "long") {
       rndr_median_range(
         median(x, na.rm = TRUE),
         IQR(x, na.rm = TRUE),
@@ -376,10 +400,22 @@ calc_median <-
     }
   }
 
+
+#' @noRd
+#' Formatierte Mittelwerte
+#'
+#' @param x vector
+#' @param digits nachkomastellen (2)
+#' @param n laenge des vectors
+#' @param style lang oder Kurz
+#' @param unit Einheiten
+#'
+#' @return character
+
 calc_mean <-  function(x,
                        digits = stp25rndr::default_stp25("digits", "mittelwert") ,
                        n = length(x),
-                       mean.style = get_my_options()$apa.style$mittelwert$mean.style,
+                       style = get_my_options()$apa.style$mittelwert$mean.style,
                        unit=NULL) {
   
   if(all(is.na(x))) return(NaN)
@@ -391,10 +427,7 @@ calc_mean <-  function(x,
     x <- units::drop_units(x)
   }
   
-  
-  
-  
-  if (is.null(mean.style)) {
+  if (is.null(style)) {
     rndr_mean(mean(x, na.rm = TRUE), 
               ifelse(n > 2, sd(x, na.rm = TRUE), NA), 
               digits=digits,
@@ -402,14 +435,14 @@ calc_mean <-  function(x,
     
     
   }
-  else if (mean.style == "1") {
+  else if (style == "1") {
     rndr_mean(mean(x, na.rm = TRUE), 
               ifelse(n > 2, sd (x, na.rm = TRUE), NA), 
               digits=digits,
               unit=unit)
   }
-  else if (mean.style == "2" |
-           mean.style == "long") {
+  else if (style == "2" |
+           style == "long") {
     rndr_mean_range(
       mean(x, na.rm = TRUE),
       ifelse(n > 2, sd (x, na.rm = TRUE), NA),
@@ -695,7 +728,7 @@ res
 Mean2default <- function(x,
                          digits = 2,
                          n = length(x),
-                         mean.style = get_my_options()$apa.style$mittelwert$mean.style,
+                         style = get_my_options()$apa.style$mittelwert$mean.style,
                          include.level = get_my_options()$apa.style$mittelwert$include_name
 ) {
   if (is.null(include.level))
@@ -708,7 +741,7 @@ Mean2default <- function(x,
   data.frame(
     lev = mylevel,
     n = as.character(n),
-    m =   calc_mean(x, digits, n, mean.style),
+    m =   calc_mean(x, digits, n, style),
     stringsAsFactors = FALSE
   )
 }
@@ -718,7 +751,7 @@ Mean2default <- function(x,
 Median2default <- function(x,
                            digits = 2,
                            n = length(x),
-                           median.style = get_my_options()$apa.style$mittelwert$median.style,
+                           style = get_my_options()$apa.style$mittelwert$median.style,
                            include.level = get_my_options()$apa.style$mittelwert$include_name
 ) {
   if (is.null(include.level))
@@ -732,7 +765,7 @@ Median2default <- function(x,
   data.frame(
     lev = mylevel,
     n = as.character(n),
-    m = calc_median(x, digits, n, median.style),
+    m = calc_median(x, digits, n, style),
     stringsAsFactors = FALSE
   )
 }
