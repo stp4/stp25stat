@@ -17,31 +17,28 @@ conTest = function(fml,
       if (is.logical(test_name)) {
         spearmanTest2(fml, data)
       } else{
-        if (test_name == "SPSS") {
-          if (res[1] == "Wilcoxon")
-            WilkoxTest2(fml, data)
-          else
-            KruskalTest2(fml, data)
-        }
-        else if (test_name == "wilcox.test")
+        # if (test_name == "SPSS") {
+        #   if (res[1] == "Wilcoxon")
+        #     WilkoxTest2(fml, data)
+        #   else
+        #     KruskalTest2(fml, data)
+        # }
+         if (test_name == "wilcox")
           WilkoxTest2(fml, data)
-        else if (test_name == "u.test")
+        else if (test_name == "utest")
           WilkoxTest2(fml, data)
-        else if (test_name == "h.test")
+        else if (test_name == "htest")
           KruskalTest2(fml, data)
-        else if (test_name == "kruskal.test")
+        else if (test_name == "kruskal")
           KruskalTest2(fml, data)
-        else if (test_name == "t.test")
+        else if (test_name == "ttest")
           TTest2(fml, data)
         else if (test_name == "aov")
           Aov2(fml, data)
         else if (test_name == "anova")
           Aov2(fml, data)
-        else if (test_name == "Hmisc")
-          spearmanTest2(fml, data)
         else
           test_name
-        
       }
     }
     else
@@ -49,7 +46,20 @@ conTest = function(fml,
     
   }
   
+
+
+contest <-  c("contest",   "wilcox","utest", "htest", "kruskal", "ttest","aov", "anova") 
+cattest <-  c("cattest", "chisq", "fisher", "ordtest")
+notest <-  c("notest")
+ordtest <-  c("ordtest")
+disttest <-  c("shapiro", "kstest")
+cortest <-   c("pearson", "kendall", "spearman")
+stattest<-   c( contest, cattest, notest, disttest)
  
+
+
+
+
   spearmanTest2 <- function(fml, data) {
     st <- Hmisc::spearman2(fml, data)
     if (is.na(st[3]))
@@ -112,7 +122,7 @@ conTest = function(fml,
 #' @description conTest Hilfsfunktion fuer Tabellen
   catTest = function(fml,
                      data,
-                     include.test = "chisq.test") {
+                     include.test = "chisq") {
     #Fehlende Factoren eliminieren , drop.unused.levels = TRUE
     #   res <- stats::chisq.test(
     #     stats::xtabs(fml, data, drop.unused.levels = TRUE),
@@ -125,24 +135,11 @@ conTest = function(fml,
     g <- g[length(g)]
     g <- table(data[[g]])
     if (all(g > 4)) {
-      if (include.test == "chisq.test")
+      if (include.test == "chisq")
         chisqTest2(fml, data)
-      else if (include.test == "fisher.test")
+      else if (include.test == "fisher")
         fisherTest2(fml, data)
-      else{
-        #' Hier kann auch ein conTest aufgerufen werden
-        if (include.test %in% c(
-          "Wilcoxon", "wilcox.test", "u.test", "h.test",
-          "kruskal.test", "t.test", "aov", "anova", "Hmisc"
-        )) {
-          g <-  all.vars(fml)
-          fml <- formula(paste(g[1], "~", g[2]))
-          data[[g[1]]] <- as.numeric(data[[g[1]]])
-          conTest(fml, data, include.test)
-        } else{
-          include.test
-        }
-      }
+      else{include.test}
     }
     else
       paste0("sample to small (", paste(g, collapse = "/"), ")")

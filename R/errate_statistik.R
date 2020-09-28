@@ -35,7 +35,7 @@ errate_statistik3 <-
             include.n = TRUE,     # Anzahl bei Gruppe je Spalte
             include.nr = FALSE,   # erste zeile Anzahl der Gruppen
             include.total = FALSE,# Total Anzahl + Statistik bei Gruppe
-            include.test = test,
+            include.test = FALSE,
             exclude.level=NULL,
             max_factor_length = 35,
             order = FALSE
@@ -137,41 +137,74 @@ errate_statistik3 <-
     Test <- function(i, j) {
       fm_chi <- formula(paste("~", measure.vars[i], "+",  j))
       fm_aov <- formula(paste(measure.vars[i], "~", j))
-
-      if( X$group.class[j] == "factor") {
-        if (X$measure.class[i] == "numeric" ) {
-          conTest(fm_aov, X$data, which_test)
-        }
-        else if (X$measure.class[i] == "factor" ) {
-          if (is.logical(which_test)){
-            catTest(fm_chi, X$data,  "chisq.test")
-          }
-          else if (is.character(which_test)){
-            catTest(fm_chi, X$data, which_test )
-          }
-          else{
-            X$data[[measure.vars[i]]] <- as.numeric(X$data[[measure.vars[i]]])
-            conTest(fm_aov, X$data, which_test)
-          }
-        }
-        else if (X$measure.class[i] == "median" ) {
-          conTest(fm_aov, X$data, which_test)
-        }
-        else if (X$measure.class[i] == "multi" ) {
-          catTest(fm_chi, X$data, which_test)
-        }
-        else{
-          # Zwischen-Ueberschrift
-          " "
-        }
-
+      test <- if (is.logical(which_test)) X$measure.test[i] else which_test
+      
+      if (test == "contest") {
+        if (X$measure.class[i] == "factor")
+          X$data[[measure.vars[i]]] <-
+            as.numeric(X$data[[measure.vars[i]]])
+        conTest(fm_aov, X$data)
       }
-      else{
-        # keine Gruppen eventuel Korrelation
-        " "
+      else if (test == "cattest") {
+        catTest(fm_chi, X$data)
       }
+      else if (test %in% contest) {
+        if (X$measure.class[i] == "factor")
+          X$data[[measure.vars[i]]] <-
+            as.numeric(X$data[[measure.vars[i]]])
+        conTest(fm_aov, X$data,  test)
+      }
+      else if (test %in% cattest) {
+        catTest(fm_chi, X$data,  test)
+      }
+      else if (test == "notest") {
+        ""
+      }
+      else
+        ""
     }
 
+    # 
+    # Test2 <- function(i, j) {
+    #   fm_chi <- formula(paste("~", measure.vars[i], "+",  j))
+    #   fm_aov <- formula(paste(measure.vars[i], "~", j))
+    # 
+    #   
+    #   if( X$group.class[j] == "factor") {
+    #     if (X$measure.class[i] == "numeric" ) {
+    #       conTest(fm_aov, X$data, which_test)
+    #     }
+    #     else if (X$measure.class[i] == "factor" ) {
+    #       if (is.logical(which_test)){
+    #         catTest(fm_chi, X$data,  "chisq.test")
+    #       }
+    #       else if (is.character(which_test)){
+    #         catTest(fm_chi, X$data, which_test )
+    #       }
+    #       else{
+    #         X$data[[measure.vars[i]]] <- as.numeric(X$data[[measure.vars[i]]])
+    #         conTest(fm_aov, X$data, which_test)
+    #       }
+    #     }
+    #     else if (X$measure.class[i] == "median" ) {
+    #       conTest(fm_aov, X$data, which_test)
+    #     }
+    #     else if (X$measure.class[i] == "multi" ) {
+    #       catTest(fm_chi, X$data, which_test)
+    #     }
+    #     else{
+    #       # Zwischen-Ueberschrift
+    #       " "
+    #     }
+    #     
+    #   }
+    #   else{
+    #     # keine Gruppen eventuel Korrelation
+    #     " "
+    #   }
+    # }
+    
+    
     # Vorbereiten der Daten
     ANS <- NULL
     X <- prepare_data2(..., na.action = na.action)
@@ -183,22 +216,12 @@ errate_statistik3 <-
     N            <- nrow(X$data)
 
     if(is.character(include.test)){
-     which_test <-  match.arg(include.test, c("wilcox.test",
-                                              "u.test",
-                                              "kruskal.test",
-                                              "h.test",
-                                              "chisq.test",
-                                              "fisher.test",
-                                              "t.test",
-                                              "aov", 
-                                              "anova",
-                                              "SPSS", 
-                                              "Hmisc",
-                                              "shapiro.test", 
-                                              "ks.test"
-                                              # Kolmogorov-Smirnov-Anpassungstest wie SPSS
-                                              ))
-     if (any(which_test %in% c("shapiro.test", "KS.test"))) {
+      include.test <- gsub("[^[:alpha:]]", "", tolower(include.test))
+     # cat("\n-----\n")
+     # print(include.test)
+      
+     which_test <-  match.arg(include.test, c( contest, cattest, notest, ordtest, disttest, cortest))
+     if (any(which_test %in% disttest)) {
        include.test <- FALSE # Einzeltest
      } else {
        include.test <- TRUE
@@ -224,10 +247,10 @@ errate_statistik3 <-
       for (i in seq_len(length(measure.vars)))
       {
         mymeans<- Mittelwert_Einzel(i, X$data[[i]])
-        if( which_test == "shapiro.test" )
+        if( which_test == "shapiro" )
               mymeans$shapiro.test <- APA(
                          stats::shapiro.test(na.omit(as.numeric(X$data[[i]]))))
-        if( which_test == "ks.test" ){
+        if( which_test == "kstest" ){
           ix <- na.omit(as.numeric(X$data[[i]]))
           mymeans$ks.test <- APA(
             stats::ks.test(ix,"pnorm", mean(ix), sd(ix)))
