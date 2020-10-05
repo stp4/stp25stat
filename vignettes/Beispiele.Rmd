@@ -48,7 +48,7 @@ Tabelle2(alter ~ geschl, varana, APA = TRUE)
 
 ```
 
-Mittelwertdiagramme einmal mit *berechne()* und einmal mit *melt2*
+Mittelwertdiagramme einmal mit *Summarise()* und einmal mit *melt2*
 
 
 ```{r fig-mean-berechne, fig.cap = "Mittelwerte",  fig.width=4, fig.height=3, cache=TRUE}
@@ -64,7 +64,8 @@ renameLevels<- function(data,
 
 pd <- position_dodge(0.15)
 
-varana %>% berechne(m1, m2, m3, m4, by =  ~ geschl) %>%
+varana %>% Summarise(m1, m2, m3, m4, by =  ~ geschl, 
+                     fun=function(x) c(mean=mean(x), sd=sd(x))) %>%
   renameLevels %>%
   ggplot(aes(variable, mean, group = geschl,
              colour = geschl,
@@ -125,7 +126,7 @@ disp_fits <- varana2 %>%
 #class(disp_fits)
 
 #+ (1|Zeit)
- APA_Table(disp_fits, type="long2")
+ APA_Table(disp_fits, type="long")
 
 
 
@@ -412,7 +413,7 @@ fit4<-lmerTest::lmer(score ~ agegrp*trial + (1|id), MMvideo)
 ```
 
 ```{r mix-mod, results='asis'}
-APA_Table(fit1, fit2, fit3, fit4, type="long2")
+APA_Table(fit1, fit2, fit3, fit4, type="long")
 
 
 #  windows(8,6)

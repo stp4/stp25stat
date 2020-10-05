@@ -29,6 +29,48 @@ Tabelle2(alter ~ geschl, varana, APA = TRUE)
 #  fix_format() %>% (function(x) x[, c(1:7,9)])
 
 
+## ----fig-mean-berechne, fig.cap = "Mittelwerte",  fig.width=4, fig.height=3, cache=TRUE----
+
+
+renameLevels<- function(data,
+                        labels=c("Begin", "2 Monate", "6 Monate", "12 Monate"),
+                        var= "variable"){
+  levels( data[,var])<- labels
+  data
+}
+
+
+pd <- position_dodge(0.15)
+
+varana %>% Summarise(m1, m2, m3, m4, by =  ~ geschl, 
+                     fun=function(x) c(mean=mean(x), sd=sd(x))) %>%
+  renameLevels %>%
+  ggplot(aes(variable, mean, group = geschl,
+             colour = geschl,
+             shape= geschl)) +
+  geom_errorbar(aes(ymin = mean - sd, ymax = mean + sd),
+                width = .1,
+                position = pd) +
+  geom_line(position = pd) +
+  geom_point(position = pd, size = 3) +
+  xlab("") +
+  ylab("Merkfaehigkeitstest")
+#+  coord_cartesian(ylim=c(1, 25)) + scale_y_reverse(breaks=1:6)
+
+
+
+## ----fig-mean-melt, fig.cap = "Mittelwerte",  fig.width=4, fig.height=3, cache=TRUE----
+pd<-position_dodge(.5)
+varana %>%  melt2(m1, m2, m3, m4, by =  ~ geschl) %>%
+  renameLevels %>%
+  ggplot(aes(variable,
+             value,
+             fill=geschl)) +
+  stat_boxplot(geom ='errorbar', width=0.4, position=pd) +
+  geom_boxplot(width=0.4, position=pd) +
+  xlab("") +
+  ylab("Merkfaehigkeitstest")
+
 ## ----gather, results='asis', warning=FALSE------------------------------------
 require(tidyr)
 varana2 <- varana %>%
@@ -50,7 +92,7 @@ disp_fits <- varana2 %>%
 #class(disp_fits)
 
 #+ (1|Zeit)
- APA_Table(disp_fits, type="long2")
+ APA_Table(disp_fits, type="long")
 
 
 
@@ -111,6 +153,10 @@ round(c(r=cor(ki_al, ga_al),  df=fit$df[2],  p.value= p), 3)
 APA2( ~., fkv, test=TRUE)
 
 
+## ----fkv-kor-plot, fig.cap = "Mittelwerte",  fig.width=4, fig.height=4, cache=TRUE----
+require(arm)
+corrplot(fkv, abs=TRUE, n.col.legend=7)#  corrplot {arm}
+
 ## ----pca,   results='asis', warning=FALSE-------------------------------------
 Principal2(fkv, 5, cut=.35)
 
@@ -136,6 +182,15 @@ APA2(fit.Lavaan)
 # #show(fit.Lavaan)
 # anova(fit.Lavaan)
 
+
+## ----pca-lavan-plot, fig.cap = "Mittelwerte",  fig.width=4, fig.height=4, cache=TRUE----
+# require(semPlot)
+# 
+# semPaths(fit.Lavaan, "std", rotation=2, title = FALSE)
+# title("Std", line = 3)
+
+plot(1)
+ 
 
 ## ----reliability,  results='asis', warning=FALSE------------------------------
 
@@ -244,7 +299,7 @@ fit4<-lmerTest::lmer(score ~ agegrp*trial + (1|id), MMvideo)
 
 
 ## ----mix-mod, results='asis'--------------------------------------------------
-APA_Table(fit1, fit2, fit3, fit4, type="long2")
+APA_Table(fit1, fit2, fit3, fit4, type="long")
 
 
 #  windows(8,6)

@@ -1,13 +1,13 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 
 
- require(stpvers)
+require(stpvers)
 require(flextable)
-Projekt("text",  "Exampel")
+Projekt("",  "Exampel")
 #set_my_options(output="html")
  
 
@@ -25,7 +25,7 @@ vars <- c(
 )
 
 
-## ----DiagrammeR, echo=FALSE----------------------------------------------
+## ----DiagrammeR, echo=FALSE---------------------------------------------------
 library(DiagrammeR)
 
  DiagrammeR("graph RL;
@@ -41,7 +41,7 @@ Geschlecht-->Einkommen
  
  ")
 
-## ---- include = FALSE----------------------------------------------------
+## ---- include = FALSE---------------------------------------------------------
 
 n<-100
 
@@ -90,17 +90,21 @@ function(x) {
 
 
 
-## ----default-table, results='asis'---------------------------------------
- names(DF)
+## ----default-table, results='asis'--------------------------------------------
+ 
+which_output()
+
+
 DF %>% Tabelle2(sex, age, edu, beruf, single, APA = TRUE, caption= "Characteristics")
 
-## ----pca-table, results='asis'-------------------------------------------
+
+## ----pca-table, results='asis'------------------------------------------------
 
  APA_PCA(DF[vars], 5, cut=.35,include.plot = FALSE)
  
 
 
-## ----rel-table, results='asis'-------------------------------------------
+## ----rel-table, results='asis'------------------------------------------------
  
 Openness <- Reliability(~o1+o2+o3+o4+o5, DF, check.keys=TRUE)
 Conscientiousness <- Reliability(~ c1+c2+c3+c4+c5, DF, check.keys=TRUE)
@@ -117,7 +121,7 @@ DF$A<- Agreeableness$index
 Alpha2(Openness,Conscientiousness,Extraversion,Neuroticism,Agreeableness)
 
 
-## ------------------------------------------------------------------------
+## ----reg-tab, results='asis'--------------------------------------------------
 
 
 DF %>% Tabelle2(Einkommen , sex, age , O , C , E , N , A)
@@ -126,18 +130,13 @@ fit<- lm(Einkommen ~ sex + age + O + C + E + N + A, DF)
 APA_Table(fit)
 
 
-## ------------------------------------------------------------------------
- 
-
-hist(DF$Einkommen)
-
-## ---- fig.cap = "Your figure caption.", fig.width=8, fig.height=8--------
+## ---- fig.cap = "Your figure caption.", fig.width=8, fig.height=8-------------
  
 # MySet()
 require(effects)
  plot(allEffects(fit), main="")
 
 
-## ---- echo=FALSE, results='asis'-----------------------------------------
+## ---- echo=FALSE, results='asis'----------------------------------------------
 knitr::kable(head(mtcars, 10))
 

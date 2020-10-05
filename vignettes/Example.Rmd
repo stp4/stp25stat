@@ -17,9 +17,9 @@ knitr::opts_chunk$set(
 )
 
 
- require(stpvers)
+require(stpvers)
 require(flextable)
-Projekt("text",  "Exampel")
+Projekt("",  "Exampel")
 #set_my_options(output="html")
  
 
@@ -140,8 +140,12 @@ function(x) {
 ## Beschreibung der Untersuchungsgruppe
 
 ```{r default-table, results='asis'}
- names(DF)
+ 
+which_output()
+
+
 DF %>% Tabelle2(sex, age, edu, beruf, single, APA = TRUE, caption= "Characteristics")
+
 ```
 
 
@@ -178,7 +182,7 @@ Alpha2(Openness,Conscientiousness,Extraversion,Neuroticism,Agreeableness)
 ## Test des Regressionsmodels
 
 
-```{r}
+```{r reg-tab, results='asis'}
 
 
 DF %>% Tabelle2(Einkommen , sex, age , O , C , E , N , A)
@@ -191,14 +195,6 @@ APA_Table(fit)
 ## Figures
 
 
-```{r}
- 
-
-hist(DF$Einkommen)
-```
-
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
 
 ```{r, fig.cap = "Your figure caption.", fig.width=8, fig.height=8}
  
