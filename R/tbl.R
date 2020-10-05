@@ -56,15 +56,15 @@ Tbll <- function(..., output = FALSE)  {
   
   if (frst[1] == "formula" |
       ("data.frame" %in% frst & !isa_formula)) {
-    rslt <- Tabelle(...)
+    rslt <- Tbll_desc(...)
   }
   else if ("data.frame" %in% frst & isa_formula) {
     if (n <= 2)
       rslt <-
-        lazyeval::lazy_eval(lazyeval::make_call(quote(Tabelle), dots[c(2, 1)]))
+        lazyeval::lazy_eval(lazyeval::make_call(quote(Tbll_desc), dots[c(2, 1)]))
     else
       rslt <-
-        lazyeval::lazy_eval(lazyeval::make_call(quote(Tabelle), dots[c(2, 1, (3:n))]))
+        lazyeval::lazy_eval(lazyeval::make_call(quote(Tbll_desc), dots[c(2, 1, (3:n))]))
   }
   else{
     if (n > 1) {
@@ -103,8 +103,6 @@ Tbll <- function(..., output = FALSE)  {
 apa2 <- function(..., output = FALSE) {
   rslt <-  APA2(..., output = FALSE)
   
-  
-  
   if (tibble::is_tibble(rslt))
     rslt
   else if (is.data.frame(rslt))
@@ -114,18 +112,6 @@ apa2 <- function(..., output = FALSE) {
 }
 
 
-#' @rdname Tbll
-#' @export
-Tbll_desc <-
-  function(...,
-           output = FALSE,
-           APA = TRUE) {
-    rslt <- Tabelle(..., APA = APA)
-    if (length(rslt) == 1 & is.list(rslt))
-      rslt <- rslt[[1]]
-    
-    rslt
-  }
 
 #' @rdname Tbll
 #' @export
