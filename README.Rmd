@@ -69,6 +69,21 @@ DF %>% Tabelle2(age, sex, height,
                 by =  ~ sex,
                 APA = TRUE)
 
+
+# neue Funktion
+
+DF %>%
+  Tbll(
+    age[median], height[mean,ttest],
+    race,
+    died[fisher], smoker[fisher],
+    iq, likert[mean],
+    by = ~ sex,
+    include.test = TRUE,
+    include.total = TRUE
+  ) %>%
+  Output()
+
 ```
 
 

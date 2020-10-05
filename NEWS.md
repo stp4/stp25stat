@@ -1,3 +1,15 @@
+
+
+
+
+# stp25stat 0.2.2
+
+## Changes to functions
+
+* `Tbll_desc()`ist jetzt eine eigenstaendige Funktion. Das Resultat ist etwas andest formatiert, arbeitet aber ansonsten gleich wie Tabelle()
+
+
+
 # stp25stat 0.2.1
 
 ## New functions
