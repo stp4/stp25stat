@@ -401,7 +401,7 @@ calc_median <-
   }
 
 
-#' @noRd
+
 #' Formatierte Mittelwerte
 #'
 #' @param x vector
@@ -411,7 +411,7 @@ calc_median <-
 #' @param unit Einheiten
 #'
 #' @return character
-
+#' @noRd
 calc_mean <-  function(x,
                        digits = stp25rndr::default_stp25("digits", "mittelwert") ,
                        n = length(x),
@@ -528,6 +528,7 @@ Prozent <- function (x,
 #' @param n intern
 #' @param exclude geh noch nicht
 #' @param max_factor_length lange Einträge kuerzen
+#' @export
 Prozent2default <-
   function(x,
            digits = 0,

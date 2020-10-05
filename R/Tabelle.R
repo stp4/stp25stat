@@ -165,29 +165,37 @@ Tabelle.default <- function(...,
   if (APA) {
     errate_statistik3(
       ...,
-      type = type,        # "multiresponse"
+      type = type,
       caption = caption,
       note = note,
-    #  digits = digits,
       na.action = na.action,
       exclude = exclude,
-
       include.n = include.n,
       include.nr = include.nr,
       include.total = include.total,
-      include.test = include.test, # "wilcox.test","u.test",  "kruskal.test","h.test",
-                                   # "chisq.test","t.test",  "aov", "anova",
-                                   # "SPSS", "Hmisc"
-                                   #         "shapiro.test" "KS.test"
-                                  #  Kolmogorov-Smirnov-Anpassungstest mit SPSS
+      include.test = include.test,
       exclude.level=exclude.level,
-
       max_factor_length = max_factor_length,
       order = order
-    #  decreasing = decreasing,
-   #   useconTest = useconTest,
-    #  normality.test = normality.test
     )
+    
+    # prepare_output(
+    #   Tbll_desc(
+    #     ...,
+    #     type = type,
+    #     na.action = na.action,
+    #     exclude = exclude,
+    #     include.n = include.n,
+    #     include.nr = include.nr,
+    #     include.total = include.total,
+    #     include.test = include.test,
+    #     exclude.level = exclude.level,
+    #     max_factor_length = max_factor_length
+    #   ),
+    #   caption = caption,
+    #   note = note
+    # )
+ 
   }
   else
   {
