@@ -42,14 +42,24 @@ errate_statistik3 <-
          )
   {
     mySep<-  stp25rndr::symbol_nbsp()
-    mySep2  <-  paste0(mySep,mySep)
+    mySep2  <-  paste0(mySep, mySep)
  
     Emty_res <- function(...) { data.frame(lev="", 
                                            n="", 
                                            m="", 
                                            stringsAsFactors = FALSE)}
 
-    Mittelwert_Einzel <- function(i, x) {
+    Mittelwert_Einzel <- function(i, 
+                                  x
+                                  #,
+                               #   digits,
+                               #   measure,
+                               #   row_name,
+                               #   mySep2,
+                               #   exclude.level,
+                                #  max_factor_length
+                                  
+                                  ) {
 
       x  <- na.omit(x)
       n  <- length(x)
@@ -322,7 +332,6 @@ errate_statistik3 <-
 #' measure.vars nach groesse sortieren
 #' 
 #' @noRd
-#'
 order_by_mean <- function(X) {
   if (length(X$yname) == 1) {
     return(X)
