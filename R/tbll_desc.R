@@ -1,8 +1,17 @@
-#' @rdname Tbll
+
+#' Tbll_desc
+#' 
+#' @param ...  an prepare_data2
+#' @param caption 
+#' @param na.action an prepare_data2
+#' @param include.n,include.nr,include.total,include.multiresponse 
+#' @param include.test,include.normality.tests Test
+#' @param include.label Labels ja-nein
+#' @param exclude,exclude.level,max_factor_length fuer factor
+#' 
+#' @return data.frame
 #' @export
 #' @examples
-#' 
-#'
 #' 
 #' Tbll_desc(
 #'   warpbreaks,
@@ -23,16 +32,18 @@ Tbll_desc <- function (...,
                        #          "mean", "median", "ci","cohen.d","effsize",
                        #          "multiresponse",  "pearson", "spearman"),
                        na.action = na.pass,
-                       exclude = NA,
+                      
                        include.n = TRUE,
                        # Anzahl bei Gruppe je Spalte
-                        include.nr = FALSE,
-                       # erste zeile Anzahl der Gruppen
+                       include.nr = FALSE,
+                       # erste Zeile Anzahl der Gruppen
                        include.total = FALSE,
                        # Total Anzahl + Statistik bei Gruppe
                        include.test = FALSE,
                        include.normality.tests=FALSE, #distribution-Test
                        include.multiresponse=FALSE,
+                       include.label=TRUE,
+                       exclude = NA,
                        exclude.level = FALSE,
                        max_factor_length = 35
                        ) {
@@ -245,15 +256,153 @@ Tbll_desc <- function (...,
   
   rslt_all[[1]] <- paste(rslt_all[[1]], rslt_all[[2]])
   prepare_output(rslt_all[-2], caption = caption, note=note, N=X$N)
+  
+  
 }
 
 
-#' @rdname Tbll
+#' @rdname Tbll_desc
 #' @export
 Tbll_desc_multi <- function(...) {
   Tbll_desc(..., include.multiresponse=TRUE)
 }
 
+
+
+#' @rdname Tbll_desc
+#' @export
+#' @examples 
+#' 
+#' #' require(stpvers)
+#' n <- 2 * 20
+#' e <- rnorm(n)
+#' dat <- stp25aggregate::Label(
+#'   data.frame(
+#'     a = rnorm(n) + e / 2,
+#'     b = rnorm(n) + e,
+#'     c = rnorm(n),
+#'     d = rnorm(n) + e * 10,
+#'     g = gl(2, 20, labels = c("Control", "Treat"))
+#'   ),
+#'   a = "Alpha",
+#'   b = "Beta",
+#'   c = "Gamma"
+#' )
+#' 
+#' 
+#' Tbll_corr( ~ a + b + c, dat)
+#' Tbll_corr(a ~ c, dat)
+#' Tbll_corr(a + b + c ~ d, dat)
+#' Tbll_corr(a + b + c ~ d, dat, groups = ~ g)
+#' 
+#' 
+Tbll_corr <-
+  function(...,
+           include.mean = FALSE,
+           include.n = TRUE,
+           include.stars = TRUE,
+           include.p = FALSE,
+           cor_diagonale_up = TRUE,
+           type = c("pearson", "spearman")) {
+  Hmisc_rcorr(
+      ...,
+      cor_diagonale_up = cor_diagonale_up,
+      include.stars = include.stars,
+      include.p  = include.p,
+      include.mean = include.mean,
+      include.n = include.n,
+      type = type,
+      caption = "Korrelation",
+      note = "note"
+    )
+}
+
+
+
+
+#' @rdname Tbll_desc
+#' @export
+#' 
+#' @examples 
+#' 
+#' 
+#'  data(infert, package = "datasets")
+#' infert$case  <- factor(infert$case , 1:0, c("case", "control"))
+#' 
+#' infert$spontaneous <- factor(infert$spontaneous)
+#' infert$induced2    <- factor(infert$induced == 0)
+#' 
+#' Tbll_xtabs( ~  case, infert)
+#' Tbll_xtabs( ~ induced2 + case, infert)
+#' Tbll_xtabs( ~ induced + case, infert)
+#' Tbll_xtabs( ~ induced + education, infert)
+#' 
+#' 
+#' Tbll_xtabs( ~ induced + education + case,
+#'             infert,
+#'             margin = "case",
+#'             #  add.margins = c("education", "induced"),
+#'             include.count = FALSE)
+#' 
+#' Tbll_xtabs(
+#'   ~ induced + education + case,
+#'   infert,
+#'   margin = "case",
+#'   add.margins = c("case"),
+#'   include.count = FALSE
+#' )
+#' 
+#' 
+#' 
+Tbll_xtabs <- function(...,
+                       include.count = TRUE,
+                       include.percent = TRUE,
+                       include.total = FALSE,
+                       
+                       include.prop.chisq = FALSE,
+                       include.chisq = FALSE,
+                       include.fisher = FALSE,
+                       include.test = any(c(include.fisher,
+                                            include.chisq,
+                                            include.prop.chisq)),
+                       
+                       include.correlation = FALSE,
+                       include.diagnostic = FALSE,
+                       
+                       margin = NULL,
+                       add.margins = NA) {
+  rslt <- APA_Xtabs(
+    ...,
+    include.percent = include.percent,
+    include.count = include.count,
+    include.total = include.total,
+    
+    margin = margin,
+    add.margins = add.margins,
+    
+    include.prop.chisq = include.prop.chisq,
+    include.chisq = include.chisq,
+    include.fisher = include.fisher,
+    include.test = include.test,
+    include.correlation = include.correlation,
+    include.diagnostic = include.diagnostic,
+    
+    output = FALSE
+  )
+  rslt
+}
+
+
+
+
+
+
+
+
+
+#' Leerer Data.Frame
+#' 
+#' @noRd
 emty_tbll <- function() {
   data.frame(
     lev = "",
@@ -264,7 +413,9 @@ emty_tbll <- function() {
 }
 
 
- 
+#' Die Berechnung
+#' 
+#' @noRd
 calc_desc_mean <- function(x,
                            digits,
                            measure,
@@ -283,15 +434,16 @@ calc_desc_mean <- function(x,
     numeric = Mean2default(x, digits, n),
     integer = Mean2default(x, digits, n),
     factor =  Prozent2default(x, digits, n, exclude, max_factor_length),
+   # freq =    Prozent2default(x, digits, n, exclude, max_factor_length),
     logical = Prozent2default(x, digits, n, exclude, max_factor_length),
-    freq =    Prozent2default(x, digits, n, exclude, max_factor_length),
     mean =    Mean2default(x, digits, n),
     median =  Median2default(x, digits, n),
     multi =   Multi2default(x, digits, n),
+    
     header =  emty_tbll(),
     emty_tbll()
   )
-
+# | measure == "freq"
   if (measure == "factor") {
     x0 <- data.frame(
       Item = row_name,
@@ -319,6 +471,8 @@ calc_desc_mean <- function(x,
   rslt
 }
 
-
+#' liste als DF
+#' 
+#' @noRd
 list_rbind <- function(l)
   as.data.frame(do.call(rbind, (l)))

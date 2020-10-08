@@ -4,7 +4,6 @@
 #' Tabelle ohne Output an html
 #'
 #' @param ... alles an APA2 odere Tabelle
-#' @param output an Output
 #'
 #' @return data.frame oder liste mit data.frames
 #' @export
@@ -40,7 +39,7 @@
 #'   caption = "Liste mit lm und aov"
 #' )
 #'
-Tbll <- function(..., output = FALSE)  {
+Tbll <- function(...)  {
   dots <- lazyeval::lazy_dots(...)
   n <- length(dots)
   rslt <- NULL
@@ -48,7 +47,6 @@ Tbll <- function(..., output = FALSE)  {
   isa_formula <- FALSE
   frst <-
     lazyeval::lazy_eval(lazyeval::make_call(quote(class), dots[[1]]))
-  
   
   if (n > 1 & "data.frame" %in%  frst)
     isa_formula <-
@@ -100,7 +98,7 @@ Tbll <- function(..., output = FALSE)  {
 #' @rdname Tbll
 #' @description apa2(): APA2 ohne Output
 #' @export
-apa2 <- function(..., output = FALSE) {
+apa2 <- function(...) {
   rslt <-  APA2(..., output = FALSE)
   
   if (tibble::is_tibble(rslt))
@@ -112,29 +110,3 @@ apa2 <- function(..., output = FALSE) {
 }
 
 
-
-#' @rdname Tbll
-#' @export
-Tbll_corr <-
-  function(...,
-           output = FALSE) {
-    APA_Correlation(..., output = FALSE)
-  }
-
-
-#' @rdname Tbll
-#' @export
-Tbll_reg  <- function(...,
-                      output = FALSE) {
-  APA_Table(..., output = FALSE)
-  
-}
-
-
-#' @rdname Tbll
-#' @export
-Tbll_xtabs <- function(...,
-                       output = FALSE) {
-  APA_Xtabs(..., output = FALSE)
-  
-}

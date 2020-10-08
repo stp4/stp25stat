@@ -6,7 +6,11 @@
 
 ## Changes to functions
 
+
 * `Tbll_desc()`ist jetzt eine eigenstaendige Funktion. Das Resultat ist etwas andest formatiert, arbeitet aber ansonsten gleich wie Tabelle()
+* Neue Statistik Methode in erate_statistik  Beispiel: `hkarz %>% Tbll_desc(gruppe[binomial], by =  ~ Lai, include.test = TRUE)`
+* 
+* `Tbll_desc_long()`ist jetzt eine eigenstaendige Funktion abgeleitet von Tabelle()
 
 
 

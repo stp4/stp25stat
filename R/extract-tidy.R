@@ -125,7 +125,8 @@ extract.default <- function(x, ...) {
   AV <-
     ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
   
-  if (class(x) == "lme")
+ 
+  if (inherits(x, "lme"))
     df <- broom.mixed::tidy(x)
   else
     df <- broom::tidy(x)
