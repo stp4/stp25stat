@@ -56,9 +56,12 @@ APA2.default <- function(x,
                        "Obs: ", attr(rslt, "N"))
     if (is.null(note))
       note <- attr(rslt, "note")
+    
+    rslt <- fix_format(rslt)
+    
     if( !is.logical(output) )
       Output(
-        fix_format(rslt),
+        rslt,
         caption = paste(custom.model.names, caption),
         note = note,
         output=output)
