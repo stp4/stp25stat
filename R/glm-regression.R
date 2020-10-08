@@ -3,15 +3,68 @@
 
 #' @rdname APA
 #' @export
+#' @examples 
+#' 
+#' # Likelihood Ratio Test
+#' 
+#' fit0 <- glm(gruppe ~ 1, hkarz, family = binomial)
+#' fit1 <- glm(gruppe ~ tzell + lai, hkarz, family = binomial)
+#' #fit0 <- update(fit1, . ~ -tzell- lai)
+#' 
+#' 
+#' logLik(fit0)
+#' logLik(fit1)
+#' 
+#' - 2 * (logLik(fit0) -  logLik(fit1))
+#' 
+#' lmtest::lrtest(fit1)
+#' APA(fit1)
+#' hkarz$Lai <- factor(hkarz$lai)
+#' hkarz %>% Tbll_desc(gruppe[binomial], 
+#' by = ~ Lai, 
+#' include.test = TRUE)
+#' 
+#' 
 APA.glm <- function(x, ...) {
-  lrtst <-  lmtest::lrtest(x)
-  paste0("LogLik=",
-         Format2(lrtst[2, 2], 2),
-         ", ",
-         rndr_X(lrtst[2, 4],
-                lrtst[1, 1],
-                lrtst[2, 1],
-                lrtst[2, 5]))
+  # Hier gibt es Probleme wen die Funktion in
+  # anderen verschachtelt ist
+  # lrtst <-  lmtest::lrtest(x)
+  # paste0("LogLik=",
+  #        Format2(lrtst[2, 2], 2),
+  #        ", ",
+  #        rndr_X(lrtst[2, 4],
+  #               lrtst[1, 1],
+  #               lrtst[2, 1],
+  #               lrtst[2, 5]))
+  #
+  #
+  # rhs <-  formula(x)[-2]
+  # fm0 <-
+  #   as.formula(paste(".~ -", paste(all.vars(rhs), collapse = " - ")))
+  # null_model <- update(x, fm0)
+  #
+  lhs <-  formula(x)[[2]]
+  null_model <-
+    glm(as.formula(paste(lhs, "~1")),
+        data =  x$data,
+        family = x$family)
+  
+  ll_fit <- logLik(x)
+  ll_0 <- logLik(null_model)
+  
+  chi2 <- -2 * (as.numeric(ll_0) -  as.numeric(ll_fit))
+  df_fit <-  df <- attr(ll_fit, "df") - 1
+  
+  paste0(
+    "LogLik=",
+    stp25rndr::Format2(as.numeric(ll_fit), 2),
+    ", ",
+    stp25rndr::rndr_X(
+      chi2,
+      df1 = df_fit,
+      p = pchisq(chi2, df = df_fit, lower.tail = FALSE)
+    )
+  )
 }
 
 #' @rdname APA2

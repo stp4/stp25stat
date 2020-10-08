@@ -7,7 +7,7 @@ contest <-
     "ttest",
     "aov",
     "anova")
-cattest <-  c("cattest", "chisq", "fisher", "ordtest")
+cattest <-  c("cattest", "chisq", "fisher", "ordtest", "binomial")
 notest <-  c("notest")
 ordtest <-  c("ordtest")
 disttest <-  c("shapiro", "kstest")
@@ -94,12 +94,14 @@ catTest = function(x,
                    data,
                    include.test = "chisq") {
   g <- size_data_tabel(x, data)
-  
+  cat("\n include.test: ", include.test,"\n")
   if (all(g > 4)) {
     if (include.test == "chisq")
       chisqTest2(x, data)
     else if (include.test == "fisher")
       fisherTest2(x, data)
+    else if (include.test == "binomial")
+      gml_binomial(x, data)
     else{
       include.test
     }
@@ -196,6 +198,65 @@ chisqTest2 <- function(x, data) {
   res
 }
 
+# das geht nicht wegen lmertest
+# gml_binomial <- function(x, data) {
+#   xt <- as.data.frame(stats::xtabs(x, data))
+#   fm <- formula(paste("Freq ~ ", paste(all.vars(x), collapse = "*")))
+#   APA(glm(fm, xt, family = poisson()))
+#   
+# }
+
+gml_binomial <- function(x, data) {
+  fm <- as.formula(paste(all.vars(x), collapse = "~"))
+ # fm0 <- as.formula(paste(all.vars(x)[1],  "~ 1"))
+  fit_1 <- glm(fm, data, family = binomial())
+ # fit0 <- glm(fm0, data, family = binomial())
+  
+  # # https: /  / api.rpubs.com / tomanderson_34 / lrt
+  # 
+  # A <- logLik(fit1)
+  # M0 <- logLik(fit0)
+  # teststat <- -2 * (as.numeric(M0) - as.numeric(A))
+  # 
+  # df <- attr(A, "df") - 1
+  # p <- pchisq(teststat, df = df, lower.tail = FALSE)
+  # rslt <- paste(
+  #   "log Lik ",
+  #   paste(format(as.numeric(A), digits = 2), collapse = ", "),
+  #   " (df=",
+  #   format(df),
+  #   "), ",
+  #   stp25rndr::rndr_P(p),
+  #   sep = ""
+  # )
+  
+  rslt <- APA(fit_1)
+  
+  names(rslt) <- "LRT-Test"
+  rslt
+}
+
+
+# counts <- c(18,17,15,20,10,20,25,13,12)
+# outcome <- gl(3,1,9)
+# treatment <- gl(3,3)
+# dat<-data.frame(treatment, outcome, counts) # showing data
+# dat$counts <- as.numeric(dat$counts <15)
+# dat
+# 
+# glm.D93 <- glm(counts ~ 1, dat, family = binomial())
+# APA(glm.D93)
+# lmtest::lrtest(glm.D93)
+# 
+# 
+# glm.D93 <- glm(counts ~ treatment, dat, family = binomial())
+# APA(glm.D93)
+# lmtest::lrtest(glm.D93)
+# gml_binomial(~ counts + treatment, dat)
+# 
+# pchisq(-2 * ( (-5.7286) - (-3.8191)), 2, lower.tail = FALSE)
+
+
 fisherTest2 <- function(x, data) {
   xt <- stats::xtabs(x, data)
   if (all(dim(xt) == c(2, 2))) {
@@ -206,9 +267,6 @@ fisherTest2 <- function(x, data) {
     
   } else
     "wrong dim for fisher-test"
-  
-  
-  
 }
 
 
