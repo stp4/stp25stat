@@ -852,21 +852,22 @@ berechne_all <- function(data,
   }
   
   lgcl <- function() {
-    if(length(na.omit(data[all.vars(fm)[1]]))<0){
-      aggregate(
-        fm,
-        data ,
-        FUN = function(x) {
-          x<- factor(x)
-          r <- table(x)
-          paste(r, collapse = "/")
-        }
-      )}
-    else {
-      r<- data.frame(x="", stringsAsFactors=FALSE)
-      names(r)<- all.vars(fm)[1]
-      r
-    }
+    #   if(length(na.omit(data[all.vars(fm)[1]]))<0){
+    aggregate(
+      fm,
+      data ,
+      FUN = function(x) {
+        x <- factor(x)
+        r <- table(x)
+        paste(r, collapse = "/")
+      }
+    )
+    #  }
+    #  else {
+    #    r<- data.frame(x="", stringsAsFactors=FALSE)
+    #    names(r)<- all.vars(fm)[1]
+    #   r
+    #  }
   }
   
   custom_fun <- function() {
@@ -878,6 +879,13 @@ berechne_all <- function(data,
     } else
       res
   }
+  
+  
+  emty <- function() {
+   data.frame(x = "", stringsAsFactors = FALSE)
+  }
+    
+
   
   
   if (is.null(fm)) {
@@ -893,12 +901,13 @@ berechne_all <- function(data,
     mean = mn(),
     units=mn(), ## library(units)
     custom_fun = custom_fun(),
-    logical = lgcl(), # Zwischen-Ueberschrift
-    NA
+    logical = lgcl(), 
+    header = emty(),
+    emty()
   )
   
   if (!is.null(measure.name))
     names(res)[ncol(res)] <- measure.name[1]
-  
+
   res
 }
