@@ -72,6 +72,14 @@ NULL
 
 
 
+# survfit -----------------------------------------------------------------
+
+
+# survfit: Compute a survival Curve for Censored Data (survival)
+
+
+
+
 #' @rdname Kaplan_Meier
 #' @description APA.survfit  Mediane berechnen.
 #' @export
@@ -92,6 +100,40 @@ APA.survfit <- function(x, ...) {
     unlist(mdn["median"])
   }
 }
+#' @rdname Kaplan_Meier
+#' @export
+#' @examples 
+#' 
+#' APA2.survfit(survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
+#' APA2.survfit(survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian), type=2)
+#' #ovarian$fustat.r <- 1 - ovarian$fustat
+#' #APA2.survfit(survfit(Surv(futime, fustat.r) ~ ecog.ps, data = ovarian))
+#' 
+APA2.survfit <- function(x,
+                         caption = "", 
+                         note = "",
+                         output=which_output(),
+                         
+                         type = 1,
+                         # 1ist Mediane 2 Mediane + Tabelle
+                         digits = 2,
+                         ...) {
+  
+  rslt <- extract_survfit(x, digits)
+    Output(rslt$median,
+           caption = paste("Survival Mean ", caption),
+           note = note,
+           output=output)
+
+    if (type != 1)
+      Output(rslt$table, 
+             caption = paste("Survival Table ", caption),
+             output=output)
+  invisible(rslt)
+}
+
+ 
+
 
 
 
@@ -141,107 +183,11 @@ APA2.summary.survfit <- function(x,
                                    upper = "upper 95% CI"
                                  ),
                                  ...) {
-  #cat("\nin APA2.summary.survfit")
-  #fit <- survfit((time=time,event=death)~group)
-  #surv.prob <- summary(fit,time=c(0,10,20,30))$surv
-  if (is.null(names(include))) {
-    vars <- vars_names <- include
-  }
-  else{
-    vars <-  names(include)
-    vars_names <- as.character(include)
-  }
+  rslt <- extract_summary_survfit(x, digits, percent, include)
   
-  result <- as.data.frame(x[vars])
-  if (percent) {
-    result$surv <- result$surv * 100
-    result$lower <- result$lower * 100
-    result$upper <- result$upper * 100
-  }
-  
-  colnames(result) <- vars_names
-  result <-  stp25output::fix_format(result,  exclude = 1:3, digits = digits)
-  if ("strata" %in% names(x))
-    result <- cbind(Source = x$strata,
-                    result)
-  
-  stp25output::Output(result, ...)
-  invisible(result)
+  stp25output::Output(rslt, ...)
+  invisible(rslt)
 }
-
-
-
-#' @rdname Kaplan_Meier
-#' @export
-#' @examples 
-#' 
-#' APA2.survfit(survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
-#' APA2.survfit(survfit(Surv(futime, fustat) ~ ecog.ps, data = ovarian), type=2)
-#' #ovarian$fustat.r <- 1 - ovarian$fustat
-#' #APA2.survfit(survfit(Surv(futime, fustat.r) ~ ecog.ps, data = ovarian))
-#' 
-APA2.survfit <- function(x,
-                         caption = "NULL", output=which_output(),
-                         note = "",
-                         type = 1,
-                         # 1ist Mediane 2 Mediane + Tabelle
-                         digits = 2,
-                         ...) {
-  if (length(names(x)) > 11) {
-    # Workaround fuer unterschiedlichen Output
-    # Mediane berechnen
-    mdn <- fix_to_data_frame(summary(x)$table)
-    
-    if (!is.null(digits)) {
-      cat(names(mdn))
-      mdn["median"] <- round(mdn["median"], digits)
-      mdn["0.95LCL"] <- round(mdn["0.95LCL"], digits)
-      mdn["0.95UCL"] <- round(mdn["0.95UCL"], digits)
-    }
-    mdn <- if (ncol(mdn) == 10)
-      cbind(mdn[, c(1, 2, 5)], mdn[, c(8:10)],
-            Mean = rndr_mean(mdn[, 6], mdn[, 7]))
-    else
-      cbind(mdn[, c(1, 4)], mdn[, c(7:9)],
-            Mean = rndr_mean(mdn[, 5], mdn[, 6]))
-    
-    
-    Output(mdn,
-           caption = paste("Survival Mean ", caption),
-           note = note,
-           output=output)
-    
-    
-    
-    tab<- with(
-      x,
-      data.frame(
-        Time = time,
-        Risk = n.risk,
-        Event = n.event,
-        Survival = Format2(surv, 2),
-        SE = Format2(std.err, 2)
-      )
-    )
-    
-    if (type != 1)
-      Output(tab, 
-             caption = paste("Survival Table ", caption),
-             output=output)
-  }
-  else{
-    cat(
-      "Hier besser folgend kodieren: 0=alive, 1=dead. Other choices are TRUE/FALSE (TRUE = death)."
-    )
-    return(x)
-  }
-  
-  invisible(list(median=mdn,
-                 table=tab))
-  
-  
-}
-
 
 #' @rdname Kaplan_Meier
 #' @export
@@ -252,89 +198,141 @@ APA2.survfit <- function(x,
 APA2.survdiff <- function(x,
                           caption = "Test Survival Curve Differences",
                           note = "") {
-  df <- length(x$n) - 1
-  p.val <- 1 - pchisq(x$chisq, df)
-  
   Output(
-    data.frame(
-      Source = c(names(x$n), "Overall"),
-      N = as.integer(c(x$n, sum(x$n))),
-      Observed = as.integer(c(x$obs, sum(x$obs))),
-      Expected = c(round(x$exp, 1), NA)
-    ),
+    extract_survdiff(x),
     caption,
     note = APA.survdiff(x)
   )
 }
 
-
-
-#' @rdname Kaplan_Meier
-#' @export
-#' 
-#' @examples 
-#' APA2.coxph(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian) )
-#' APA2.coxph(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian),
-#'  include.param=TRUE, include.test = FALSE)
-#'  Coxph_Test(Surv(futime, fustat) ~ ecog.ps, data = ovarian) 
-#'  
-APA2.coxph <- function(x,
-                       caption = "",
-                       note = "",
-                       output = which_output(),
-                       include.param = FALSE,
-                       include.test = TRUE,
-                       ...) {
-  tst <- NULL
-  prm <- NULL
-  
-  if (include.test) {
-    sfit <- summary(x)  #survival:::summary.coxph
-    tst <- rbind(
-      "Wald test" =  fix_format_p(sfit$waldtest) ,
-      "Score (logrank) test" = fix_format_p(sfit$sctest),
-      "Likelihood ratio test" = fix_format_p(sfit$logtest) ,
-      "Concordance" = c(paste0(Format2(sfit$concordance[1], 2), " (SE=", Format2(sfit$concordance[1], 2),")"), NA, NA),
-      "Rsquare" = c(Format2(sfit$rsq[1], 2), NA, NA),
-      "AIC" = c(Format2(AIC(x), 2), NA, NA),
-      "BIC" = c(Format2(BIC(x), 2), NA, NA)
+extract_survfit <- function(x,
+                            digits = 2) {
+  mdn <-   summary(x)$table
+  if (is.null(names(mdn))) {
+    mdn <- as.matrix(mdn)
+    mdn  <-   data.frame(
+      Source =  rownames(mdn), #   sapply(strsplit(rownames(mdn), "="), "[", 2),
+      median = stp25rndr::Format2(mdn[, "median"], digits),
+      low.ci = stp25rndr::Format2(mdn[, "0.95LCL"], digits),
+      up.ci = stp25rndr::Format2(mdn[, "0.95UCL"], digits),
+      Mean = stp25rndr::rndr_mean(mdn[, "*rmean"], mdn[, "*se(rmean)"], digits =
+                                    digits)
     )
-    colnames(tst)[3]<- "p.value" 
-  #  print(tst)
-    tst <- fix_to_data_frame(tst)
     
-    Output(tst,
-           caption = caption,
-           note = note,
-           output = output)
+    tab <- with(
+      x,
+      data.frame(
+        strata= rep(attr(strata,"names"), strata),
+        Time = time,
+        Risk = n.risk,
+        Event = n.event,
+        Survival = stp25rndr::Format2(surv, 2),
+        SE = stp25rndr::Format2(std.err, 2)
+        
+      )
+    )
   }
-  if (include.param) {
-    prm <- APA2_coxph_param(x, output = FALSE)
-    Output(prm,
-           caption = caption,
-           note = note,
-           output = output)
+  else
+  {
+    mdn  <-   data.frame(
+      Source = "Null",
+      median = stp25rndr::Format2(mdn[["median"]], digits),
+      low.ci = stp25rndr::Format2(mdn[["0.95LCL"]], digits),
+      up.ci = stp25rndr::Format2(mdn[["0.95UCL"]], digits),
+      Mean = stp25rndr::rndr_mean(mdn[["*rmean"]], mdn[["*se(rmean)"]], digits =
+                                    digits)
+    )
+    
+    tab <- with(
+      x,
+      data.frame(
+        Time = time,
+        Risk = n.risk,
+        Event = n.event,
+        Survival = stp25rndr::Format2(surv, 2),
+        SE = stp25rndr::Format2(std.err, 2)
+      )
+    )
   }
-  invisible(list(test = tst, param = prm))
+  list(median = mdn, table = tab)
 }
 
-#' @rdname Kaplan_Meier
-#' 
-#' @description  APA2_coxph_param Kopie von survival:::print.coxph
-#' @export
-#' 
-#' @examples 
-#' 
-#' APA2_coxph_param(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
-#' 
-APA2_coxph_param <-
+extract_summary_survfit <- function(x,
+                                    digits = NULL,
+                                    percent = FALSE,
+                                    include = c(
+                                      time = "time",
+                                      n.risk = "n.risk",
+                                      n.event = "n.event",
+                                      surv = "survival",
+                                      std.err = "std.err",
+                                      lower = "lower 95% CI",
+                                      upper = "upper 95% CI"
+                                    )) {
+  if (is.null(names(include))) {
+    vars <- vars_names <- include
+  }
+  else{
+    vars <-  names(include)
+    vars_names <- as.character(include)
+  }
+  rslt <- as.data.frame(x[vars])
+  
+  if (percent) {
+    rslt$surv  <- rslt$surv * 100
+    rslt$lower <- rslt$lower * 100
+    rslt$upper <- rslt$upper * 100
+  }
+  
+  colnames(rslt) <- vars_names
+  rslt <-
+    stp25output::fix_format(rslt, exclude = 1:3, digits = digits)
+  if ("strata" %in% names(x))
+    rslt <- cbind(Source = x$strata, rslt)
+  
+  rslt
+}
+
+extract_survdiff <- function(x) {
+  data.frame(
+    Source = c(names(x$n), "Overall"),
+    N = as.integer(c(x$n, sum(x$n))),
+    Observed = as.integer(c(x$obs, sum(x$obs))),
+    Expected = c(round(x$exp, 1), NA)
+  )
+}
+
+extract_coxph_test <- function(x) {
+  sfit <- summary(x)
+  Concordance <- paste0(
+    stp25rndr::Format2(sfit$concordance[1], 2),
+    " (SE=",
+    stp25rndr::Format2(sfit$concordance[2], 2),
+    ")"
+  )
+  tst <- cbind(data.frame(
+    Source = c(
+      "Wald test",
+      "Score (logrank test)",
+      "Likelihood ratio test",
+      "Rsquare","AIC","BIC")
+  ),
+  rbind(
+    sfit$waldtest,
+    sfit$sctest,
+    sfit$logtest ,
+    c(sfit$rsq[1], NA, NA),
+    c(AIC(x),  NA, NA),
+    c(BIC(x), NA, NA)
+  ))
+  
+  rbind(fix_format(tst), c("Concordance", Concordance, NA, NA))
+}
+
+extract_coxph_param <-
   function (x,
-            caption = "",
-            note = "",
-            include.ci=TRUE,
-            include.se=FALSE,
-            output = which_output())
-  {
+            include.se = FALSE,
+            include.ci = TRUE) {
     coef <- x$coefficients
     se <- sqrt(diag(x$var))
     
@@ -356,26 +354,90 @@ APA2_coxph_param <-
       tmp <-
         cbind(coef,
               exp(coef),
-             # nse,
               se,
               coef / se,
               pchisq((coef / se) ^ 2,
                      1, lower.tail = FALSE))
       dimnames(tmp) <- list(names(coef),
-                            c("coef", "HR", #"se(coef)", 
-                              "robust se", 
-                              "z", "p"))
+                            c("coef", "HR", "robust se", "z", "p"))
     }
     
     res <- fix_format(tmp, digits = c(2, 2, 2, 2, 3))
     res <- cbind(Source = cnames, res)
-   # names(res)[3] <- "HR"
-    if(!include.se) res<- res[-4]
-    if(include.ci){
-      ci<- stp25rndr::rndr_CI(exp(confint(x)))
-      res<- cbind(res[1:3], CI.HR=ci, res[4:ncol(res)])
-      
+    
+    if (!include.se)
+      res <- res[-4]
+    if (include.ci) {
+      ci <- stp25rndr::rndr_CI(exp(confint(x)))
+      res <- cbind(res[1:3], CI.HR = ci, res[4:ncol(res)])
     }
+    
+    res
+  }
+
+
+
+#' @rdname Kaplan_Meier
+#' @export
+#' 
+#' @examples 
+#' APA2.coxph(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian) )
+#' APA2.coxph(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian),
+#'  include.param=TRUE, include.test = FALSE)
+#'  Coxph_Test(Surv(futime, fustat) ~ ecog.ps, data = ovarian) 
+#'  
+APA2.coxph <- function(x,
+                       caption = "",
+                       note = "",
+                       output = which_output(),
+                       include.param = FALSE,
+                       include.test = TRUE,
+                       ...) {
+ 
+  prm <- NULL
+  rslt<- NULL
+  if (include.test) {
+    rslt <- extract_coxph_test(x)
+    Output(rslt,
+           caption = caption,
+           note = note,
+           output = output)
+  }
+  if (include.param) {
+    prm <- extract_coxph_param(x)
+    if(include.test) rslt <- list(test = rslt, param = prm)
+    else rslt <- prm
+    
+    Output(prm,
+           caption = caption,
+           note = note,
+           output = output)
+  }
+  invisible(rslt)
+}
+
+
+
+
+
+#' @rdname Kaplan_Meier
+#' 
+#' @description  APA2_coxph_param Kopie von survival:::print.coxph
+#' @export
+#' 
+#' @examples 
+#' 
+#' APA2_coxph_param(coxph(Surv(futime, fustat) ~ ecog.ps, data = ovarian))
+#' 
+APA2_coxph_param <-
+  function (x,
+            caption = "",
+            note = "",
+            include.ci=TRUE,
+            include.se=FALSE,
+            output = which_output())
+  {
+   res <- extract_coxph_param(x)
     
     Output(res,
            caption = caption,
@@ -604,11 +666,6 @@ fix_format_p <- function(x,
   else  {NULL}
 }
 
-#' rendere percent and CIs
-#'
-#' @param x,low,upr Wert, Lower und Upper
-#' @param digits Nachkommastellen
-#' @param prc,sep,sep_1,sep_2 Formatierungs-Symbole
-#' @return string
+
 
 
