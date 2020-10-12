@@ -59,20 +59,23 @@ Tbll <- function(...)  {
   else if ("data.frame" %in% frst & isa_formula) {
     if (n <= 2)
       rslt <-
-        lazyeval::lazy_eval(lazyeval::make_call(quote(Tbll_desc), dots[c(2, 1)]))
+        lazyeval::lazy_eval(lazyeval::make_call(
+          quote(Tbll_desc), dots[c(2, 1)]))
     else
       rslt <-
-        lazyeval::lazy_eval(lazyeval::make_call(quote(Tbll_desc), dots[c(2, 1, (3:n))]))
+        lazyeval::lazy_eval(lazyeval::make_call(
+          quote(Tbll_desc), dots[c(2, 1, (3:n))]))
   }
   else{
     if (n > 1) {
       is_arg <- sapply(dots,
                        function(x) {
-                         lazyeval::lazy_eval(lazyeval::make_call(quote(is.vector), x))
+                         lazyeval::lazy_eval(lazyeval::make_call(
+                           quote(is.vector), x))
                        })
       
       if (all(is_arg[-1])) {
-        rslt <- apa2(...)
+        rslt <- tbll_extract(...)
       }
       else{
         is_obj <- which(!is_arg)
@@ -83,12 +86,13 @@ Tbll <- function(...)  {
                             })
         for (i in seq_along(is_obj)) {
           rslt[[names_obj[i]]] <-
-            lazyeval::lazy_eval(lazyeval::make_call(quote(apa2), dots[c(i, is_arg)]))
+            lazyeval::lazy_eval(lazyeval::make_call(
+              quote(tbll_extract), dots[c(i, is_arg)]))
         }
       }
     }
     else
-      rslt <- apa2(...)
+      rslt <- tbll_extract(...)
   }
   
   rslt
@@ -96,17 +100,84 @@ Tbll <- function(...)  {
 
 
 #' @rdname Tbll
-#' @description apa2(): APA2 ohne Output
+#' @description tbll_extract(): APA2 ohne Output
 #' @export
-apa2 <- function(...) {
-  rslt <-  APA2(..., output = FALSE)
+#' 
+#' 
+tbll_extract<- function(...){
+  UseMethod("tbll_extract")
+}
+
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.default <- function(...) {
+ # print(class(list(...)[[1]]))
   
-  if (tibble::is_tibble(rslt))
-    rslt
-  else if (is.data.frame(rslt))
-    (tibble::as_tibble(rslt))
-  else
+  rslt <-  APA2(..., output = FALSE)
+  cat( "\n in APA2()\n")
+ # if (tibble::is_tibble(rslt))
+ #   rslt
+ # else if (is.data.frame(rslt))
+ #   (tibble::as_tibble(rslt))
+ # else
     rslt
 }
 
 
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.survfit <- function(x,
+                         caption = "Median", 
+                         include.survival=FALSE,
+                         digits = 2) {
+  rslt <- extract_survfit(x, digits)
+  rslt$median <- prepare_output(rslt$median, caption=caption, note="")
+  
+  if(include.survival) rslt
+  else  rslt$median
+}
+
+
+tbll_extract.summary.survfit <- function(x,
+                                 caption="Summary of a Survival Curve",
+                                 digits = NULL,
+                                 include.se=FALSE,
+                                 include.ci=TRUE) {
+  include <- c(time = "time", n.risk = "n.risk", n.event = "n.event", surv = "survival")
+  if(include.se) include<- append(include, c(std.err = "std.err"))
+  if(include.ci) include<- append(include, c(lower = "lower 95% CI", upper = "upper 95% CI"))
+  rslt <- extract_summary_survfit(x, digits=digits, percent=FALSE, include=include)
+  prepare_output(rslt, caption=caption, note="")
+}
+
+tbll_extract.survdiff <- function(x,
+                          caption = "Test Survival Curve Differences") {
+  prepare_output( extract_survdiff(x),
+                  caption=caption,
+                  note=APA(x)
+                  )
+}
+
+tbll_extract.coxph <- function(x,
+                               caption = "Cox proportional hazards regression model",
+                               include.param = FALSE,
+                               include.test = TRUE,
+                               ...) {
+  rslt <- NULL
+  prm <- NULL
+ # cat( "\n in tbll_extract.coxph()\n")
+  if (include.test) {
+    rslt <- extract_coxph_test(x)
+
+  }
+  if (include.param) {
+    prm <- prepare_output(extract_coxph_param(x), caption=caption)
+    
+    if(include.test) rslt<- list(test = rslt, param = prm)
+    else rslt <- prm
+  }
+  
+  rslt
+}

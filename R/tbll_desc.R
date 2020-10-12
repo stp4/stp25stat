@@ -3,7 +3,6 @@
 #' 
 #' @param ...  an prepare_data2
 #' @param caption 
-#' @param na.action an prepare_data2
 #' @param include.n,include.nr,include.total,include.multiresponse 
 #' @param include.test,include.normality.tests Test
 #' @param include.label Labels ja-nein
@@ -23,69 +22,80 @@
 #'   include.n = FALSE,
 #'   include.test = TRUE)
 #'   
+#'   
+#'    warpbreaks2 <- Label(warpbreaks,
+#' breaks	=	"The number of breaks",
+#' wool	=	"The type of wool",
+#' tension	=	"The level of tension")
+#' warpbreaks2$tension2 <- as.numeric(warpbreaks2$tension)
+#' 
+#' warpbreaks2 %>%
+#'   Tbll_desc(breaks + tension ~ wool)
+#' warpbreaks2 %>%
+#'   Tbll_desc_long(breaks + tension ~ wool)
+#' Tbll_corr(breaks ~ tension2, warpbreaks2,  groups = ~ wool)
+#' 
+#' Tbll_xtabs( ~ tension + wool, warpbreaks2, include.label = FALSE)
+#' 
+#' lm1 <- lm(breaks ~ wool + tension, data = warpbreaks2)
+#' lm2 <- lm(breaks ~ wool * tension, data = warpbreaks2)
+#' 
+#' # aufruf von APA_Table()
+#' Tbll_reg(
+#'   lm1,
+#'   lm2,
+#'   include.p = FALSE,
+#'   include.ci = TRUE,
+#'   include.se = FALSE,
+#'   caption = "Regression Table"
+#' )
+#' 
+#' # aufruf von APA2()
+#' Tbll_reg(lm1, lm2)
+#'   
+#'   
+#'   
 Tbll_desc <- function (...,
                        caption="",
-                       #note=""
-                       # type = c("2", 
-                       #          "1", 
-                       #          "freq","freq.ci",
-                       #          "mean", "median", "ci","cohen.d","effsize",
-                       #          "multiresponse",  "pearson", "spearman"),
-                       na.action = na.pass,
-                      
-                       include.n = TRUE,
-                       # Anzahl bei Gruppe je Spalte
-                       include.nr = FALSE,
-                       # erste Zeile Anzahl der Gruppen
-                       include.total = FALSE,
-                       # Total Anzahl + Statistik bei Gruppe
-                       include.test = FALSE,
-                       include.normality.tests=FALSE, #distribution-Test
-                       include.multiresponse=FALSE,
                        include.label=TRUE,
-                       exclude = NA,
-                       exclude.level = FALSE,
-                       max_factor_length = 35
+                       include.n = TRUE,
+                       include.nr = FALSE,
+                       include.total = FALSE,
+                       include.test = FALSE,
+                       include.normality.tests=FALSE,
+                       include.multiresponse=FALSE
                        ) {
-
-  sep <- paste(stp25rndr::symbol_nbsp(), stp25rndr::symbol_nbsp())
   note<-""
   rslt_all <- NULL
-  X <- stp25formula::prepare_data2(..., na.action = na.action)
-  n <- length(X$measure.vars)
+ 
   
+  X <- stp25formula::prepare_data2(...)
+  print(X)
+  n <- length(X$measure.vars)
   any_missing_measure <- sapply(X$data[X$measure.vars], function(x) length(na.omit(x))) 
-  X$measure <- ifelse(X$measure == "logical"  & (any_missing_measure == 0), "header", X$measure)
-  # keine fehlenden
+ 
+   if(!include.label) X$row_name <- X$measure.vars
+ 
   if ( include.n & sum(any_missing_measure[X$measure!="header"]-X$N) == 0 ) {
+    # keine fehlenden dann nur erste Zeile mit N
     include.n <- FALSE
     include.nr <- TRUE
   }
   
-
   if (include.multiresponse)
       X$measure <- rep("multi", length(X$measure))
   
   if (is.null(X$group.vars) | include.total) {
- 
     rslt_all <-
       list_rbind(purrr::pmap(list(
         x = X$data[X$measure.vars],
         digits = X$digits,
         measure = X$measure,
-        row_name = X$row_name,
-        sep = rep(sep, n),
-        exclude = rep(exclude, n),
-        exclude.level = if(is.null(exclude.level)) rep(NA, n) else rep(exclude.level, n),
-        max_factor_length = rep(max_factor_length, n)
-      )
-      , 
-      calc_desc_mean))
+        row_name = X$row_name), .calc_desc_mean))
     
     if (include.total)
       names(rslt_all)[3:4] <-
       paste0("Total_", names(rslt_all)[3:4])
-    
   }
   
   if (!is.null(X$group.vars)) {
@@ -104,20 +114,12 @@ Tbll_desc <- function (...,
           x = data[[i]],
           digits = X$digits,
           measure = X$measure,
-          row_name = X$row_name,
-          sep = rep(sep, n),
-          exclude = rep(exclude, n),
-          exclude.level = if(is.null(exclude.level)) rep(NA, n) else rep(exclude.level, n),
-          max_factor_length = rep(max_factor_length, n)
-        ),   
-        calc_desc_mean))
+          row_name = X$row_name), .calc_desc_mean))
       
       if (is.null(ans))
         ans <- ans_i[1:2]
       names(ans_i) <-  paste0(i, "_", names(ans_i))
       ans <- cbind(ans, ans_i[-c(1:2)])
-      
-      
     }
 
     
@@ -136,8 +138,6 @@ Tbll_desc <- function (...,
     }
     else {
       tsum <- table(X$data[[X$group.vars]])
-      
- 
       if (include.total) {
         n.out <- c("(N)", rep("", ncol(rslt_all) + 4))
         n.out[grep("_m", names(rslt_all))] <-
@@ -145,16 +145,13 @@ Tbll_desc <- function (...,
       } else{
         n.out <- c("(N)", rep("", ncol(rslt_all) + 2))
         n.out[grep("_m", names(rslt_all))] <- as.character(tsum)
-        
       }
       rslt_all <- rbind(n.out, rslt_all)
     }
   }
   
   if (!include.n) {
-    
     length.out <- if(is.null(X$group.vars)) 1 else nlevels(X$data[[X$group.vars]]) + include.total
-    
     rslt_all <-
       rslt_all[-(seq(
         from = 3,
@@ -169,20 +166,16 @@ Tbll_desc <- function (...,
     which_test <-
       match.arg(include.test,
                 c(contest, cattest, notest, ordtest, disttest, cortest))
-    
-     X$measure.test <- rep(which_test, length(X$measure.test))
+    X$measure.test <- rep(which_test, length(X$measure.test))
     if (which_test %in% disttest) {
-          include.test <- FALSE
+      include.test <- FALSE
       include.normality.tests <- TRUE
-     
     } else{
-  
-    include.test <- TRUE
+      include.test <- TRUE
     }
-    }  
+  }  
   
   if (include.test) {
- 
     rslt_test <- NULL
     for (i in seq_len(n)) {
       temp <- NULL
@@ -254,10 +247,9 @@ Tbll_desc <- function (...,
     rslt_all$normality.tests <- rslt_disttest
   }
   
+  
   rslt_all[[1]] <- paste(rslt_all[[1]], rslt_all[[2]])
   prepare_output(rslt_all[-2], caption = caption, note=note, N=X$N)
-  
-  
 }
 
 
@@ -298,6 +290,8 @@ Tbll_desc_multi <- function(...) {
 #' 
 Tbll_corr <-
   function(...,
+           caption="",
+           include.label=TRUE,
            include.mean = FALSE,
            include.n = TRUE,
            include.stars = TRUE,
@@ -312,8 +306,8 @@ Tbll_corr <-
       include.mean = include.mean,
       include.n = include.n,
       type = type,
-      caption = "Korrelation",
-      note = "note"
+      caption = caption,
+      note = ""
     )
 }
 
@@ -355,6 +349,8 @@ Tbll_corr <-
 #' 
 #' 
 Tbll_xtabs <- function(...,
+                       caption="",
+                       include.label=TRUE,
                        include.count = TRUE,
                        include.percent = TRUE,
                        include.total = FALSE,
@@ -373,6 +369,8 @@ Tbll_xtabs <- function(...,
                        add.margins = NA) {
   rslt <- APA_Xtabs(
     ...,
+    caption=caption,
+    label=include.label,
     include.percent = include.percent,
     include.count = include.count,
     include.total = include.total,
@@ -403,7 +401,7 @@ Tbll_xtabs <- function(...,
 #' Leerer Data.Frame
 #' 
 #' @noRd
-emty_tbll <- function() {
+.emty_tbll <- function() {
   data.frame(
     lev = "",
     n = "",
@@ -416,15 +414,15 @@ emty_tbll <- function() {
 #' Die Berechnung
 #' 
 #' @noRd
-calc_desc_mean <- function(x,
+.calc_desc_mean <- function(x,
                            digits,
                            measure,
                            row_name,
-                           sep = " ",
+                           sep = paste(stp25rndr::symbol_nbsp(), stp25rndr::symbol_nbsp()),
                            exclude = NA,
-                           exclude.level = NULL,
                            max_factor_length = 35,
                            ...) {
+ 
   x  <- na.omit(x)
   n  <- length(x)
   rslt <- NULL
@@ -434,16 +432,14 @@ calc_desc_mean <- function(x,
     numeric = Mean2default(x, digits, n),
     integer = Mean2default(x, digits, n),
     factor =  Prozent2default(x, digits, n, exclude, max_factor_length),
-   # freq =    Prozent2default(x, digits, n, exclude, max_factor_length),
     logical = Prozent2default(x, digits, n, exclude, max_factor_length),
     mean =    Mean2default(x, digits, n),
     median =  Median2default(x, digits, n),
     multi =   Multi2default(x, digits, n),
-    
-    header =  emty_tbll(),
-    emty_tbll()
+    header =  .emty_tbll(),
+    .emty_tbll()
   )
-# | measure == "freq"
+
   if (measure == "factor") {
     x0 <- data.frame(
       Item = row_name,
@@ -454,14 +450,6 @@ calc_desc_mean <- function(x,
     )
     res$n <- ""
     x1 <- cbind(Item = sep, res)
-    
-    #if (!all(exclude.level))    exclude.level <- NULL
-    
-    if (all(is.na(exclude.level)) | ( !is.null(exclude.level) & length(x1$lev) == 2)) {
-      excld <- which(x1$lev %in% exclude.level)
-      if (length(excld) > 0)
-        x1 <- x1[-excld, ]
-    }
     
     rslt <- rbind(x0, x1)
   } else
