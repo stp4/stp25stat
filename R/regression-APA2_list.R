@@ -226,17 +226,17 @@ APA2_list <-
         n.rgroup <- nrow(coefs)
         result <-
           prepare_output(dplyr::bind_rows(coefs, gofs),
-                         caption, note, include.n = NULL)
+                         caption, note, N = NULL, include.n = NULL)
         
       } else if (!include.param) {
         result <-
-          prepare_output(gofs, caption, note, include.n = NULL)
+          prepare_output(gofs, caption, note, N = NULL, include.n = NULL)
         rgroup <- n.rgroup <- NULL
       }
       
     } else {
       result <-
-        prepare_output(coefs, caption, note, include.n = NULL)
+        prepare_output(coefs, caption, note, N = NULL, include.n = NULL)
       rgroup <- n.rgroup <- NULL
     }
     
