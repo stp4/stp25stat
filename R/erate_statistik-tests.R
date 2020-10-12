@@ -94,7 +94,7 @@ catTest = function(x,
                    data,
                    include.test = "chisq") {
   g <- size_data_tabel(x, data)
-  cat("\n include.test: ", include.test,"\n")
+  #cat("\n include.test: ", include.test,"\n")
   if (all(g > 4)) {
     if (include.test == "chisq")
       chisqTest2(x, data)
