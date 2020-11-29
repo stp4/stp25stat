@@ -92,7 +92,7 @@ APA.survfit <- function(x, ...) {
   if (length(names(x)) > 11) {
     # Workaround fuer unterschiedlichen Output
     # Mediane berechnen
-    mdn <- stp25output::fix_to_data_frame(summary(x)$table)
+    mdn <-  stp25tools::fix_to_df(summary(x)$table)
     mdn <- if (ncol(mdn) == 10)
       cbind(mdn[, c(1, 2, 5)], mdn[, c(8:10)])
     else

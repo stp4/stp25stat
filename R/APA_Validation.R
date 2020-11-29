@@ -363,9 +363,18 @@ test_regression <- function(x,
             ))
   }
   
-  
-  # if(include.vif) VIF2(x)
- #cat("\n end \n")
+  # Test                                statistic
+  # 2                         F-Statistic                   F(6, 276)=2.14, p=.049
+  # 3                  Deviance Residuals                                     31.3
+  # 4                           R-Squared R<sup>2</sup>=.04, adj.R<sup>2</sup>=.02
+  # 5  Heteroskedasticity (Breusch-Pagan)                       BP(6)=4.63, p=.592
+  # 6     Autocorrelation (Durbin-Watson)                          DW=2.28, p=.984
+  # 7         Shapiro-Wilk normality test                           W=0.96, p<.001
+  # 8                                 AIC                                    195.9
+  # 9                                 BIC                                    225.0
+  # 10                      Var: Residual                                     0.11
+  # 1                                Obs.                                      283
+ 
   rbind(res[-1,],  
         res[1,]) 
   

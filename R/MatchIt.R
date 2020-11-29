@@ -99,8 +99,8 @@ APA2.matchit <- function (x, ...)
   # print.table(x$nn, ...)
   # invisible(x)
   # cat("\n")
- 
-  Output(fix_to_data_frame(x$nn), ...)
+ #stp25tools::fix_to_df()
+  Output( stp25tools::fix_to_df(x$nn), ...)
   invisible(x$nn)
   
 }

@@ -70,7 +70,7 @@ Tbll_desc <- function (...,
  
   
   X <- stp25formula::prepare_data2(...)
-  print(X)
+ # print(X)
   n <- length(X$measure.vars)
   any_missing_measure <- sapply(X$data[X$measure.vars], function(x) length(na.omit(x))) 
  
@@ -458,6 +458,10 @@ Tbll_xtabs <- function(...,
   
   rslt
 }
+
+
+
+
 
 #' liste als DF
 #' 

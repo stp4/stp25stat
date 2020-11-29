@@ -141,8 +141,9 @@ APA2.manova <-
         output = output
       )
     #
+ 
     maov_result <- summary(x, test = test)
-    maov_result <- fix_to_data_frame(maov_result$stats)
+    maov_result <-  stp25tools::fix_to_df(maov_result$stats)
     
     maov_result$Source <- gsub(".*\\$", "", maov_result$Source)
     
@@ -317,13 +318,13 @@ APA2.lda <- function(x,
                      note = "",
                      output = which_output(),
                      ...) {
-  means <- prepare_output(fix_to_data_frame(t(x$means)),
+  means <- prepare_output( stp25tools::fix_to_df(t(x$means)),
                           caption = paste("Means:", caption))
   
   Output(fix_format(means),
          output = output)
   
-  scaling <- fix_to_data_frame(x$scaling)
+  scaling <-  stp25tools::fix_to_df(x$scaling)
   scaling <- prepare_output(scaling[order(-scaling[, 2]),],
                             caption = paste("Coefficients of linear discriminants:", caption))
   
@@ -353,7 +354,7 @@ APA2.lda <- function(x,
   cTotal <- c(diag(prop.table(cTab, 1)),
               Total = sum(diag(prop.table(cTab)))) * 100
   
-  cTotal <- fix_to_data_frame(cTotal)
+  cTotal <-  stp25tools::fix_to_df(cTotal)
   Output(fix_format(cTotal),
          "prozentuale Uebereinstimmung",
          output = output)

@@ -425,7 +425,7 @@ format_xtab <- function(x,
       rndr_percent_ftable(f_percent, f_count, digits = digits)
     }
     else if (!include.percent)  {
-      stp25output::fix_to_data_frame(f_count)
+     stp25tools::fix_to_df(f_count)
     }
     else{
       rndr_percent_ftable(f_percent, digits = digits)
@@ -435,12 +435,12 @@ format_xtab <- function(x,
     f_count <- x
     f_percent <-
       (prop.table(x) * 100)
-    r <- stp25output::fix_to_data_frame(f_count)
+    r <-  stp25tools::fix_to_df(f_count)
     if (include.count & include.percent) {
-      r$Freq <- rndr_percent(f_percent, f_count, digits = digits)
+      r[1,] <- rndr_percent(f_percent, f_count, digits = digits)
     }
     else if (include.percent)  {
-      r$Freq <- rndr_percent(f_percent, digits = digits)
+      r[1,] <- rndr_percent(f_percent, digits = digits)
     }
     r
   }
