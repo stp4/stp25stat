@@ -34,7 +34,7 @@
 #'
 #'
 
-APA2.list <- function(...) APA2_list(...)
+APA2.list <- function(...) regression_table(...)
 
  
 

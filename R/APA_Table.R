@@ -36,7 +36,6 @@
 #' 
 #' #' extract(fit1) = 
 #' extract_param(fit1)
-#' extract_gof(fit1) 
 #' #' Aufruf von extract_param()
 #' #' 
 #' APA2(fit1) 
@@ -45,7 +44,7 @@
 #' #'
 #' APA_Table(fit1,  type = "default")
 #' 
-#' #'Geht an APA_list und danach an  extract_param hier ist die Formatierung anderst
+#' #'Geht an regression_table und danach an  extract_param hier ist die Formatierung anderst
 #' #'include.stars kombiniet B + Sternchen. Die GOFs werden auch mit ausgegeben.
 #' #'
 #' APA_Table(fit1,  type = "long")
@@ -77,9 +76,8 @@
 #' extract_param(lme1, fix_format = TRUE, include.stars=TRUE )
 #' broom::glance(lme1)
 #' RMSE(lme1)
-#' extract_gof(lme1, fix_format=FALSE) 
 #' 
-#' #APA2_list(list(lme1),  include.stars=TRUE, include.gof=FALSE )
+#' #regression_table(list(lme1),  include.stars=TRUE, include.gof=FALSE )
 #' 
 #' 
 #' APA2(lme1)
@@ -233,7 +231,7 @@ APA_Table <- function(...,
  
   
   if (type == "long") {
-    result <- APA2_list(
+    result <- regression_table(
       myfits,
       caption = caption, note = note, output=output,
       custom.model.names = names,
@@ -265,7 +263,7 @@ APA_Table <- function(...,
     
     for (i in  seq_len(length(myfits)) ) {
       x <-  
-        APA2_list(
+        regression_table(
           list(myfits[[i]]),
           caption = paste(names[i], caption), note = note , output=output,
         #  custom.model.names = "",
@@ -296,7 +294,7 @@ APA_Table <- function(...,
     }
   }
   # else if (type == "long") {
-  #   result <- APA2_list(
+  #   result <- regression_table(
   #     myfits,
   #     caption = caption ,
   #     note = note , output=output,
@@ -564,4 +562,4 @@ APA_Table <- function(...,
 
  
 # type_long <- function(...)
-#   APA2_list(...)
+#   regression_table(...)
