@@ -2,31 +2,26 @@
 #'
 #' Ergebnis fuer Output vorbereiten
 #'
-#' @param x data.frame
+#' @param x data.frame Objekt Liste oder df
 #' @param caption Uberschrift
 #' @param note Anmerkung
 #' @param N Dezimalstellen bei zB Mean2
 #' @param labels Label
+#' @param rgroup,n.rgroup 
 #' @param ... Weitere Argumente
 #' @return tibble mit attributen
 #' @export
 prepare_output <- function(x,
-                           #Objekt Liste oder df
+                           
                            caption = NULL,
                            note = NULL,
                            N = NULL,
                            labels = NA,
                            include.n =  get_my_options()$caption,
+                           
+                           rgroup = NULL,
+                           n.rgroup = NULL,
                            ...) {
-  # if (is.data.frame(x) & (!tibble::is_tibble(x))) {
-  #   x<- tibble::as_tibble()
-  # }
-  #
-  #
-  #
-  # if (!tibble::is_tibble(x)) {
-  #  x<- tibble::as_tibble()
-  #}
   if (is.null(N))
     N <- model_info(x)[["N"]]
   if (is.null(note))
@@ -41,6 +36,8 @@ prepare_output <- function(x,
   attr(x, "note") = note
   attr(x, "N") = N
   attr(x, "labels") = labels
+  attr(x, "rgroup") = rgroup
+  attr(x, "n.rgroup") = n.rgroup
   
   x
 }
