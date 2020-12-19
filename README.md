@@ -68,29 +68,29 @@ Tab 1: Sex Charakteristik
 
 <tr>
 
-<th colspan="1" style="font-weight: 900; border-top: 2px solid grey; text-align: center;">
+<th colspan="1" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
 
 </th>
 
-<th style="border-bottom: none; border-top: 2px solid grey;" colspan="1">
+<th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
 
  
 
 </th>
 
-<th colspan="2" style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th colspan="2" style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
  Male
 
 </th>
 
-<th style="border-bottom: none; border-top: 2px solid grey;" colspan="1">
+<th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
 
  
 
 </th>
 
-<th colspan="2" style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th colspan="2" style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
  Female
 
@@ -100,43 +100,43 @@ Tab 1: Sex Charakteristik
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 Item
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;" colspan="1">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
 
  
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 n
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 m
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;" colspan="1">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
 
  
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 n
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 m
 
@@ -1094,39 +1094,39 @@ Likert 
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  Strongly Agree
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;" colspan="1">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
 
  
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 1 (8%)
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;" colspan="1">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
 
  
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 1 (6%)
 
@@ -1166,6 +1166,9 @@ DF %>%
   Output()
 ```
 
+    ## Warning in measure == "logical" & (any_missing == 0): longer object length is
+    ## not a multiple of shorter object length
+
 <table class="gmisc_table" style="border-collapse: collapse; padding-left: .5em; padding-right: .2em;">
 
 <thead>
@@ -1182,31 +1185,31 @@ Tab 2: sex
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Item
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Total
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Male
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Female
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Test Statistik
 
@@ -1706,31 +1709,31 @@ F(1, 28)=0.25, p=.624
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 Likert (mean)
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 3 (1)
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 3 (1)
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 3 (1)
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 F(1, 28)=0.74, p=.398
 
@@ -1813,19 +1816,19 @@ Tab 3: Characteristics
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Item
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 n
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 m
 
@@ -2119,17 +2122,17 @@ single 
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  no
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 71 (71%)
 
@@ -2173,55 +2176,55 @@ Tab 4: Korrelation
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Quelle
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (1)
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (2)
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (3)
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (4)
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (5)
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (6)
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (7)
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 (8)
 
@@ -2599,41 +2602,41 @@ Quelle
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 (8) c3
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 1
 
@@ -2689,49 +2692,49 @@ matrix
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Item
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Nr
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 PC1
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 PC2
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 PC3
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 PC4
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 PC5
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 h2
 
@@ -3993,49 +3996,49 @@ c5
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 c1
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  6
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
  0.68
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 0.54
 
@@ -4076,13 +4079,13 @@ matrix
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Measures
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Test Statistik
 
@@ -4144,13 +4147,13 @@ RMSR
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 empirical chi square
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 X2=182.28, p=.543
 
@@ -4191,13 +4194,13 @@ matrix
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Measures
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Statistic
 
@@ -4227,13 +4230,13 @@ Kaiser-Meyer-Olkin Measure
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 Bartlett’s test of sphericity
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 X2(300)=1037.47, p\<.001
 
@@ -4261,11 +4264,35 @@ X2(300)=1037.47, p\<.001
 
 ``` r
     Openness <- Reliability(~o1+o2+o3+o4+o5, DF, check.keys=TRUE)
-    Conscientiousness <- Reliability(~ c1+c2+c3+c4+c5, DF, check.keys=TRUE)
-    Extraversion <-Reliability(~ e1+e2+e3+e4+e5, DF, check.keys=TRUE)
-    Neuroticism <- Reliability(~  n1+n2+n3+n4+n5, DF, check.keys=TRUE)
-    Agreeableness <- Reliability(~ a1+a2+a3+a4+a5, DF, check.keys=TRUE)
+```
 
+    ## Number of categories should be increased  in order to count frequencies.
+
+``` r
+    Conscientiousness <- Reliability(~ c1+c2+c3+c4+c5, DF, check.keys=TRUE)
+```
+
+    ## Number of categories should be increased  in order to count frequencies.
+
+``` r
+    Extraversion <-Reliability(~ e1+e2+e3+e4+e5, DF, check.keys=TRUE)
+```
+
+    ## Number of categories should be increased  in order to count frequencies.
+
+``` r
+    Neuroticism <- Reliability(~  n1+n2+n3+n4+n5, DF, check.keys=TRUE)
+```
+
+    ## Number of categories should be increased  in order to count frequencies.
+
+``` r
+    Agreeableness <- Reliability(~ a1+a2+a3+a4+a5, DF, check.keys=TRUE)
+```
+
+    ## Number of categories should be increased  in order to count frequencies.
+
+``` r
     DF$O<- Openness$index
     DF$C<- Conscientiousness$index
     DF$E<- Extraversion$index
@@ -4291,61 +4318,61 @@ Tab 8:
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Quelle
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Item
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 n
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 M
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 SD
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Alpha
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Range
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Skew
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Kurtosi
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Shapiro.Test
 
@@ -4615,61 +4642,61 @@ W=0.98, p=.257
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 Agreeableness
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 5
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 100
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 0.03
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 1.12
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 0.84
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 \-4.54; 4.23
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 0.19
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 \-0.30
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 W=0.99, p=.527
 
@@ -4730,17 +4757,17 @@ Tab 9: Mittelwerte
 
 <tr>
 
-<th colspan="1" style="font-weight: 900; border-top: 2px solid grey; text-align: center;">
+<th colspan="1" style="font-weight: 900; border-top: 2px solid black; text-align: center;">
 
 </th>
 
-<th style="border-bottom: none; border-top: 2px solid grey;" colspan="1">
+<th style="border-bottom: none; border-top: 2px solid black;" colspan="1">
 
  
 
 </th>
 
-<th colspan="3" style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th colspan="3" style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Einkommen
 
@@ -4750,31 +4777,31 @@ Einkommen
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 sex
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;" colspan="1">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;" colspan="1">
 
  
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 n
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 M
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; text-align: center;">
 
 SD
 
@@ -4822,31 +4849,31 @@ m
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 f
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;" colspan="1">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;" colspan="1">
 
  
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 71
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 2124.77
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 401.93
 
@@ -4894,25 +4921,25 @@ Tab 10: Effekte: Effect
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 sex
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 fit
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 lower
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 upper
 
@@ -4954,25 +4981,25 @@ m
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 f
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 2094.16
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 2012.93
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 2175.39
 
@@ -5016,55 +5043,55 @@ Tab 11: Einkommen
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 sex
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 age
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 O
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 C
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 E
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 N
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 A
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 fit
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 ci
 
@@ -5136,55 +5163,55 @@ m
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 f
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 49.5034145628059
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 0.0257084929372925
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 0.131716153092842
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 0.196639846431887
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 \-0.203510181429749
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 \-0.0629899907928555
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 2116.4
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 \[2035.6, 2197.1\]
 
@@ -5230,19 +5257,19 @@ Tab 12:
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Quelle
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 b
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 conf
 
@@ -5454,33 +5481,13 @@ Goodness of fit
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-r.squared
+R-Squared
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-0.52
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-</td>
-
-</tr>
-
-<tr>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-adj.r.squared
-
-</td>
-
-<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
-
-0.48
+R<sup>2</sup>=.52, adj.R<sup>2</sup>=.48
 
 </td>
 
@@ -5500,7 +5507,7 @@ AIC
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1459.01
+1459.0
 
 </td>
 
@@ -5520,7 +5527,7 @@ BIC
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-1482.46
+1482.5
 
 </td>
 
@@ -5552,19 +5559,19 @@ RMSE
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
-Obs
+Obs.
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 100
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 </td>
 
@@ -5608,13 +5615,13 @@ Tab 13: Testing Regression Models
 
 <tr>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 Test
 
 </th>
 
-<th style="font-weight: 900; border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;">
+<th style="font-weight: 900; border-bottom: 1px solid black; border-top: 2px solid black; text-align: center;">
 
 statistic
 
@@ -5772,13 +5779,13 @@ Var: Residual
 
 <tr>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 Obs.
 
 </td>
 
-<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid grey; text-align: left;">
+<td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
 100
 

@@ -50,7 +50,7 @@ Tbll_reg  <- function(...,
     )
   }
   
-    rslt <- APA2_list(
+    rslt <- regression_table(
       fit,
       caption = caption, note = "", output = FALSE,
       custom.model.names = names,

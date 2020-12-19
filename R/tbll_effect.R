@@ -3,11 +3,7 @@
 #'
 #' @param x,formula    fit  und effecte
 #' @param ... param an effect transformation = list(link = log, inverse = exp)
-#' @param caption,include.se,include.ci,include.n,digits
-#' @param
-#' @param
-#' @param
-#' @param
+#' @param caption,include.se,include.ci,include.n,digits an Output
 #'
 #' @return data.frame ore  list with data.frame
 #' @export
@@ -126,7 +122,8 @@ tbll_extract.eff <-
     
     if (include.n) {
       n <- ectract_n(x)
-      fit <-  combine_data_frame(n, fit, item = 1)
+      fit <-  stp25tools::combine_data_frame(n, fit, by = 1)
+ 
     }
     
     prepare_output(fit, caption = caption, note = note)

@@ -57,7 +57,7 @@
 #' APA_Table_Anova(fit1, fit2, fit3,fit4,
 #'                 include.eta = FALSE,
 #'                 include.sumsq = FALSE ,include.fvalue = FALSE ,output=FALSE,
-#'                 include.df= FALSE)  %>% list_to_df(last="Residuals" )
+#'                 include.df= FALSE)  %>% stp25tools::list_to_df(last="Residuals" )
 APA_Table_Anova  <-
   function(...,
            caption = "Anova",
@@ -167,7 +167,8 @@ APA_Table_Anova  <-
     if (type == "wide")
       Output(rslt, output = output)
     else
-      Output(list_to_df(rslt,
+      Output(
+      stp25tools::list_to_df(rslt,
                         last = "Residuals")
              , output = output)
     
@@ -259,7 +260,7 @@ APA_Table_Anova  <-
 #   }
 #   
 #   if(type=="wide") Output(rslt, output=output)
-#   else   Output(list_to_df(rslt, 
+#   else   Output(stp25tools::list_to_df(rslt, 
 #                            last="Residuals")
 #                 , output=output)
 #   

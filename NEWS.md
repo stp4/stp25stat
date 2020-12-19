@@ -6,17 +6,21 @@
 
 ## Changes to functions
 
+* In `APA_Table()` wurde die Funktion der GOF's geändert jetzt ist R2 eine einzelne Zeile.
 
+
+
+## New functions
 * `Tbll_desc()`ist jetzt eine eigenstaendige Funktion. Das Resultat ist etwas andest formatiert, arbeitet aber ansonsten gleich wie Tabelle()
 * Neue Statistik Methode in erate_statistik  Beispiel: `hkarz %>% Tbll_desc(gruppe[binomial], by =  ~ Lai, include.test = TRUE)`
 * 
 * `Tbll_desc_long()`ist jetzt eine eigenstaendige Funktion abgeleitet von Tabelle()
 
 
+* `Tbll_effect()`ist ein workaround fuer  `effects::effect ()`
+
 
 # stp25stat 0.2.1
-
-## New functions
 
 
 
