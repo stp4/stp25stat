@@ -5481,13 +5481,33 @@ Goodness of fit
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-R-Squared
+R2
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-R<sup>2</sup>=.52, adj.R<sup>2</sup>=.48
+0.52
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+adj. R2
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.48
 
 </td>
 
@@ -5561,7 +5581,7 @@ RMSE
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
-Obs.
+Obs
 
 </td>
 
@@ -5669,13 +5689,29 @@ Deviance Residuals
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-R-Squared
+R2
 
 </td>
 
 <td style="padding-left: .5em; padding-right: .2em; text-align: left;">
 
-R<sup>2</sup>=.52, adj.R<sup>2</sup>=.48
+0.52
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+adj. R2
+
+</td>
+
+<td style="padding-left: .5em; padding-right: .2em; text-align: left;">
+
+0.48
 
 </td>
 
@@ -5781,7 +5817,7 @@ Var: Residual
 
 <td style="padding-left: .5em; padding-right: .2em; border-bottom: 2px solid black; text-align: left;">
 
-Obs.
+Obs
 
 </td>
 

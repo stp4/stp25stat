@@ -66,7 +66,7 @@ APA_CI <- function(x,
           names(re)[1:2] <- c("Item", "N")
           r <- 1
           names(r) <- X$row_name[i]
-          re <- stp25aggregate::add_row_df(re, r)
+          re <- stp25tools::add_row_df(re, r)
         } else {
           
           if(X$measure[i] == "median")

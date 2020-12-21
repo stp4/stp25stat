@@ -1,7 +1,6 @@
-# glm-regression
-# Fitting Generalized Linear Models
-
 #' @rdname APA
+#' 
+#' @description glm-regression Fitting Generalized Linear Models
 #' @export
 #' @examples 
 #' 

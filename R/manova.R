@@ -318,9 +318,13 @@ APA2.lda <- function(x,
                      note = "",
                      output = which_output(),
                      ...) {
+  
+  
   means <- prepare_output( stp25tools::fix_to_df(t(x$means)),
                           caption = paste("Means:", caption))
   
+  
+ 
   Output(fix_format(means),
          output = output)
   
@@ -330,6 +334,7 @@ APA2.lda <- function(x,
   
   Output(fix_format(scaling),
          output = output)
+  
   svd <- x$svd
   names(svd) <- dimnames(x$scaling)[[2L]]
   if (length(svd) > 1L) {
@@ -345,7 +350,8 @@ APA2.lda <- function(x,
                 dnn = c(names(newdata)[1], "Predict"))
   
   Output(
-    addmargins(cTab),
+    stp25tools::fix_to_df(
+      addmargins(cTab)),
     "Kontingenztafel tatsaechlicher und vorhergesagter Kategorien",
     output = output
   )

@@ -38,14 +38,22 @@ APA2.NULL <- function(x,
 
 #' @rdname APA2
 #' @export
-APA2.formula <- function(...) {
-  Tabelle2(...)
+APA2.formula <- function(...,
+                         output = which_output()) {
+  if (is.character(output))
+    Tabelle2(..., APA = TRUE)
+  else if (output)
+    Tabelle2(..., APA = TRUE)
+  else
+    Tabelle(..., APA = TRUE)
 }
 
 #' @rdname APA2
 #' @export
 APA2.default <- function(x,
-                         caption = NULL,  note = NULL, output=which_output(),
+                         caption = NULL, 
+                         note = NULL, 
+                         output=which_output(),
                          custom.model.names = NULL,
                          ...) {
  

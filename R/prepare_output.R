@@ -7,7 +7,7 @@
 #' @param note Anmerkung
 #' @param N Dezimalstellen bei zB Mean2
 #' @param labels Label
-#' @param rgroup,n.rgroup 
+#' @param rgroup,n.rgroup an htmlTable {htmlTable}
 #' @param ... Weitere Argumente
 #' @return tibble mit attributen
 #' @export

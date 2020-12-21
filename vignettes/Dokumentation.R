@@ -1,10 +1,8 @@
-## ----setup, include=FALSE-----------------------------------------------------
-
-#vignette: |
- # %\VignetteIndexEntry{Statistische Methoden} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}#
-#setwd("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25APA2/vignettes")
-knitr::opts_chunk$set(echo = TRUE)
-#owd = setwd('vignettes')
+## ----setup, include = FALSE---------------------------------------------------
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
 
 ## ----setup2, include=FALSE----------------------------------------------------
  #getwd()
@@ -40,7 +38,7 @@ data<- data.frame(g=g, g2=g2,
 
 
 ## ----simpel-ferq, results='asis', warning=FALSE-------------------------------
-APA_CI( data, g )  
+ APA_CI( data, g )  
 #  library(BayesianFirstAid)
 #  x<-as.data.frame(table(data$g))$Freq
 #  bayes.prop.test(x, rep(nrow(data), nlevels(data$g)), p=1/3)
@@ -415,20 +413,6 @@ Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
 #ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
  
 
-## ----fig-BlandAltman3, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
-# A - Goldstandart
-
-x <- MetComp_BAP(~A+B+E, Giavarina)
-# x %>% Output("BA-Analyse der Messwertreihe")
-plot(x)
-
-
-## ----fig-BlandAltman4, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
-x <- MetComp_BAP(~A+E+B, Giavarina)
-# x %>% Output("BA-Analyse der Messwertreihe")
-plot(x)
-
-
 ## ----met-comp-data2, include=FALSE--------------------------------------------
 
 
@@ -602,7 +586,9 @@ fit1 %>% Goodness %>% Output()
 
 ## ----tab-lm-class, results='asis', warning=FALSE------------------------------
 
-Klassifikation2(fit1)
+Klassifikation(fit1)
+
+
 
 
 ## ----tab-glm-1, results='hide', warning=FALSE---------------------------------
@@ -824,7 +810,8 @@ Alpha(Verarbeitung, Coping, Vertrauen, Religion, Distanz) %>% Output()
 
 ## ----tab-icc-2, results='asis', warning=FALSE---------------------------------
 # #Quelle  http://www.personality-project.org/r/book/Chapter7.pdf
-ICC2(sf)
+ICC(sf)
+
 
 ## ----tab-pca-1, results='asis', warning=FALSE---------------------------------
   # APA2( ~., fkv, test=TRUE)
@@ -835,10 +822,10 @@ ICC2(sf)
  fit1<- Principal(fkv, 5, cut=.35)
  names(fit1$Loadings ) <- c("Item", "nr", 
                            "PC_1", "PC_2", "PC_3", "PC_4", "PC_5", "h2"  )
- fit1$Loadings %>% Output()
+ fit1$Loadings #%>% Output()
  
- fit1$Eigenvalue %>% Output()
- fit1$Test %>% Output()
+ fit1$Eigenvalue# %>% Output()
+ fit1$Test #%>% Output()
 
 ## ----tab-pca-kmo, results='asis', warning=FALSE-------------------------------
  fit1$KMO %>% Output()

@@ -1,20 +1,40 @@
 ---
 title: "Statistische Methoden"
-author: "Wolfgang Peter"
+author: "Wolfgang Peterr"
 date: "`r Sys.Date()`"
-output:
-  html_document:
-    toc: yes
-  pdf_document:
-    toc: yes
-  md_document:
-    variant: markdown_github
-bibliography: RepResRef.bib
+output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Statistische Methoden}
-  %\VignetteEncoding{UTF-8}
   %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+<!-- title: "Statistische Methoden2" -->
+<!-- author: "Wolfgang Peter" -->
+<!-- date: "`r Sys.Date()`" -->
+<!-- output: -->
+<!--   html_document: -->
+<!--     toc: yes -->
+<!--   pdf_document: -->
+<!--     toc: yes -->
+<!--   md_document: -->
+<!--     variant: markdown_github -->
+<!-- bibliography: RepResRef.bib -->
+<!-- vignette: > -->
+<!--   %\VignetteIndexEntry{Statistische Methoden} -->
+<!--   %\VignetteEncoding{UTF-8} -->
+<!--   %\VignetteEngine{knitr::rmarkdown} -->
+
+
+
 
 
   <!-- html_document: -->
@@ -26,15 +46,7 @@ vignette: >
    
  
 
-
-```{r setup, include=FALSE}
-
-#vignette: |
- # %\VignetteIndexEntry{Statistische Methoden} %\VignetteEngine{knitr::rmarkdown} %\VignetteEncoding{UTF-8}#
-#setwd("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25APA2/vignettes")
-knitr::opts_chunk$set(echo = TRUE)
-#owd = setwd('vignettes')
-```
+ 
 
 <!--  Valid themes include "default",  -->
 <!--  "united","cosmo","lumen","flatly","sandstone", -->
@@ -55,8 +67,8 @@ Das Literaturverzeichnis erstelle ich mit dem
   sowie [DOI zo BibTeX](https://www.doi2bib.org/) Generator.
 
  Link:
- 
-  -  [Grafiken](Methoden_Grafik.html)
+  -  [Grafiken](C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25plot/README.pdf)
+  -  [Grafiken2](Methoden_Grafik.html)
   -  [Beispiele](Beispiele.html)
   -  [Kano-Analyse](Kano-Analyse.html)
   -  [Regressionsanalyse](Regressionsanalyse.html) 
@@ -149,7 +161,7 @@ data<- data.frame(g=g, g2=g2,
  
 
 ```{r simpel-ferq, results='asis', warning=FALSE}
-APA_CI( data, g )  
+ APA_CI( data, g )  
 #  library(BayesianFirstAid)
 #  x<-as.data.frame(table(data$g))$Freq
 #  bayes.prop.test(x, rep(nrow(data), nlevels(data$g)), p=1/3)
@@ -1245,7 +1257,9 @@ Weitere Betrachtung ist über Klassifikationstabelle und dazu gibt es die Tests 
 
 ```{r tab-lm-class, results='asis', warning=FALSE}
 
-Klassifikation2(fit1)
+Klassifikation(fit1)
+
+
 
 ```
 
@@ -1765,7 +1779,8 @@ ICC Intra-Klassen-Korrelation. Kopie von ICC aus dem Packet  psych.
 
 ```{r tab-icc-2, results='asis', warning=FALSE}
 # #Quelle  http://www.personality-project.org/r/book/Chapter7.pdf
-ICC2(sf)
+ICC(sf)
+
 ```
 
 
@@ -1799,10 +1814,10 @@ Kaiser-Gutman-Kriterium = nur solche Faktoren sind zu interpretieren deren Eigen
  fit1<- Principal(fkv, 5, cut=.35)
  names(fit1$Loadings ) <- c("Item", "nr", 
                            "PC_1", "PC_2", "PC_3", "PC_4", "PC_5", "h2"  )
- fit1$Loadings %>% Output()
+ fit1$Loadings #%>% Output()
  
- fit1$Eigenvalue %>% Output()
- fit1$Test %>% Output()
+ fit1$Eigenvalue# %>% Output()
+ fit1$Test #%>% Output()
 ```
 
  
