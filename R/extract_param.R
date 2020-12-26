@@ -59,7 +59,7 @@ extract_param  <- function(x,
   param <-  "term"
   res <- NULL
  # Error in broom:tidy
-  if (inherits(x, "lmerModLmerTest")) {
+  if (inherits(x, "lmerModLmerTest") | inherits(x, "glmerMod")) {
     res <- tidy_lmer(
       x,
       effects = include.effects,
