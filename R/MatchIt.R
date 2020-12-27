@@ -92,44 +92,35 @@
 #' 
 #' #df.match0$subclass 
 #' # End()
-APA2.matchit <- function (x, ...)
+APA2.matchit <- function (x,
+                          caption = "",
+                          note = "",
+                          output = which_output())
 {
-  # cat("\nCall: ", deparse(x$call), sep = "\n")
-  # cat("\nSample sizes:\n")
-  # print.table(x$nn, ...)
-  # invisible(x)
-  # cat("\n")
- #stp25tools::fix_to_df()
-  Output( stp25tools::fix_to_df(x$nn), ...)
-  invisible(x$nn)
-  
+ rslt <- tbll_extract.matchit(x, caption, note)
+ Output(rslt, output = output)
+ invisible(rslt)  
 }
+
+
+
 #' @rdname APA2
 #' @export
 #' 
-
-APA2.summary.matchit <- function (x,  ..., digits = 2)
+APA2.summary.matchit <- function (x,
+                                  caption = "Summary of balance for matched data",
+                                  note = "",
+                                  digits = 2,
+                                  output = which_output())
 {
-  # "call"        "nn"          "sum.all"     "sum.matched" "reduction"
-  # APA2(cbind(Source=row.names(x$sum.all), round(x$sum.all[1:3], digits)),
-  #       caption="Summary of balance for all data")
-  
-  Output( 
-    cbind(Source = row.names(x$sum.matched),
-                         round(x$sum.matched[c(1, 2, 4)],
-                               digits))
-  ,
-  caption = "Summary of balance for matched data")
-  
-  #   Output(cbind(Source = row.names(x$sum.matched),
-  #                round(x$sum.matched[c(1, 2, 4)],
-  #                      digits)),
-  # APA2(cbind(Source=row.names(x$reduction), round(x$reduction[1:3], digits)),
-  #        caption="Percent Balance Improvement")
-  
-  
-  invisible(cbind(Source = row.names(x$sum.matched), x$sum.matched))
-  
+  rslt <-
+    tbll_extract.summary.matchit(x,
+                                 caption = caption,
+                                 note = note,
+                                 digits = digits)
+  Output(rslt, output = output)
+  invisible(rslt)
 }
+
 
 

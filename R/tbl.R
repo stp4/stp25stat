@@ -124,4 +124,30 @@ tbll_extract.default <- function(...) {
     rslt
 }
 
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.matchit <- function (x, caption = "", note)
+{
+  note <-
+    paste0("method = ", x[["info"]]$method, ", ratio = ", x[["info"]]$ratio)
+    prepare_output(stp25tools::fix_to_df(x$nn[c(2, 4, 5, 6), ]),
+                 caption = caption,
+                 note = note)
+  
+}
 
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.summary.matchit <-
+  function (x,
+            caption = "Summary of balance for matched data",
+            note = "",
+            digits = 3)
+  {
+    prepare_output(stp25tools::fix_to_df(round(x$sum.matched[, c(3, 4)], digits)),
+                   caption = caption,
+                   note = "")
+    
+  }
