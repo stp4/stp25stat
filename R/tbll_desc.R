@@ -7,6 +7,10 @@
 #' @param include.test,include.normality.tests Test
 #' @param include.label Labels ja-nein
 #' @param exclude,exclude.level,max_factor_length fuer factor
+#' @param include.custom eigene Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein
+#'  function(x , by){
+#' x <- scale(as.numeric(x))
+#' diff(sapply(split(x, by), mean, na.rm=TRUE))})
 #' 
 #' @return data.frame
 #' @export
@@ -63,7 +67,8 @@ Tbll_desc <- function (...,
                        include.total = FALSE,
                        include.test = FALSE,
                        include.normality.tests=FALSE,
-                       include.multiresponse=FALSE
+                       include.multiresponse=FALSE,
+                       include.custom = NULL
                        ) {
   note<-""
   rslt_all <- NULL
@@ -161,6 +166,42 @@ Tbll_desc <- function (...,
     names(rslt_all) <- gsub("_m", "", names(rslt_all))
   }
   
+  if (!is.null(include.custom)) {
+    rslt_custom <- NULL
+    for (i in seq_len(n)) {
+      tmp <- do.call(include.custom,
+                     list(X$data[[X$measure.vars[i]]],
+                          X$data[[X$group.vars[1]]]))
+      if (is.vector(tmp)) {
+        rslt_custom <- append(rslt_custom, tmp)
+        if (X$measure[i] == "factor")
+          rslt_custom <-
+            append(rslt_custom, rep("", nlevels(X$data[[X$measure.vars[i]]])))
+      }
+      else{
+        rslt_custom <- rbind(rslt_custom, tmp)
+        if (X$measure[i] == "factor") {
+          rslt_custom <- rbind(rslt_custom,
+                               matrix(
+                                 "",
+                                 ncol = ncol(rslt_custom),
+                                 nrow = nlevels(X$data[[X$measure.vars[i]]])
+                               ))
+        }
+      }
+    }
+    if (is.vector(rslt_custom)) {
+      if (include.nr)
+        rslt_custom <-  append(rslt_custom, "", after = 0)
+      rslt_all$custom <- rslt_custom
+    }
+    else {
+      rslt_custom <- rbind(rep("", ncol(rslt_custom)), rslt_custom)
+      rslt_all <- cbind(rslt_all, rslt_custom)
+    }
+  }
+  
+  
   if (is.character(include.test)) {
     include.test <- gsub("[^[:alpha:]]", "", tolower(include.test))
     which_test <-
@@ -224,6 +265,7 @@ Tbll_desc <- function (...,
     note <- paste(unique(names(rslt_test)[nzchar(names(rslt_test))]), collapse = ", ")
     rslt_all$statistics <- rslt_test
   }
+  
   
   if (include.normality.tests) {
     rslt_disttest <- NULL
