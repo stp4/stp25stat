@@ -1,9 +1,8 @@
-
 #' Tbll_desc
 #' 
 #' @param ...  an prepare_data2
-#' @param caption 
-#' @param include.n,include.nr,include.total,include.multiresponse 
+#' @param caption besser mit Output verwenden
+#' @param include.n,include.nr,include.total,include.multiresponse  weitere param
 #' @param include.test,include.normality.tests Test
 #' @param include.label Labels ja-nein
 #' @param exclude,exclude.level,max_factor_length fuer factor
@@ -72,14 +71,16 @@ Tbll_desc <- function (...,
                        ) {
   note<-""
   rslt_all <- NULL
- 
-  
+  ans <- NULL
   X <- stp25formula::prepare_data2(...)
- # print(X)
   n <- length(X$measure.vars)
-  any_missing_measure <- sapply(X$data[X$measure.vars], function(x) length(na.omit(x))) 
+  
+  any_missing_measure <- 
+    sapply(X$data[X$measure.vars], 
+           function(x) length(na.omit(x))) 
  
-   if(!include.label) X$row_name <- X$measure.vars
+   if(!include.label) 
+     X$row_name <- X$measure.vars
  
   if ( include.n & sum(any_missing_measure[X$measure!="header"]-X$N) == 0 ) {
     # keine fehlenden dann nur erste Zeile mit N
@@ -92,11 +93,15 @@ Tbll_desc <- function (...,
   
   if (is.null(X$group.vars) | include.total) {
     rslt_all <-
-      list_rbind(purrr::pmap(list(
-        x = X$data[X$measure.vars],
-        digits = X$digits,
-        measure = X$measure,
-        row_name = X$row_name), .calc_desc_mean))
+      list_rbind(purrr::pmap(
+        list(
+          x = X$data[X$measure.vars],
+          digits = X$digits,
+          measure = X$measure,
+          row_name = X$row_name
+        ),
+        .calc_desc_mean
+      ))
     
     if (include.total)
       names(rslt_all)[3:4] <-
@@ -106,33 +111,34 @@ Tbll_desc <- function (...,
   if (!is.null(X$group.vars)) {
     if (length(X$group.vars) > 1) {
       X$data$group <- interaction(X$data[X$group.vars])
-     caption <- paste(paste(X$group.vars, collapse=", "), caption)
+      caption <- paste(paste(X$group.vars, collapse=", "), caption)
       X$group.vars <- "group"
-    } else  caption <- paste( X$group.vars, caption)
-    ans <- NULL
+    } else { caption <- paste( X$group.vars, caption) }
+    
     data <-
       split(X$data[X$measure.vars], X$data[[X$group.vars]])
-    
+    # gruppe einzeln auswerten
     for (i in names(data)) {
       ans_i <-
-        list_rbind(purrr::pmap(list(
-          x = data[[i]],
-          digits = X$digits,
-          measure = X$measure,
-          row_name = X$row_name), .calc_desc_mean))
+        list_rbind(purrr::pmap(
+          list(
+            x = data[[i]],
+            digits = X$digits,
+            measure = X$measure,
+            row_name = X$row_name
+          ),
+          .calc_desc_mean
+        ))
       
       if (is.null(ans))
         ans <- ans_i[1:2]
       names(ans_i) <-  paste0(i, "_", names(ans_i))
       ans <- cbind(ans, ans_i[-c(1:2)])
     }
-
-    
     if (include.total)
       rslt_all <- cbind(rslt_all, ans[-c(1:2)])
     else
       rslt_all <- ans
-    
   }
   
   if (include.nr) {
@@ -168,26 +174,32 @@ Tbll_desc <- function (...,
   
   if (!is.null(include.custom)) {
     rslt_custom <- NULL
+    # schleife statt purrr::pmap weil es einfacher lesbar ist
     for (i in seq_len(n)) {
-      tmp <- do.call(include.custom,
-                     list(X$data[[X$measure.vars[i]]],
-                          X$data[[X$group.vars[1]]]))
+     if (is.null(X$group.vars))
+       # include.custom ist eine function
+       tmp <- do.call(include.custom,
+                list(X$data[[X$measure.vars[i]]]))
+      else
+        tmp <- do.call(include.custom,
+                list(X$data[[X$measure.vars[i]]],
+                     X$data[[X$group.vars[1]]]))
+      # tmp kann ein vector der laenge 1 oder eine matrix sein
       if (is.vector(tmp)) {
         rslt_custom <- append(rslt_custom, tmp)
-        if (X$measure[i] == "factor")
+        if (X$measure[i] == "factor" & length(tmp)==1)
           rslt_custom <-
             append(rslt_custom, rep("", nlevels(X$data[[X$measure.vars[i]]])))
       }
       else{
         rslt_custom <- rbind(rslt_custom, tmp)
-        if (X$measure[i] == "factor") {
+        if (X$measure[i] == "factor" & nrow(tmp)==1) 
           rslt_custom <- rbind(rslt_custom,
                                matrix(
                                  "",
                                  ncol = ncol(rslt_custom),
                                  nrow = nlevels(X$data[[X$measure.vars[i]]])
                                ))
-        }
       }
     }
     if (is.vector(rslt_custom)) {
@@ -200,7 +212,6 @@ Tbll_desc <- function (...,
       rslt_all <- cbind(rslt_all, rslt_custom)
     }
   }
-  
   
   if (is.character(include.test)) {
     include.test <- gsub("[^[:alpha:]]", "", tolower(include.test))
@@ -259,13 +270,10 @@ Tbll_desc <- function (...,
         rslt_test <-
         append(rslt_test, rep("", nlevels(X$data[[X$measure.vars[i]]])))
     }
-    
-   
     if(include.nr)   rslt_test <-  append(rslt_test, "", after = 0)
     note <- paste(unique(names(rslt_test)[nzchar(names(rslt_test))]), collapse = ", ")
     rslt_all$statistics <- rslt_test
   }
-  
   
   if (include.normality.tests) {
     rslt_disttest <- NULL
@@ -289,7 +297,6 @@ Tbll_desc <- function (...,
     rslt_all$normality.tests <- rslt_disttest
   }
   
-  
   rslt_all[[1]] <- paste(rslt_all[[1]], rslt_all[[2]])
   prepare_output(rslt_all[-2], caption = caption, note=note, N=X$N)
 }
@@ -303,6 +310,13 @@ Tbll_desc_multi <- function(...) {
 
 
 
+
+
+#' @param include.mean mean + sd
+#' @param include.stars,include.p P-Wert
+#' @param cor_diagonale_up diagonale
+#' @param type c("pearson", "spearman"
+#'
 #' @rdname Tbll_desc
 #' @export
 #' @examples 

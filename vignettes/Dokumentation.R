@@ -413,20 +413,6 @@ Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
 #ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
  
 
-## ----fig-BlandAltman3, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
-# A - Goldstandart
-
-x <- MetComp_BAP(~A+B+E, Giavarina)
-# x %>% Output("BA-Analyse der Messwertreihe")
-plot(x)
-
-
-## ----fig-BlandAltman4, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
-x <- MetComp_BAP(~A+E+B, Giavarina)
-# x %>% Output("BA-Analyse der Messwertreihe")
-plot(x)
-
-
 ## ----met-comp-data2, include=FALSE--------------------------------------------
 
 
@@ -446,26 +432,6 @@ DF <- transform(DF, C = round( A + rnorm(n, -5, 20)),
                 E = A + ifelse(A<cutA, A/5, -A/5 )+ rnorm(n, 0, 10)
 )
 
-
-
-## ----fig-BAx1, fig.cap = "A und C Messen das gleiche mit SD=20", fig.width=8, fig.height=3, cache=TRUE----
-x<- MetComp_BAP(~A+C, DF)
-plot(x)
-
-
-## ----fig-BAx2, fig.cap = "A und B Messen unterschiedliche Parameter", fig.width=8, fig.height=3, cache=TRUE----
-x<- MetComp_BAP(~A+B, DF)
-plot(x)
-
-
-## ----fig-BAx3, fig.cap = "A und D Messen das unterschiedlich D hat im unteren Wertevereich deutlich geringere Werte", fig.width=8, fig.height=3, cache=TRUE----
-x<- MetComp_BAP(~A+D, DF)
-plot(x)
-
-
-## ----fig-BAx4, fig.cap = "A und E Messen das unterschiedlich es esistiert ein Knick im Wertebereich 100", fig.width=8, fig.height=3, cache=TRUE----
-x<- MetComp_BAP(~A+E, DF)
-plot(x)
 
 
 ## ----tab-anova-1, results='asis', warning=FALSE-------------------------------
@@ -787,24 +753,6 @@ Alpha(Verarbeitung, Coping, Vertrauen, Religion, Distanz) %>% Output()
 # #Quelle  http://www.personality-project.org/r/book/Chapter7.pdf
 ICC(sf)
 
-
-## ----tab-pca-1, results='asis', warning=FALSE---------------------------------
-  # APA2( ~., fkv, test=TRUE)
-  # library(arm)
-  # windows(5,5)
-  # corrplot(fkv, abs=TRUE, n.col.legend=7)
-
- fit1<- Principal(fkv, 5, cut=.35)
- names(fit1$Loadings ) <- c("Item", "nr", 
-                           "PC_1", "PC_2", "PC_3", "PC_4", "PC_5", "h2"  )
- fit1$Loadings #%>% Output()
- 
- fit1$Eigenvalue# %>% Output()
- fit1$Test #%>% Output()
-
-## ----tab-pca-kmo, results='asis', warning=FALSE-------------------------------
- fit1$KMO %>% Output()
- 
 
 ## ----data-multi-split, warning=FALSE------------------------------------------
 x <- c(123, 23, 456,3)

@@ -1708,74 +1708,6 @@ ICC(sf)
 
 
 
-### Explorative Faktorenanalyse (EFA)
-
- Die EFA ist eine Gruppe von Verfahren für die Analyse unbekannten korrelativen Strukturen. Zu diesen Methoden zählen die Faktorenanalyse (FA) und die Hauptkomponenten-Analyse (PCA) .
-Ziel der **Faktorenanalyse** ist aus einer Vielzahl von Variablen unabhängige Beschreibung und Erklärungsvariablen zu extrahieren.
-Die Abgrenzung von FA zu PCA ist je nach Lehrbuch und verwendeter Software fließend. So spricht [15] dass die PCA ein Spezialfall der FA ist dagegen grenzt [16] die FA stärker von der PCA ab. Verwirrung schafft zudem SPSS welches keinen “Button” für PCA besitzt. Aus diesen Gründen verwende ich hier die Begriffe Faktorenanalyse (FA) und PCA als synonym.  
-
-Der Unterschied ist, das bei der PAC die Anzahl der Faktoren sich aus der Berechnung ergeben (Anwendungen sind sozialwissenschaftliche Fragestellungen) und bei der (FA) die Faktoren vor der Berechnung bekannt sein müssen (Anwendungen sind biologische Fragestellungen bei denen bestimmte Gradienten wie Temperatur, pH Wert bekannte Komponenten darstellen).
-
-
-*Interpretation FA*
-Eine Auswertung die sich an den Tabellen Output von SPSS orientiert, kann mit der library *library(psych)* und den Funktionen *principal()* und *fa()* bewerkstelligt werden. Der Output entspricht dem was SPSS unter Faktorenanalyse berechnet. Ein anderer Zugang sind die Funktionen *princomp()* und *prcomp()* oder die library *library(vegan)* mit der Funktion *rda()*.
-
-
-Faktorladung = Korrelation zwischen Variable und Faktor
-Kommunalität h² = Ausmaß an Varianz der Variable
-Eigenwert = Varianz des Faktors
-
-Kaiser-Gutman-Kriterium = nur solche Faktoren sind zu interpretieren deren Eigenwert größer 1 ist (Scree-Test.
- 
- 
-```{r tab-pca-1, results='asis', warning=FALSE}
-  # APA2( ~., fkv, test=TRUE)
-  # library(arm)
-  # windows(5,5)
-  # corrplot(fkv, abs=TRUE, n.col.legend=7)
-
- fit1<- Principal(fkv, 5, cut=.35)
- names(fit1$Loadings ) <- c("Item", "nr", 
-                           "PC_1", "PC_2", "PC_3", "PC_4", "PC_5", "h2"  )
- fit1$Loadings #%>% Output()
- 
- fit1$Eigenvalue# %>% Output()
- fit1$Test #%>% Output()
-```
-
- 
-Test der Eignung für die PCA Kaiser-Meyer-Olkin (KMO)  **KMO>0.80** ist gut. (KMO ist die partiellen Korrelationen zwischen den Itempaaren)
-Der **Bartlett Test** testet die Spherizität, überprüft die Nullhypothese, ob die Korrelationsmatrix eine Identitätsmatrix ist(gut ist wenn p < .050). 
- 
-```{r tab-pca-kmo, results='asis', warning=FALSE}
- fit1$KMO %>% Output()
- 
-```
- 
-**Faustregel nach Bortz:**
- 
-unter n<60 ist keine Faktorenanalyse durchführbar, ausreichend sind n=100 die kann Faktorenstruktur interpretiert werden...
-- wenn auf einem Faktor mindestens vier Variablen Ladungen **h>0.60** aufweisen  
-- oder wenn für zehn oder mehr Variablen Ladungen h>0.40 vorliegen
-- oder wenn weniger als zehn Variablen eine h>0.40 aufweisen und die Stichprobe n>300 Probanden enthält
-
-
-
-
-#### Beispiel FKV
-
-Freiburger Fragebogen zur Krankheitsverarbeitung (Buehl Seite 473)
-
- Quelle:http://statistikguru.de/spss/hauptkomponentenanalyse/auswerten-und-berichten.html
-Es wurde eine Hauptkomponentenanalyse durchgeführt, um die wichtigsten,
-unabhängigen Faktoren zu extrahieren. Das Kaiser-Meyer-Olkin-Kriterium war 0.71 und 
-der Bartlett-Test hoch signifikant (p < .001), was eine ausreichend hohe Korrelation 
-zwischen Items darstellt, um eine Hauptkomponentenanalyse durchzuführen. Nur Faktoren 
-mit Eigenwerten $\geq$ 1 wurden in Betracht gezogen (Guttman, 1954; Kaiser, 1960).
-Eine Überprüfung des Kaiser-Kriteriums und Scree-Plots rechtfertigte
-die Extraktion von zwei Faktoren, jeweils mit Eigenwerten über 1,
-die eine Gesamtvarianz von 43% aufklären. Unter den Lösungen lieferte die Varimax rotierte zweifaktor-Lösung die Lösung, die am besten zu interpretieren war, bei der die meisten Items nur auf einen der beiden Faktoren hohe Ladungen zeigten. Die Faktoren konnten den theoretischen Begriffen
-Verarbeitung, Coping, Vertrauen, Religion, Distanz und Verarbeitung zugeordnet werden
 
 
 
@@ -1794,39 +1726,7 @@ Der Sobel Test ist der indirekt Effekt also das Produkt aus Mediator und Einflus
 
 
 
-### SEM
 
-* Chi-Quadrat-Wert
-        Validität des Models H0: empirische Kovarianz entspricht modelltheoretischer Kovarianz
-        Chi-Quadrat/df möglichst klein (Chi-Quadrat/df<2.5 oder p<0.100)
-        Ist nur zuverlässig wenn eine Normalverteilung und eine ausreichend große Stichprobe gegeben ist.
-        
-* Goodness-of-Fit-Index (GFI) 
-Ist vergleichbar mit dem Bestimmtheitsmass in der Regressionsanalyse, also ein Mass für die erklärende Varianz GFI>0.90  
-
-* Adjusted-Goodness-of-Fit-Index (AGFI)
-Analog wie GFI nur korrigiert durch df und Anzahl an Variablen
-        AGFI>0.90
-        
-* Normed-Fit-Index NFI
-Vergleicht das Modell mit einem Modell bei dem alle manifesten Variablen unkorreliert angenommen werden NFI>0.90
-
-* Comparative-Fit-Index
-Wie NFI nur korrigiert durch df und Anzahl an Variablen CFI>0.90
-        
-* Root-Mean-Square-Error of Approximation (RMSEA) 
-RMSEA<0.05
-        
-Backhaus Multivariate Analysemethoden 11 AuflageSeite 383
-
-Moosbrugger, Kelava 2012 Testtheorie 2. Auflage Seite 339 
-
-Fit-Mass | Guter Fit | Akzeptabler Fit
--------- | --------- | ---------------
-Chi2/df  |  .00-2.00 | 2.01-3.00
-RMSEA    | .000-.050 | 051.-.080
-CFI      | .970-1.00 | .950-.969
-NFI      | .950-1.00 | .900-.949
 
  
  
