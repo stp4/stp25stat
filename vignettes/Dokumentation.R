@@ -413,6 +413,20 @@ Giavarina <- transform(Giavarina, C = round( A + rnorm(30,0,20)),
 #ICC2(~A+E, Giavarina, caption="ICC (Korrelationen)")
  
 
+## ----fig-BlandAltman3, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
+# A - Goldstandart
+
+x <- MetComp_BAP(~A+B+E, Giavarina)
+# x %>% Output("BA-Analyse der Messwertreihe")
+plot(x)
+
+
+## ----fig-BlandAltman4, fig.cap = "Bland Altman", fig.width=8, fig.height=3, cache=TRUE----
+x <- MetComp_BAP(~A+E+B, Giavarina)
+# x %>% Output("BA-Analyse der Messwertreihe")
+plot(x)
+
+
 ## ----met-comp-data2, include=FALSE--------------------------------------------
 
 
@@ -678,45 +692,6 @@ APA_Table(lmer_fit1, lmer_fit2, type="long")
 # 
 #    windows(4,3)
 #   multiplot(lmer_fit1, lmer_fit2, intercept=F, xlab="b (SE)")
-
-## ----surv-data, results='asis', warning=FALSE---------------------------------
-library(survival)
-mkarz <- GetData("C:/Users/wpete/Dropbox/3_Forschung/1 Statistik/BspDaten/SPSS/_Buehl/MKARZ.SAV")
-mkarz$status<- ifelse(mkarz$status=="tot", 1, 0)
-mkarz %>% Tabelle2(survive[median], status, lkb)
-
-
-## ----tab-surv-summary, results='asis', warning=FALSE--------------------------
-# Kaplan-Meier estimator without grouping
-
-
-m0 <- Surv(survive, status) ~ 1
-res0 <- survfit(m0, mkarz)
-APA2(res0)
-
-APA2(
-summary(res0, times = c(5, 10, 20, 60)),
-percent = TRUE,
-#Statistik Anfordern und ander Schreibweise
-include = c(
-time = "time",
-n.risk = "n.risk",
-n.event = "n.event",
-surv = "survival",
-lower = "lower 95% CI",
-upper = "upper 95% CI"
-),
-caption = "Kaplan-Meier"
-)
-
-## ----tab-surv-fit, results='asis', warning=FALSE------------------------------
-m1 <- Surv(survive, status) ~ lkb
-res1<- survfit(m1, mkarz)
-fit1<- coxph(m1, mkarz)
-logrank1<- survdiff(m1, mkarz)
-APA2(res1, caption="Kaplan-Meier")
-APA2(logrank1)
-APA2(coxph(m1,mkarz))
 
 ## ----manova-data, include=FALSE-----------------------------------------------
 m_data<-GetData("C:/Users/wpete/Dropbox/3_Forschung/R-Project/stp25data/extdata/manova.sav")

@@ -1,9 +1,14 @@
-# "Sun Nov 11 06:48:12 2018"
-# APA_PCA einfacher Test OK
-
-
-
 #'  PCA (Faktoranalyse)
+#'
+#' Eine Auswertung die sich an den Tabellen Output von SPSS 
+#' orientiert, kann mit der library library(psych) und den Funktionen 
+#' principal() und fa() bewerkstelligt werden. 
+#' 
+#' Der Output entspricht dem was SPSS unter Faktorenanalyse berechnet. 
+#' Ein anderer Zugang sind die Funktionen princomp() und prcomp() oder die library library(vegan)
+#'  mit der Funktion rda().
+#'  
+#'
 #'
 #' Gestohlen von psych::print.psych.fa \link{print.psych}.
 #' Die Ergebnisse stimmen mit SPSS weitgehend ueberein. Ueberprueft habe ich das

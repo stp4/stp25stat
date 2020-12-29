@@ -151,3 +151,103 @@ tbll_extract.summary.matchit <-
                    note = "")
     
   }
+
+
+
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.principal <- function (x, ...)
+{
+  Tbll_pca(x, ...)
+}
+
+#'  Tabelle PCA
+#'  
+#'
+#' @param x psych::principal
+#' @param cut display loadings 
+#' @param sort by value
+#' @param digits  digits
+#' @param ... not used
+#'
+#' @return data.frame ore list with data.frame
+#' @export
+#'
+#' @examples
+#' 
+#' rslt <- psych::principal(fkv, 5)
+#' #  rslt %>% stp25stat:::extract_principal() iste eine Kopie von print(rslt)
+#' 
+#' rslt  %>%  Tbll_pca_loadings()
+#' rslt  %>%  Tbll_pca_eigen()
+#' rslt  %>%  Tbll_pca_test()
+Tbll_pca<- function(x,  cut = .30,
+                    sort = TRUE,
+                    digits = 2,
+                    ...){
+  
+  rslt <- extract_principal(x,
+                            cut = .30,
+                            sort = TRUE,
+                            digits = 2)
+  
+  
+  rslt$eigen <- Tbll_pca_eigen(extprn=rslt)
+  rslt
+}
+
+
+
+
+#' @rdname Tbll_pca
+#' @export
+Tbll_pca_loadings <-
+  function(x,
+           caption = "Principal components analysis (PCA)",
+           cut = .30,
+           sort = TRUE,
+           digits = 2,
+           ...
+  ) {
+    
+    if(!is.null(x))
+      extract_principal(
+        x,
+        caption = caption,
+        digits = digits,
+        cut = cut,
+        sort = sort
+      )$loadings
+    else extprn$loadings
+    
+  }
+
+
+#' @rdname Tbll_pca
+#' @export
+Tbll_pca_eigen <- function(x,
+                           digits = 2,    
+                           extprn =NULL,
+                           ...) {
+  if(is.null(extprn))
+    rslt <- extract_principal(x,  digits = digits)$eigen
+  else   rslt <- extprn$eigen
+  
+  caption <- (attr(rslt, "caption"))
+  
+  prepare_output(cbind(
+    data.frame(Source = rownames(rslt)),
+    stp25rndr::Format2(rslt, digits = digits)
+  ),
+  caption = caption)
+}
+
+
+#' @rdname Tbll_pca
+#' @export
+Tbll_pca_test <- function(x,
+                          ...) {
+  rslt <- extract_principal(x)$test
+  rslt
+}
