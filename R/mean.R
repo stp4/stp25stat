@@ -145,7 +145,19 @@ calc_mean <-  function(x,
       digits = digits,
       unit=unit
     )
-  } else {
+ 
+    
+  } 
+  else if (style == "3" |
+           style == "CI") {
+    
+    Meanci2(x, digits=digits)
+ 
+    
+  } 
+  
+  
+  else {
     rndr_mean(mean(x), 
               ifelse(n > 2, sd (x), NA), 
               digits=digits,
@@ -197,6 +209,11 @@ calc_median <-
         unit=unit
       )
     }
+    
+    else if(style=="3"| style=="CI"){
+      Medianci2(x, digits=digits)
+    }
+    
     else {
       rndr_median_quant(quantile(x, na.rm = TRUE),
                         digits=digits,

@@ -73,6 +73,10 @@ Tbll_desc <- function (...,
   rslt_all <- NULL
   ans <- NULL
   X <- stp25formula::prepare_data2(...)
+  
+  cat("\n\ninput\n")
+  print( X$measure )
+  print( X$digits )
   n <- length(X$measure.vars)
   
   any_missing_measure <- 
@@ -91,7 +95,10 @@ Tbll_desc <- function (...,
   if (include.multiresponse)
       X$measure <- rep("multi", length(X$measure))
   
-  if (is.null(X$group.vars) | include.total) {
+  
+
+  
+  if (is.null(X$group.vars)  | include.total) {
     rslt_all <-
       list_rbind(purrr::pmap(
         list(
@@ -140,6 +147,8 @@ Tbll_desc <- function (...,
     else
       rslt_all <- ans
   }
+  
+ 
   
   if (include.nr) {
     if (is.null(X$group.vars)) {
@@ -203,12 +212,11 @@ Tbll_desc <- function (...,
       }
     }
     if (is.vector(rslt_custom)) {
-      if (include.nr)
-        rslt_custom <-  append(rslt_custom, "", after = 0)
+      if (include.nr) rslt_custom <-  append(rslt_custom, "", after = 0)
       rslt_all$custom <- rslt_custom
     }
-    else {
-      rslt_custom <- rbind(rep("", ncol(rslt_custom)), rslt_custom)
+    else { # is.matrix
+      if (include.nr) rslt_custom <- rbind(rep("", ncol(rslt_custom)), rslt_custom)
       rslt_all <- cbind(rslt_all, rslt_custom)
     }
   }

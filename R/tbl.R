@@ -48,12 +48,12 @@ Tbll <- function(...)  {
   frst <-
     lazyeval::lazy_eval(lazyeval::make_call(quote(class), dots[[1]]))
   
-  if (n > 1 & "data.frame" %in%  frst)
+  if (n > 1 & "data.frame" %in%  frst )
     isa_formula <-
     any(grepl("~", as.character(dots[[2]][1])))
   
   if (frst[1] == "formula" |
-      ("data.frame" %in% frst & !isa_formula)) {
+      ("data.frame" %in% frst & !isa_formula & frst[1] != "anova")) {
     rslt <- Tbll_desc(...)
   }
   else if ("data.frame" %in% frst & isa_formula) {
