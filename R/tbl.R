@@ -156,10 +156,116 @@ tbll_extract.summary.matchit <-
 
 #' @rdname Tbll
 #' @export
+#' @examples 
+#' require(vcd)
+#' data("Arthritis")
+#' tab <- xtabs(~Improved + Treatment, data = Arthritis)
+#' Tbll(assocstats(tab))
 #'
 tbll_extract.principal <- function (x, ...)
 {
   Tbll_pca(x, ...)
+}
+
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.assocstats <- function(x) {
+  if (length(x) == 2) {
+    x2 <- cor2 <- NULL
+    for (i in names(x)) {
+      if (is.null(x2)) {
+        x2 = extract_assocstats_chisq(x[[i]])
+        cor2 = extract_assocstats_corr(x[[i]])
+        names(cor2)[-1] <-  i
+        names(x2)[-1] <- paste0(i, "_", names(x2)[-1])
+      } else{
+        x22 = extract_assocstats_chisq(x[[i]])
+        cor22 = extract_assocstats_corr(x[[i]])
+        names(cor22)[-1] <-  i
+        names(x22)[-1] <- paste0(i, "_", names(x22)[-1])
+        x2 <- dplyr::bind_cols(x2, x22[-1])
+        cor2 <- dplyr::bind_cols(cor2, cor22[-1])
+      }
+    }
+    list(x2 = x2, cor = cor2)
+  }
+  else
+    list(x2 = extract_assocstats_chisq(x),
+         cor = extract_assocstats_corr(x))
+}
+
+extract_assocstats_corr <- function(x) {
+  prepare_output(data.frame(
+    Test = c("Phi-Coefficient",
+             "Contingency Coefficient",
+             "Cramer's V"),
+    r = stp25rndr::Format2(
+      c(x$phi,
+        x$contingency,
+        x$cramer),
+      3
+    )),
+    caption = "Measures of Association Correlation Test")
+  
+}
+
+extract_assocstats_chisq   <- function(x) {
+  prepare_output(data.frame(
+    Test = rownames(x$chisq_tests),
+    X2 =   stp25rndr::Format2(x$chisq_tests[[1]],2),
+    df =   stp25rndr::Format2(x$chisq_tests[[2]],0),
+    p.value =   stp25rndr::rndr_P(x$chisq_tests[[3]],FALSE)
+  )
+  ,
+  caption = "Pearson chi-Squared")
+}
+
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.list <- function(x) {
+  if (inherits(x[[1]], "assocstats")) {
+    tbll_extract.assocstats(x)
+  }
+  else{
+    cat("\n Keine Methode fuer list()  vorhanden.\n\n")
+    sapply(x, class)
+  }
+}
+
+#' @rdname Tbll
+#' @export
+#' @examples 
+#' #'
+#' require(MASS)
+#' minn38a <- xtabs(f ~ ., minn38)
+#' fm <- loglm(~ 1 + 2 + 3 + 4, minn38a)  # numerals as names.
+#' deviance(fm)
+#' fm
+#' tbll_extract.loglm(fm)
+#' 
+tbll_extract.loglm <- function(x) {
+  ts.array <-
+    rbind(c(x$lrt, x$df,
+            if (x$df > 0L)
+              1 - pchisq(x$lrt, x$df) else 1),
+          c(x$pearson, x$df,
+            if (x$df > 0L)
+              1 - pchisq(x$pearson, x$df) else 1))
+ 
+  prepare_output(
+    data.frame(
+      Test = c("Likelihood Ratio", "Pearson"),
+      X2 = stp25rndr::Format2(ts.array[, 1], 2),
+      df = stp25rndr::Format2(ts.array[, 2], 0),
+      p.value = stp25rndr::rndr_P(ts.array[, 3], FALSE)  ),
+    
+    caption= "Log-Linear Model"
+    
+  )
+  
+  
 }
 
 #'  Tabelle PCA
