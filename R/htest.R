@@ -31,6 +31,9 @@ APA.htest <- function(x,  ...) {
               x$parameter,
               x$p.value)
     }
+    else if (names(x$statistic) == "X-squared") {
+      rndr_Chisq(x$statistic, x$parameter, x$p.value)
+    }
     else{
       rndr_W(x$statistic,
              x$p.value)
@@ -68,6 +71,14 @@ APA2.htest <- function(x, caption = "", ...) {
   else {"Eventuel Fisher-Test"}
 }
 
+fix_data_frame2<-function(...){
+  
+  rslt<-data.frame(...)
+  rslt[[2]]<- stp25rndr::Format2(rslt[[2]],2)
+  rslt[[ncol(rslt)]] <- stp25rndr::rndr_P( rslt[[ncol(rslt)]], FALSE)
+  rslt
+}
+
 
 #' @rdname APA2
 #' @export
@@ -88,3 +99,5 @@ APA2.pairwise.htest <-
       ...
     )
   }
+
+
