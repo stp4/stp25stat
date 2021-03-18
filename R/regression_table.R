@@ -133,6 +133,9 @@ regression_table <-
     } else
       coefs <- coefs[[1]]
     
+   # rownames(coefs) <- NULL
+    
+    
     #-- gof ----------------------------------
     if (include.gof) {
       for (i in seq_along(x)) { 
@@ -229,6 +232,10 @@ regression_table <-
         )
       
     }
+    
+    
+    rownames(result) <- NULL
+    
     
     if (!is.logical(output)) {
       Output(

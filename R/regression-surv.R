@@ -333,7 +333,7 @@ Summary_Surv <- function(...) {
 #'
 Summary_Surv.list <- function(fits,
                               times = 1,
-                              digits = 0,
+                              digits = if(percent) 0 else 2,
                               percent = FALSE,
                               names_time = c("n (% [95% CI])", "n (est [95% CI])"),
                               caption = "",
@@ -367,8 +367,9 @@ Summary_Surv.list <- function(fits,
 Summary_Surv.survfit <-
   function(x,
            times = 1,
-           digits = 0,
+           digits = if(percent) 0 else 2,
            percent = FALSE,
+           
            names_time = c("n (% [95% CI])", "n (est [95% CI])"),
            cleanup_names = FALSE,
            caption = "",
