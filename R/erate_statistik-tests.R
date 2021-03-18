@@ -1,3 +1,79 @@
+#' auto_test
+#'
+#'Sig-Test fur Tabelle.
+#' include.custom = auto_test
+#'
+#' @param x  vector (measure)
+#' @param by vector (group)
+#' @param measure not used 
+#' @param measure.test test statistics
+#'
+#' @return matrix with one row
+#' @export
+#'
+#' @examples
+#' 
+#'  dat <- data.frame(
+#'  m1 = c(1, 2, 1, 3, 1, 4, 1, 1,
+#'        3, 5, 3, 1, 3, 6, 3, 1),
+#'  geschl = gl(2, 8, labels = c("m", "f"))
+#'  )
+#'  dat$m2 <- cut(dat$m1, 2)
+#' 
+#' 
+#'  dat %>% Tbll_desc(
+#'   m1[median, 1],
+#'   m2,
+#'   by = ~ geschl,
+#'   include.custom = auto_test,
+#'   # include.test = TRUE,
+#'   include.total = TRUE
+#'  ) 
+#' 
+auto_test <- function(x= 1:16,
+                      by=gl(2, 8, labels = c("m", "f")),
+                      measure=NULL,
+                      measure.test="contest"
+                        ) {
+  dat <-  na.omit(data.frame(x = x, by = by))
+  rslt <- NULL
+ 
+  if (measure.test == "notest") {
+    rslt <-  ""
+  }
+  else if (measure.test == "contest") {
+    if (inherits(x, "factor")) {
+      dat$x <- as.numeric(dat$x)
+    }
+    rslt <- conTest(x ~ by, dat)
+  }
+  else if (measure.test == "cattest") {
+    rslt <- catTest(~ x + by, dat)
+  }
+  else if (measure.test %in% contest) {
+    if (inherits(x, "factor")) {
+      dat$x <-
+        as.numeric(dat$x)
+    }
+    rslt <- conTest(x ~ by, dat, measure.test)
+  }
+  else if (measure.test %in% cattest) {
+    rslt <- catTest(~ x + by, dat, measure.test)
+  }
+  
+  rslt <-   strsplit(rslt, ', p')[[1]]
+  cbind("Test Statistics" = rslt[1],
+          "p Value" = gsub("=", "", rslt[2]))
+
+}
+
+
+
+
+
+
+
+
 contest <-
   c("contest",
     "wilcox",
