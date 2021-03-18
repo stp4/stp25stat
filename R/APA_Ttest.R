@@ -1,16 +1,3 @@
-
-
-
-#' @rdname APA
-#' @export
-APA.ScalarIndependenceTest <- function(x, ...) {
-  ## coin::wilcox_test
-  capture.output(x)[5]
-}
-
-
-
-
 #' @rdname APA_
 #' @description \strong{APA_Ttest}:
 #'  Berechnung von Mittelwerten und Mittelwertdifferenzen und des T-Test.

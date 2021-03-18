@@ -71,6 +71,49 @@ APA.NULL <- function(x,
 #' @export
 APA.default <- function(x, ...) {
   cat("\nKeine Methode fuer: ", class(x), "\n")
+  class(x)[1]
+}
+
+
+#' @rdname APA
+#' @export
+#' @examples
+#'
+#' davis <- matrix(
+#' c(3,  6,
+#'   2, 19),
+#' nrow = 2, byrow = TRUE
+#' )
+#' davis <- as.table(davis)
+#' ## Asymptotic Pearson chi-squared test
+#' diffusion <- data.frame(
+#'   pd = c(0.80, 0.83, 1.89, 1.04, 1.45, 1.38, 1.91, 1.64, 0.73, 1.46,
+#'          1.15, 0.88, 0.90, 0.74, 1.21),
+#'   age = factor(rep(c("At term", "12-26 Weeks"), c(10, 5)))
+#' )
+#' 
+#' ## Exact Wilcoxon-Mann-Whitney test
+#' ## Hollander and Wolfe (1999, p. 111)
+#' ## (At term - 12-26 Weeks)
+#' wt <- wilcox_test(pd ~ age, data = diffusion,
+#'                   distribution = "exact", conf.int = TRUE)
+#' 
+#' APA(xt<-chisq_test(davis))
+#' 
+#' 
+#' APA(wt)
+APA.QuadTypeIndependenceTest <- function(x, ...) {
+  # capture.output(x)[5]
+  stp25rndr::rndr_Chisq(coin::statistic(x), 
+                        x@statistic@df, 
+                        coin::pvalue(x))
+}
+#' @rdname APA
+#' @export
+APA.ScalarIndependenceTest <- function(x, ...) {
+  stp25rndr::rndr_W(coin::statistic(x), 
+                    coin::pvalue(x))
+  
 }
 
 #' @rdname APA
