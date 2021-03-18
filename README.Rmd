@@ -33,15 +33,22 @@ Functions for Statistical Computations
 
 ```{r}
 which_output()
+
+#'  #  set_my_options(style_mean = list(line_break = '<br>'))
+#'  #  set_my_options(prozent = list(null_percent_sign = '.'))
+#'  #  set_my_options(mittelwert = list(mean.style = 2, median.style = "IQR"), 
+#'  #              prozent=list(style=2))
+#'  #  set_my_options(caption= "include.n") 
+
+
+
 ```
 
 
-## Artificial data
+## Deskriptive Tabellen mit sig-Test
 
+```{r, include=FALSE}
 
-
-```{r, results='asis'}
- 
 require(wakefield)
 
 
@@ -61,54 +68,197 @@ DF <- r_data_frame(
   likert,
   date_stamp(prob = probs(12))
 ) %>% clean_names()
+DF$died <- factor(DF$died)
+
+SDM <- function(x, by,...) {
+  dat<-  na.omit(data.frame(x=x, by=by))
+  n<- nrow(dat)
+  or<- sdm<- NA 
+  if(n>10){
+    if( is.numeric(dat$x) | nlevels(dat$x)>2 ){
+      
+      xx <- split(scale(as.numeric(dat$x)), dat$by)
+      x1 <- xx[[1]]
+      x2 <- xx[[2]]  
+      
+      m1 <-  mean(x1)
+      m2 <-  mean(x2)
+      v1 <-  var(x1)
+      v2 <-  var(x2)
+      ss <- sqrt((v2 + v1) / 2)
+      sdm <- (m1 - m2) / ss
+      vr<- v1 / v2
+      or<- NA
+    }
+    else{
+      sdm <- vr <- NA 
+      or<- try(fisher.test(dat$x, dat$by)$estimate )
+      if( or <0.01 )  or<- "--"
+      else if (or>100 )or<- "--"
+      else or <- stp25rndr::Format2(or, 2)
+    }
+  }
+  rslt<-
+    cbind(SDM = stp25rndr::Format2(sdm, 2),
+          VR = stp25rndr::Format2(vr, 2),
+          OR = or
+    )
+  
+  rslt
+}
+```
 
 
-# DF %>% Tabelle2(age, sex, height,
-#                 race, died, smoker,  
-#                 iq, likert,
-#                 by =  ~ sex,
-#                 APA = TRUE)
 
 
-# neue Funktion
-
-DF %>%
-  Tbll(
-    age[median], height[mean,ttest],
-    race,
-    died[fisher], smoker[fisher],
-    iq, likert[mean],
-    by = ~ sex,
-    include.test = TRUE,
-    include.total = TRUE
-  ) %>% Output()
 
 
-# mit include.custom
+```{r}
+
+
+#' effect_size
+#'
+#' Cohen's d  d=(x1-x2)/s psych::cohen.d
+#' Hedges' g  g= (x1-x2)/s1s2 ( pooled standard deviation)
+#' g enspricht  x<-scale(x)  (mean(x1) - mean(x2)) 
+#' 
+#' Generalized Log Odds Ratios for Frequency Tables vcd::oddsratio
+#' 
+#' @param x vector
+#' @param by factor
+#' @param measure  intern c("mean", "median", "numeric", "factor", "logical")
+#' @param measure.test, test  intern c("cattest", "contest", "notest", "ttest", ...)
+#' @export
+#'
+#' @examples
+#' 
+#'  effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
+#' 7, 6, 8, 9, 4, 5, 6, 7) ,
+#' gl(2, 8, labels = c("Control", "Treat")))
+#' 
+#' effect_size(factor(c(2, 2, 2, 2, 1, 1, 1, 1,
+#'                      2, 2, 2, 2, 1, 2, 1, 2)) ,
+#'             gl(2, 8, labels = c("Control", "Treat")))
+#'             
+#'             
+effect_size2 <- function(x,
+                        by,
+                        measure,
+                        ...
+                        ) {
+  dat <-  na.omit(data.frame(x = x, by = by))
+  n <- nrow(dat)
+  es <- rslt <- "n.a."
+  if (n > 10) {
+    if (measure %in% c("mean", "median", "numeric")) {
+      es <- psych::cohen.d(dat$x, dat$by)
+      es <- stp25rndr::Format2(es$cohen.d)
+      es <- paste0(es[2], " [", es[1], ", ", es[3], "] ES")
+    }
+    else  if (measure %in% c("factor", "logical")) {
+      # Generalized Log Odds Ratios for Frequency Tables
+      if (measure == "factor" & nlevels(dat$x) != 2) {
+        es <- "n.a."
+      }
+      else{
+        es <- vcd::oddsratio(table(dat$x, dat$by), log = FALSE)
+        if (coef(es) < 0.01)
+          es <- "n.a."
+        else if (coef(es) > 100)
+          es <- "n.a."
+        else{
+          es <- stp25rndr::rndr_ods(c(coef(es) ,  confint(es)))
+          es <- paste0(es[1], " [", es[2], ", ", es[3], "] OR")
+        }
+      }
+    }
+  }
+  cbind('Odds Ratio/Effect Size' = es)
+}
+  
+```
+
+
+
+
+
+
+ 
+
+
+```{r}
+
+
+# Zu Auto-Test existiiert eine eigene Funktion unter stp25stat::auto_test
+
+auto_test2 <- function(x,
+                      by,
+                      measure,
+                      measure.test,
+                      type = 2) {
+  dat <-  na.omit(data.frame(x = x, by = by))
+  rslt <- NULL
+ 
+  contest <- stp25stat:::contest
+  cattest <- stp25stat:::cattest
+  
+  if (measure.test == "notest") {
+    rslt <-  ""
+  }
+  else if (measure.test == "contest") {
+    if (inherits(x, "factor")) {
+      dat$x <- as.numeric(dat$x)
+    }
+    rslt <- stp25stat:::conTest(x ~ by, dat)
+  }
+  else if (measure.test == "cattest") {
+    rslt <- stp25stat:::catTest( ~ x + by, dat)
+  }
+  else if (measure.test %in% contest) {
+    if (inherits(x, "factor")) {
+      dat$x <-
+        as.numeric(dat$x)
+    }
+    rslt <- stp25stat:::conTest(x ~ by, dat, measure.test)
+  }
+  else if (measure.test %in% cattest) {
+    rslt <- stp25stat:::catTest( ~ x + by, dat, measure.test)
+  }
+  
+  
+  
+  if (type == 1) {
+    cbind('Statistics' = rslt)
+  }
+  else if (type == 2) {
+    rslt <-   strsplit(rslt, ', p')[[1]]
+    cbind("Test Statistics" = rslt[1],
+          "p-value" = gsub("=", "", rslt[2]))
+  }   else if (type == 3) {
+    cbind('Statistics' = gsub(", p", ",<BR>p", rslt))
+  }
+  
+  
+}
+```
+
+
+```{r, results='asis'}
+
 
 DF %>% Tbll_desc(
-  age,
-  employment,
-  by =  ~ sex,
-  include.custom =
-    function(x, by)  {
-      # Standardized Differenze of the Mean
-      # Variance Ratio
-      xx <- split(scale(as.numeric(x)), by)
-      x1 <- xx[[1]]
-      x2 <- xx[[2]]
-      m1 <-  mean(x1, na.rm = TRUE)
-      m2 <-  mean(x2, na.rm = TRUE)
-      v1 <-  var(x1, na.rm = TRUE)
-      v2 <-  var(x2, na.rm = TRUE)
-      ss <- sqrt((v2 + v1) / 2)
-      
-      cbind(SDM = stp25rndr::Format2((m1 - m2) / ss, 2),
-            VR = stp25rndr::Format2(v1 / v2, 2))
-      }
+  age[median, 1],
+  height[1, mean, ttest],
+  sex,
+  smoker[fisher],
+  iq[0],
+  likert[2, mean],
+  by =  ~ died,
+  include.custom = effect_size2,
+  include.test=TRUE,
+  include.n=TRUE,
+  include.total=TRUE
 ) %>% Output()
-
-
 
 ```
 
@@ -150,15 +300,7 @@ DF %>% Tbll_desc(
 
 ## Mittelwerte und Prozent
 
-
-```{r, results='asis'}
-    DF %>% Tabelle2(sex, age, edu, 
-                    "Zwischen Überschrift",
-                    beruf, single,
-                    APA = TRUE, caption = "Characteristics")
-
-```
-
+ 
 
 
 

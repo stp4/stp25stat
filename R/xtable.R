@@ -199,9 +199,9 @@ APA2.summary.table <- function(x, ...) {
 #' APA2(summary(table(a, sample(a))))
 #' 
 APA.summary.table <- function(x, ...) {
-  Text(paste0(
+  paste0(
     "Chisq(df=", x$parameter, ")=",
-    Format2(x$statistic, 2), ", ", rndr_P(x$p.value)))
+    Format2(x$statistic, 2), ", ", rndr_P(x$p.value))
 }
 
 
@@ -390,7 +390,6 @@ APA2.xtabs  <- function(x,
 }
 
  
-
 
 
 

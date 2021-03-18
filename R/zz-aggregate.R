@@ -14,9 +14,6 @@ dapply1 <-
             ...) {
     if (tibble::is_tibble(.data))
       tibble::as_tibble(plyr::llply(.data, fun, ...))
-   # 3: `tbl_df()` is deprecated as of dplyr 1.0.0.
-   # Please use `tibble::as_tibble()` instead.
-    #  dplyr::tbl_df(plyr::llply(.data, fun, ...)) 
     else
       data.frame(plyr::llply(.data, fun, ...),
                  stringsAsFactors=stringsAsFactors) 
