@@ -7,7 +7,7 @@
 #' @param include.label Labels ja-nein
 #' @param exclude,exclude.level,max_factor_length fuer factor
 #' @param include.custom eigene Funktion mit (x, by, fun) return kann ein Vector oder eine Matrix sein
-#'  function(x , by){
+#'  function(x , by, ...){
 #' x <- scale(as.numeric(x))
 #' diff(sapply(split(x, by), mean, na.rm=TRUE))})
 #' 
@@ -67,23 +67,34 @@ Tbll_desc <- function (...,
                        include.test = FALSE,
                        include.normality.tests=FALSE,
                        include.multiresponse=FALSE,
-                       include.custom = NULL
+                       include.custom = NULL,
+                       include.ci=FALSE
                        ) {
   note<-""
   rslt_all <- NULL
   ans <- NULL
-  X <- stp25formula::prepare_data2(...)
   
-  cat("\n\ninput\n")
-  print( X$measure )
-  print( X$digits )
+  if( include.ci ){
+    
+    
+    cat("\ninclude.ci wird über die options() gesteuert!\n\n")
+    cat('set_my_options(mittelwert=list(  mean.style="ci"  ))')
+    cat("\n")
+    cat('set_my_options(prozent=list(  style="%ci"  ))')
+    cat("\n")
+    
+    stop( "include.ci=TRUE" )
+    
+  }
+  
+  X <- stp25formula::prepare_data2(...)
   n <- length(X$measure.vars)
   
   any_missing_measure <- 
     sapply(X$data[X$measure.vars], 
            function(x) length(na.omit(x))) 
  
-   if(!include.label) 
+ if(!include.label) 
      X$row_name <- X$measure.vars
  
   if ( include.n & sum(any_missing_measure[X$measure!="header"]-X$N) == 0 ) {
@@ -92,13 +103,18 @@ Tbll_desc <- function (...,
     include.nr <- TRUE
   }
   
-  if (include.multiresponse)
+  if (include.multiresponse){
+   # nein das geht nicht wegen Formel
+    # if(is.numeric(X$measure)) X$digits <- rep(0, length(X$digits))
       X$measure <- rep("multi", length(X$measure))
+      
+      }
   
+  # start der eigendlichen funktion
   
-
-  
-  if (is.null(X$group.vars)  | include.total) {
+  # 1. Mittelweret mit purrr::pmap
+  # 
+  if (is.null(X$group.vars) | include.total) {
     rslt_all <-
       list_rbind(purrr::pmap(
         list(
@@ -148,8 +164,6 @@ Tbll_desc <- function (...,
       rslt_all <- ans
   }
   
- 
-  
   if (include.nr) {
     if (is.null(X$group.vars)) {
       n.out <- c("(N)", "", "", X$N)
@@ -181,42 +195,90 @@ Tbll_desc <- function (...,
     names(rslt_all) <- gsub("_m", "", names(rslt_all))
   }
   
+  
+  # Eigene Funktion fun(x, by, measure, measure.test) 
+  #                 return vector ode matrix
+  #                 die länge ist gleich wie bei measure oder die anzahl an factoren
+  #
   if (!is.null(include.custom)) {
     rslt_custom <- NULL
     # schleife statt purrr::pmap weil es einfacher lesbar ist
     for (i in seq_len(n)) {
-     if (is.null(X$group.vars))
-       # include.custom ist eine function
-       tmp <- do.call(include.custom,
-                list(X$data[[X$measure.vars[i]]]))
+      if (is.null(X$group.vars))
+        tmp <- do.call(
+          include.custom, # include.custom ist eine function
+          list(
+            X$data[[X$measure.vars[i]]],
+            measure = X$measure[i],
+            measure.test = X$measure.test[i]
+          )
+        )
       else
-        tmp <- do.call(include.custom,
-                list(X$data[[X$measure.vars[i]]],
-                     X$data[[X$group.vars[1]]]))
+        tmp <- do.call(
+          include.custom,
+          list(
+            X$data[[X$measure.vars[i]]],
+            X$data[[X$group.vars[1]]],
+            measure = X$measure[i],
+            measure.test = X$measure.test[i]
+          )
+        )
       # tmp kann ein vector der laenge 1 oder eine matrix sein
       if (is.vector(tmp)) {
-        rslt_custom <- append(rslt_custom, tmp)
-        if (X$measure[i] == "factor" & length(tmp)==1)
+        
+        if (X$measure[i] != "factor") {
+          rslt_custom <- append(rslt_custom, tmp)
+        }
+        else  if (X$measure[i] == "factor" & length(tmp) == 1) {
+          rslt_custom <- append(rslt_custom, tmp)
           rslt_custom <-
             append(rslt_custom, rep("", nlevels(X$data[[X$measure.vars[i]]])))
+        } else if (X$measure[i] == "factor" &
+                   length(tmp) == nlevels(X$data[[X$measure.vars[i]]])) {
+          rslt_custom <- append(rslt_custom, c("", tmp))
+        } else{
+          stop("In rslt_custom stimmen die Laenge derRueckgabe nicht!")
+        }
       }
       else{
-        rslt_custom <- rbind(rslt_custom, tmp)
-        if (X$measure[i] == "factor" & nrow(tmp)==1) 
+        if (X$measure[i] != "factor") {
+          rslt_custom <- rbind(rslt_custom, tmp)
+        }
+        else if (X$measure[i] == "factor" & nrow(tmp) == 1) {
+          rslt_custom <- rbind(rslt_custom, tmp)
           rslt_custom <- rbind(rslt_custom,
                                matrix(
                                  "",
                                  ncol = ncol(rslt_custom),
                                  nrow = nlevels(X$data[[X$measure.vars[i]]])
                                ))
+        }
+        else if (X$measure[i] == "factor" &
+                 nrow(tmp) == nlevels(X$data[[X$measure.vars[i]]])) {
+          rslt_custom <- rbind(rslt_custom,
+                               matrix("",
+                                      ncol = ncol(rslt_custom),
+                                      nrow = 1))
+          rslt_custom <- rbind(rslt_custom, tmp)
+        } else{
+          stop("In rslt_custom stimmen die Laenge derRueckgabe nicht!")
+        }
+        
+        
+        
       }
     }
+    
+    
     if (is.vector(rslt_custom)) {
-      if (include.nr) rslt_custom <-  append(rslt_custom, "", after = 0)
+      if (include.nr)
+        rslt_custom <-  append(rslt_custom, "", after = 0)
       rslt_all$custom <- rslt_custom
     }
-    else { # is.matrix
-      if (include.nr) rslt_custom <- rbind(rep("", ncol(rslt_custom)), rslt_custom)
+    else {
+      # is.matrix
+      if (include.nr)
+        rslt_custom <- rbind(rep("", ncol(rslt_custom)), rslt_custom)
       rslt_all <- cbind(rslt_all, rslt_custom)
     }
   }
@@ -226,6 +288,8 @@ Tbll_desc <- function (...,
     which_test <-
       match.arg(include.test,
                 c(contest, cattest, notest, ordtest, disttest, cortest))
+
+    
     X$measure.test <- rep(which_test, length(X$measure.test))
     if (which_test %in% disttest) {
       include.test <- FALSE
@@ -236,6 +300,7 @@ Tbll_desc <- function (...,
   }  
   
   if (include.test) {
+    
     rslt_test <- NULL
     for (i in seq_len(n)) {
       temp <- NULL
@@ -532,3 +597,90 @@ Tbll_xtabs <- function(...,
 #' @noRd
 list_rbind <- function(l)
   as.data.frame(do.call(rbind, (l)))
+
+
+
+
+
+#' effect_size
+#'
+#' Cohen's d  d=(x1-x2)/s psych::cohen.d
+#' Hedges' g  g= (x1-x2)/s1s2 ( pooled standard deviation)
+#' g enspricht  x<-scale(x)  (mean(x1) - mean(x2))
+#'
+#' Generalized Log Odds Ratios for Frequency Tables vcd::oddsratio
+#'
+#' @param x vector
+#' @param by factor
+#' @param measure  intern c("mean", "median", "numeric", "factor", "logical")
+#' @param measure.test, test  intern c("cattest", "contest", "notest", "ttest", ...)
+#'
+#' @examples
+#'
+#'  effect_size(c(2, 3, 4, 2, 3, 4, 3, 6,
+#' 7, 6, 8, 9, 4, 5, 6, 7) ,
+#' gl(2, 8, labels = c("Control", "Treat")))
+#' x<- c(2, 3, 4, 2, 3, 4, 3, 6,7, 6, 8, 9, 4, 5, 6, 7)
+#' y<- factor(c(2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 1, 2))
+#' z<- gl(2, 8, labels = c("Control", "Treat"))
+#' rbind(
+#'   effect_size(x, z),
+#'   effect_size(y, z)
+#' )
+#' 
+effect_size <- function(x,
+                         by,
+                         measure,
+                         measure.test,
+                       #  test =
+                       #    if (measure.test == "contest")
+                       #      coin::wilcox_test
+                       #  else
+                       #    coin::chisq_test)
+                         ...) {
+  dat <-  na.omit(data.frame(x = x, by = by))
+  n <- nrow(dat)
+  es <- rslt <-  ""
+  if (n > 10) {
+    if (measure.test == "contest") {
+      es <-   try(psych::cohen.d(as.numeric(dat$x), dat$by), silent = TRUE)
+      if (is.character(es)) {
+        es <- " error "
+      }
+      else{
+        es <- stp25rndr::Format2(es$cohen.d)
+        es <- paste0(es[2], " [", es[1], ", ", es[3], "] ES")
+      }
+    }
+    else  if (measure.test  == "cattest") {
+      # Generalized Log Odds Ratios for Frequency Tables
+      if (measure == "factor" & nlevels(dat$x) != 2) {
+        es <- "n.a."
+      }
+      else{
+        es <-   try(vcd::oddsratio(table(dat$x, dat$by), log = FALSE),
+                    silent = TRUE)
+        if (is.character(es)) {
+          es <- " error "
+        }
+        else{
+          if (coef(es) < 0.01)
+            es <- "n.a."
+          else if (coef(es) > 100)
+            es <- "n.a."
+          else{
+            es <- stp25rndr::rndr_ods(c(coef(es) ,  confint(es)))
+            es <- paste0(es[1], " [", es[2], ", ", es[3], "] OR")
+          }
+        }
+        
+      }
+    }
+ #   rslt <-
+ #     stp25stat::APA(do.call(test, list(x ~ by, dat)))
+    
+  }
+ # cbind('Odds Ratio/Effect Size' = es,
+ #       'sig. Test' = rslt)
+  cbind('SDM/OR [95% CI]' = es)
+}
