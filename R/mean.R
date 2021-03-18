@@ -148,7 +148,7 @@ calc_mean <-  function(x,
  
     
   } 
-  else if (style == "3" |
+  else if (style == "3" | style == "ci"|
            style == "CI") {
     
     Meanci2(x, digits=digits)
@@ -210,7 +210,7 @@ calc_median <-
       )
     }
     
-    else if(style=="3"| style=="CI"){
+    else if(style=="3"| style=="ci"| style=="CI"){
       Medianci2(x, digits=digits)
     }
     

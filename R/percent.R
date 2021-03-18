@@ -60,6 +60,8 @@
 #' #'   ) )
 #' #' rbind(Prozent2default(out[treatment=="Control"], style = "%ci")[1,],
 #' #' Prozent2default(out[treatment=="Treat"], style = "%ci")[1,])
+#' 
+#' 
 Prozent <- function (x,
                      digits = 0,
                      exclude = if (useNA == "no")
@@ -284,7 +286,9 @@ rndr2_percent <- function(x = n / sum(n, na.rm = TRUE) * 100,
   rslt
 }
 
-rndr_percent_CI <-
+
+#' für Tabelle
+rndr_prct_ci <-
   function( 
     low,
     upr,
@@ -308,6 +312,33 @@ rndr_percent_CI <-
     )
   }
 
+#' muss nach stp25rndr verschoben werden
+#' wird in Surv verwendet
+#'
+rndr_percent_CI <-
+  function(x,
+           low,
+           upr,
+           digits = default_stp25("digits", "prozent"),
+           prc = "% ",
+           sep = ", ",
+           sep_1 = "[",
+           sep_2 = "]") {
+    
+    if(which_output()=="latex") prc<- "prc"
+    
+    paste0(
+      stp25rndr::Format2(x, digits),
+      prc,
+      sep_1,
+      stp25rndr::Format2(low, digits),prc,
+      sep,
+      stp25rndr::Format2(upr, digits),prc,
+      sep_2
+    )
+  }
+
+
 
 #' Confidence Intervals for Binomial Proportions
 #'
@@ -329,7 +360,9 @@ ci_binom <- function(x,
       method = method
     )
  
-  rndr_percent_CI(rslt[,2]*100, rslt[,3]*100)
+ r<- rndr_prct_ci(rslt[,2]*100, rslt[,3]*100)
+ 
+ ifelse(rslt[,1] <= 0, ".", r )
 }
 
 #' Confidence Intervals for Multinomial Proportions
@@ -349,7 +382,9 @@ ci_factor <- function(x,
                           sides = sides,
                           method = method)
  
-  rndr_percent_CI(rslt[,2]*100, rslt[,3]*100)
+ r<- rndr_prct_ci(rslt[,2]*100, rslt[,3]*100)
+  
+  ifelse(rslt[,1] <= 0, ".", r )
 }
 
 
