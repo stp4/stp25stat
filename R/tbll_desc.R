@@ -133,7 +133,7 @@ Tbll_desc <- function (...,
   
   if (!is.null(X$group.vars)) {
     if (length(X$group.vars) > 1) {
-      X$data$group <- interaction(X$data[X$group.vars])
+      X$data$group <- interaction2(X$data[X$group.vars])
       caption <- paste(paste(X$group.vars, collapse=", "), caption)
       X$group.vars <- "group"
     } else { caption <- paste( X$group.vars, caption) }
@@ -381,6 +381,67 @@ Tbll_desc_multi <- function(...) {
   Tbll_desc(..., include.multiresponse=TRUE)
 }
 
+
+#' @noRd
+#'  Kopie von  interaction
+#'  die Labels werden anderst sortiert.
+#'  
+#'   i lauft in umgekehrter richtung und past ist auch umgedreht ansonsten identich mit interaction
+#' @param ...	the factors for
+#' @param sep	string to construct the new level labels by joining the constituent ones.
+#' 
+#' @examples 
+#' 
+#' interaction2(
+#' gl(2, 8, labels = c("Z", "X")),
+#' gl(2, 8, labels = c( "A","B")),
+#' gl(2, 8, labels = c( "a","b"))
+#' )
+#' 
+interaction2 <-
+  function (...,
+            sep = "_") {
+    args <- list(...)
+    narg <- length(args)
+    if (narg < 1L)
+      stop("No factors specified")
+    if (narg == 1L && is.list(args[[1L]])) {
+      args <- args[[1L]]
+      narg <- length(args)
+    }
+    # orginal  for (i in narg:1L)
+    for (i in 1L:narg) {
+      # cat("\n", i, narg, "\n")
+      
+      f <- as.factor(args[[i]])[, drop = FALSE]
+      l <- levels(f)
+      if1 <- as.integer(f) - 1L
+      # Orginal  if (i == narg) {
+      if (i == 1) {
+        ans <- if1
+        lvs <- l
+      }
+      else {
+        ans <- ans * length(l) + if1
+        lvs <- paste(rep(lvs, each = length(l)),
+                     rep(l, length(lvs)),
+                     sep = sep)
+        #orginal paste(rep(l, each = ll), rep(lvs, length(l))
+        if (anyDuplicated(lvs)) {
+          ulvs <- unique(lvs)
+          while ((i <- anyDuplicated(flv <- match(lvs,  ulvs)))) {
+            lvs <- lvs[-i]
+            ans[ans + 1L == i] <- match(flv[i], flv[1:(i - 1)]) - 1L
+            ans[ans + 1L > i] <- ans[ans + 1L > i] - 1L
+          }
+          lvs <- ulvs
+        }
+      }
+    }
+    structure(as.integer(ans + 1L),
+              levels = lvs,
+              class = "factor")
+  }
 
 
 
