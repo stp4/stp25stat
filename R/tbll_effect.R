@@ -84,118 +84,222 @@ Tbll_effect <-
 #' Tbll(x4)
 tbll_extract.eff <-
   function(x,
-           caption = "",
-           include.se = FALSE,
-           include.ci = TRUE,
-           include.n = FALSE,
-           digits = 2,
+           # caption = "",
+           # include.se = FALSE,
+           # include.ci = TRUE,
+           # include.n = FALSE,
+           # digits = 2,
            ...) {
-    fit <- x$transformation$inverse(x$fit)
-    if (!include.se & !include.ci) {
-      fit <- stp25rndr::Format2(fit, digits = digits)
-      note <- "mean"
-    }
-    else if (include.ci) {
-      ci_low <- x$transformation$inverse(x$lower)
-      ci_hig <- x$transformation$inverse(x$upper)
-      fit <-
-        stp25rndr::rndr_mean_CI(fit, cbind(ci_low, ci_hig), digits = digits)
-      note <- "mean [95%-CI]"
-    } else{
-      se <- x$transformation$inverse(x$se)
-      fit <- stp25rndr::rndr_mean(fit,  se, digits)
-      note <- "mean (SE)"
-    }
-    var_source <- lapply(x$variables, function(z)
-      z$levels)
-    var_length <- sapply(x$variables, function(z)
-      length(z$levels))
     
-    if (length(var_length) > 1)
-      fit <- cbind(var_source[1], as.data.frame(array(
-        fit,
-        dim = var_length,
-        dimnames = var_source
-      )))
-    else
-      fit <- data.frame(var_source, fit)
+    tbll_extract_eff(x, ...)
     
-    if (include.n) {
-      n <- ectract_n(x)
-      fit <-  stp25tools::combine_data_frame(n, fit, by = 1)
- 
-    }
-    
-    prepare_output(fit, caption = caption, note = note)
+    # fit <- x$transformation$inverse(x$fit)
+    # 
+    # 
+    # if (!include.se & !include.ci) {
+    #   fit <- stp25rndr::Format2(fit, digits = digits)
+    #   note <- "mean"
+    # }
+    # else if (include.ci) {
+    #   ci_low <- x$transformation$inverse(x$lower)
+    #   ci_hig <- x$transformation$inverse(x$upper)
+    #   fit <-
+    #     stp25rndr::rndr_mean_CI(fit, cbind(ci_low, ci_hig), digits = digits)
+    #   note <- "mean [95%-CI]"
+    # } else{
+    #   se <- x$transformation$inverse(x$se)
+    #   fit <- stp25rndr::rndr_mean(fit,  se, digits)
+    #   note <- "mean (SE)"
+    # }
+    # var_source <- lapply(x$variables, function(z)
+    #   z$levels)
+    # var_length <- sapply(x$variables, function(z)
+    #   length(z$levels))
+    # 
+    # if (length(var_length) > 1)
+    #   fit <- cbind(var_source[1], as.data.frame(array(
+    #     fit,
+    #     dim = var_length,
+    #     dimnames = var_source
+    #   )))
+    # else
+    #   fit <- data.frame(var_source, fit)
+    # 
+    # if (include.n) {
+    #   n <- ectract_n(x)
+    #   fit <-  stp25tools::combine_data_frame(n, fit, by = 1)
+    # 
+    # }
+    # 
+    # prepare_output(fit, caption = caption, note = note)
   }
-
-
-
-
-ectract_n <- function(x) {
-  y <- names(x$data)[1L]
-  fm <- formula(paste0(y, "~", paste0(names(x$variables), collapse = "+")))
-  
-  var_is_factor <- lapply(x$variables, function(z)
-    z$is.factor)
-  var_source <- lapply(x$variables, function(z)
-    z$levels)
-  var_length <- sapply(x$variables, function(z)
-    length(z$levels))
-  
-  for (i in names(var_source)) {
-    if (!var_is_factor[[i]])
-      x$data[[i]] <- cut(x$data[[i]] , length(var_source[[i]]))
-  }
-  res <- aggregate(
-    fm,
-    x$data,
-    FUN = function(x)
-      length(x),
-    drop = FALSE
-  )
-  
-  if (length(var_length) > 1)
-    cbind(var_source[1], as.data.frame(array(
-      res[[ncol(res)]],
-      dim = var_length,
-      dimnames = var_source
-    )))
-  else
-    data.frame(var_source,  res[[ncol(res)]])
-}
-
-
-
-
-
-
 
 
 #' @rdname Tbll
 #' @export
 #'
 tbll_extract.efflist <-
+  function(x,  ...) {
+    tbll_extract_eff(x, ...)
+    
+    # rslt <- list()
+    # for (i in names(x)) {
+    #   rslt[[i]] <- tbll_extract.eff(
+    #     x[[i]],
+    #     caption = paste(caption, i),
+    #     include.se = include.se,
+    #     include.ci = include.ci,
+    #     include.n = include.n,
+    #     digits = digits
+    #   )
+    # }
+    # rslt
+  }
+
+
+
+ 
+
+extract_n <- function (x, i) {
+  if (inherits(x, "eff"))  x <- list(i = x)
+  y <- names(x[[i]]$data)[1L]
+  
+  fm <- formula(paste0(y, "~", paste0(names(x[[i]]$variables), collapse = "+")))
+  
+  var_is_factor <- lapply(x[[i]]$variables, function(z)  z$is.factor)
+  var_source <- lapply(x[[i]]$variables, function(z) z$levels)
+  for (j in names(var_source)) {
+    if (!var_is_factor[[i]])
+      x[[i]]$data[[j]] <-
+        cut(x[[i]]$data[[j]], length(var_source[[j]]))
+  }
+  rslt_n <- aggregate(
+    fm,
+    x[[i]]$data,
+    FUN = function(n)
+      length(n),
+    drop = FALSE
+  )
+  rslt_n[[ncol(rslt_n)]]
+}
+
+
+tbll_extract_eff <-
   function(x,
            caption = "",
+           include.fit = TRUE,
            include.se = FALSE,
            include.ci = TRUE,
            include.n = FALSE,
+           include.format = TRUE,
            digits = 2,
-           ...) {
-    rslt <- list()
-    for (i in names(x)) {
-      rslt[[i]] <- tbll_extract.eff(
-        x[[i]],
-        caption = paste(caption, i),
-        include.se = include.se,
-        include.ci = include.ci,
-        include.n = include.n,
-        digits = digits
-      )
+           type = c("link", "response"),
+          
+           ...)
+  {
+    type <- match.arg(type)
+    rslt <- NULL
+    if (inherits(x, "eff")) rslt[[1]] <- effects:::as.data.frame.eff(x, type = type)
+    else rslt <- effects:::as.data.frame.efflist(x, type = type)
+    
+    if (!include.format)
+      return(if (length(rslt) == 1)
+        rslt[[1]]
+        else
+          rslt)
+    
+    for (i in seq_along(rslt)) {
+      if (include.fit & include.ci) {
+        rslt[[i]]$value <-
+          stp25rndr::rndr_mean_CI(rslt[[i]]$fit, cbind(rslt[[i]]$lower, rslt[[i]]$upper), digits = digits)
+        note <- "mean [95%-CI]"
+      }
+      else if (include.fit & include.se) {
+        rslt[[i]]$value  <-
+          stp25rndr::rndr_mean(rslt[[i]]$fit,  rslt[[i]]$se, digits)
+        note <- "mean (SE)"
+      }
+      else if (include.fit) {
+        rslt[[i]]$value <-
+          stp25rndr::Format2(rslt[[i]]$fit, digits = digits)
+        note <- "mean"
+      }
+      else {
+        return(rslt[[i]])
+      }
+      
+      
+      if (include.n) {
+        rslt[[i]]$value <- paste(extract_n(x, i),  rslt[[i]]$value)
+      }
+      
+      rslt[[i]] <-  rslt[[i]][-(1:4 + (ncol(rslt[[i]]) - 1 - 4))]
+      if (ncol(rslt[[i]]) == 2)
+        rslt[[i]] <-
+        stp25stat::prepare_output(rslt[[i]], caption = caption, note = note)
+      else {
+        rslt[[i]] <- stp25stat::prepare_output(
+          tidyr::pivot_wider(rslt[[i]],
+                             names_from = 2,
+                             values_from = "value"),
+          caption = caption,
+          note = note
+        )
+      }
     }
-    rslt
+    if  (length(rslt)==1)   rslt[[1]]
+    else rslt
   }
+
+ 
+
+
+#tbll_extract(eff2)
+
+
+
+# 
+# ectract_n <- function(x) {
+#   y <- names(x$data)[1L]
+#   fm <- formula(paste0(y, "~", paste0(names(x$variables), collapse = "+")))
+#   
+#   var_is_factor <- lapply(x$variables, function(z)
+#     z$is.factor)
+#   var_source <- lapply(x$variables, function(z)
+#     z$levels)
+#   var_length <- sapply(x$variables, function(z)
+#     length(z$levels))
+#   
+#   for (i in names(var_source)) {
+#     if (!var_is_factor[[i]])
+#       x$data[[i]] <- cut(x$data[[i]] , length(var_source[[i]]))
+#   }
+#   res <- aggregate(
+#     fm,
+#     x$data,
+#     FUN = function(x)
+#       length(x),
+#     drop = FALSE
+#   )
+#   
+#   if (length(var_length) > 1)
+#     cbind(var_source[1], as.data.frame(array(
+#       res[[ncol(res)]],
+#       dim = var_length,
+#       dimnames = var_source
+#     )))
+#   else
+#     data.frame(var_source,  res[[ncol(res)]])
+# }
+# 
+# 
+# 
+
+
+
+
+
+
 
 
 # 
