@@ -125,13 +125,7 @@ tbll_extract.default <- function(...) {
 }
 
 
-#' @rdname Tbll
-#' @export
-#'
-tbll_extract.anova <- function(x, caption = "ANOVA", note = "", ...) {
-  rslt <- fix_format(broom::tidy(x))
-  prepare_output(rslt, caption = caption, note=note)
-}
+
 
 
 #' @rdname Tbll
