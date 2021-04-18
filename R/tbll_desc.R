@@ -383,10 +383,12 @@ Tbll_desc_multi <- function(...) {
 
 
 #' @noRd
-#'  Kopie von  interaction
+#' 
+#' @description Kopie von  interaction
 #'  die Labels werden anderst sortiert.
 #'  
 #'   i lauft in umgekehrter richtung und past ist auch umgedreht ansonsten identich mit interaction
+#'   
 #' @param ...	the factors for
 #' @param sep	string to construct the new level labels by joining the constituent ones.
 #' 

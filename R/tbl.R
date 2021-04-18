@@ -108,6 +108,11 @@ tbll_extract<- function(...){
   UseMethod("tbll_extract")
 }
 
+
+
+
+
+
 #' @rdname Tbll
 #' @export
 #'
@@ -125,6 +130,11 @@ tbll_extract.default <- function(...) {
 }
 
 
+
+#' @rdname Tbll
+#' @export
+#'
+tbll_extract.likert <- function(...) Tbll_likert.likert(...)
 
 
 

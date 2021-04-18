@@ -271,18 +271,11 @@ APA_Table_Anova  <-
 
 
 #' @rdname Tbll
-#' 
 #' @export
 #'
 tbll_extract.aov <- function(x,
                              type.anova = "II",
                              ...) {
- #' APA2 benutzt 
- #' 
- #'   extract_param_aov( x )
- #'   
- #'   
-  
   tbll_extract.anova(
     car::Anova(x, type = type.anova), 
     ...)
