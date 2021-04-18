@@ -4,7 +4,7 @@
 #' @description Struckturgleichungs Modelle mit lavaan. Die Funktionen sind Kopieen von lavaan
 #' und helfen den Output zu erstellen.
 #' APA_SEM ist davei einfach lavaan::sem(x, ...)
-#' mehr unter \link{http://www.understandingdata.net/2017/03/22/cfa-in-lavaan/}
+#' mehr unter http://www.understandingdata.net/2017/03/22/cfa-in-lavaan/
 #'
 #' \subsection{APA2.lavaan}{Ueber APA2 wird die Ausgabe formatiert. Ausgegeben werden die Guetemasse und der ModelFit.
 #' Loading ist dabei der standartisierte Estimate und Communality ist die quadrierte Ladung
