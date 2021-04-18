@@ -71,13 +71,6 @@ APA2.htest <- function(x, caption = "", ...) {
   else {"Eventuel Fisher-Test"}
 }
 
-fix_data_frame2<-function(...){
-  
-  rslt<-data.frame(...)
-  rslt[[2]]<- stp25rndr::Format2(rslt[[2]],2)
-  rslt[[ncol(rslt)]] <- stp25rndr::rndr_P( rslt[[ncol(rslt)]], FALSE)
-  rslt
-}
 
 
 #' @rdname APA2
