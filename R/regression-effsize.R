@@ -247,8 +247,8 @@ etaSquared2 <-
     if (!is(x, "lm")) {
       if (is(x, "anova")) {
         #etaSquared2(fit1)
-        eta <- sjstats::eta_sq(x)
-        eta_p <-  sjstats::eta_sq(x, partial = TRUE)
+        eta <- effectsize::eta_squared(x)
+        eta_p <-  effectsize::eta_squared(x, partial = TRUE)
 
       #  if (nrow(eta) == 1) {
           res <- rbind(cbind(eta[, 2],
