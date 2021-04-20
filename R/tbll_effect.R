@@ -184,6 +184,79 @@ extract_n <- function (x, i) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#' orginal geht nicht  "Tue Apr 20 11:53:58 2021"
+effects_as.data.frame.eff <-
+  function (x,
+            row.names = NULL,
+            optional = TRUE,
+            type = c("response", "link"),
+            ...)
+  {
+    type <- match.arg(type)
+    linkinv <- if (is.null(x$link$linkinv))
+      I
+    else
+      x$link$linkinv
+    linkmu.eta <- if (is.null(x$link$mu.eta))
+      function(x)
+        NA
+    else
+      x$link$mu.eta
+    xx <- x$x
+    for (var in names(xx)) {
+      if (is.factor(xx[[var]])) {
+        xx[[var]] <- addNA(xx[[var]])
+      }
+    }
+    x$x <- xx
+    
+    
+    result <- switch(type,
+                     response = {
+                       data.frame(
+                         x$x,
+                         fit = x$transformation$inverse(x$fit),
+                         se = x$transformation$inverse(x$fit) * x$se,
+                         lower = x$transformation$inverse(x$lower),
+                         upper = x$transformation$inverse(x$upper)
+                       )
+                     }, link = {
+                       data.frame(
+                         x$x,
+                         fit = x$fit,
+                         se = x$se,
+                         lower = x$lower,
+                         upper = x$upper
+                       )
+                     })
+    attr(result, "type") <- type
+    result
+  }
+
+
+
+
 tbll_extract_eff <-
   function(x,
            caption = "",
@@ -193,14 +266,24 @@ tbll_extract_eff <-
            include.n = FALSE,
            include.format = TRUE,
            digits = 2,
-           type = c("link", "response"),
-          
+           type = c("response", "link"),
+           
            ...)
   {
+    #if (include.se)
+     # stop("include.se geht nicht")
     type <- match.arg(type)
     rslt <- NULL
-    if (inherits(x, "eff")) rslt[[1]] <- effects:::as.data.frame.eff(x, type = type)
-    else rslt <- effects:::as.data.frame.efflist(x, type = type)
+    if (inherits(x, "eff")) {
+      rslt[[1]] <- effects_as.data.frame.eff(x, type = type)
+      
+      
+      
+    }
+    else{
+      rslt <-  lapply(x, effects_as.data.frame.eff, type = type)
+      
+    }
     
     if (!include.format)
       return(if (length(rslt) == 1)
@@ -247,12 +330,83 @@ tbll_extract_eff <-
         )
       }
     }
-    if  (length(rslt)==1)   rslt[[1]]
-    else rslt
+    if (length(rslt) == 1)
+      rslt[[1]]
+    else
+      rslt
   }
 
- 
 
+# 
+# tbll_extract_eff <-
+#   function(x,
+#            caption = "",
+#            include.fit = TRUE,
+#            include.se = FALSE,
+#            include.ci = TRUE,
+#            include.n = FALSE,
+#            include.format = TRUE,
+#            digits = 2,
+#            type = c("link", "response"),
+#           
+#            ...)
+#   {
+#     type <- match.arg(type)
+#     rslt <- NULL
+#     if (inherits(x, "eff")) rslt[[1]] <- effects:::as.data.frame.eff(x, type = type)
+#     else rslt <- effects:::as.data.frame.efflist(x, type = type)
+#     
+#     if (!include.format)
+#       return(if (length(rslt) == 1)
+#         rslt[[1]]
+#         else
+#           rslt)
+#     
+#     for (i in seq_along(rslt)) {
+#       if (include.fit & include.ci) {
+#         rslt[[i]]$value <-
+#           stp25rndr::rndr_mean_CI(rslt[[i]]$fit, cbind(rslt[[i]]$lower, rslt[[i]]$upper), digits = digits)
+#         note <- "mean [95%-CI]"
+#       }
+#       else if (include.fit & include.se) {
+#         rslt[[i]]$value  <-
+#           stp25rndr::rndr_mean(rslt[[i]]$fit,  rslt[[i]]$se, digits)
+#         note <- "mean (SE)"
+#       }
+#       else if (include.fit) {
+#         rslt[[i]]$value <-
+#           stp25rndr::Format2(rslt[[i]]$fit, digits = digits)
+#         note <- "mean"
+#       }
+#       else {
+#         return(rslt[[i]])
+#       }
+#       
+#       
+#       if (include.n) {
+#         rslt[[i]]$value <- paste(extract_n(x, i),  rslt[[i]]$value)
+#       }
+#       
+#       rslt[[i]] <-  rslt[[i]][-(1:4 + (ncol(rslt[[i]]) - 1 - 4))]
+#       if (ncol(rslt[[i]]) == 2)
+#         rslt[[i]] <-
+#         stp25stat::prepare_output(rslt[[i]], caption = caption, note = note)
+#       else {
+#         rslt[[i]] <- stp25stat::prepare_output(
+#           tidyr::pivot_wider(rslt[[i]],
+#                              names_from = 2,
+#                              values_from = "value"),
+#           caption = caption,
+#           note = note
+#         )
+#       }
+#     }
+#     if  (length(rslt)==1)   rslt[[1]]
+#     else rslt
+#   }
+# 
+#  
+# tbll_extract_eff(eff1, transformation = trs)
 
 #tbll_extract(eff2)
 
