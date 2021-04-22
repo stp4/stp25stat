@@ -9,10 +9,68 @@
 #' @export
 #'
 #' @examples
-#'
+#' 
+#' require(effects)
+#'  # require(stpvers)
+#'  
 #' mod <- lm(prestige ~ type * (education + income) + women, Prestige)
 #' Tbll_effect(mod, ~ type * education + women)
 #'
+#' DF <- data.frame(
+#'   
+#'   y=c(12, 15, 23, 44, 11, 44, 49, 27, 25,  8, 
+#'       11, 10, 28, 15, 34, 20, 31, 55, 15, 34, 
+#'       47, 11, 27,  9, 12, 15,  7, 15, 42, 14,
+#'       19, 24, 20, 10, 38, 28, 36,  9, 31),
+#'   iq =c(91,  95, 103, 116,  88, 116, 118, 106, 105,  82, 
+#'         88,  87, 107,  95, 111, 100, 109, 120,  95, 111, 
+#'         117,  88, 106,  85,  91,  95,  81,  95, 115,  94,  
+#'         99, 104, 100,  87, 113, 107, 112,  84, 109 )
+#' )
+#' DF$log.y =  log(DF$y) 
+#' 
+#' 
+#' (fit.linear <- lm(y ~ iq, DF))
+#' (fit.log.y <- lm(log.y ~ iq, DF))
+#' (fit.model.log<- lm(log(y)~iq, DF))
+#' 
+#' p1 <-
+#'   plot(effect("iq", fit.linear , 
+#'               partial.residuals = TRUE), 
+#'        main = "y (linear)")
+#' 
+#' p2 <- 
+#'   plot(effect("iq", fit.log.y, 
+#'               partial.residuals = TRUE), 
+#'        main = "log")
+#' 
+#' p3 <- plot(effect("iq",  fit.log.y,
+#'                   partial.residuals = TRUE,
+#'                   transformation =  list(link =  log,  inverse = exp)),
+#'            main = "log + trans")
+#' 
+#' p4 <- plot(effect("iq", fit.model.log , 
+#'                   partial.residuals = TRUE), 
+#'            main = "log(y)")
+#' 
+#' p5 <-   plot(effect("iq", fit.model.log , 
+#'                     partial.residuals = TRUE,
+#'                     transformation =  list(link =  log,  inverse = exp)), 
+#'              main = "log(y) + trans")
+#' 
+#' require(cowplot)
+#' plot_grid(p1,p4, p5,  p2, p3, ncol = 3)
+#' 
+#' cbind(
+#'   Tbll(effect("iq", fit.linear), include.ci=FALSE),
+#'   log.y=Tbll(effect("iq", fit.log.y), include.ci=FALSE)[[2]],
+#'   log.y.trans= Tbll(effect("iq", fit.log.y,   
+#'                            transformation = list(link = log, inverse = exp)), include.ci=FALSE)[[2]],
+#'   model.log=Tbll(effect("iq", fit.model.log), include.ci=FALSE)[[2]],
+#'   model.log.trans= Tbll(effect("iq", fit.model.log,   
+#'                                transformation =  list(link = log, inverse = exp)), include.ci=FALSE)[[2]]
+#' )
+
 Tbll_effect <-
   function(x,
            formula = NULL,
@@ -59,11 +117,12 @@ Tbll_effect <-
   }
 
 
+
 #' @rdname Tbll
 #' @export
 #' @examples
 #'
-#'  require(effects)
+#' require(effects)
 #' fit1 <-
 #'   lm (Sepal.Length ~ Sepal.Width * Species + Petal.Width, data = iris)
 #' fit2 <-
@@ -75,99 +134,39 @@ Tbll_effect <-
 #' x3 <- effect("Petal.Width",  fit1)
 #' x4 <- effect("Petal.Width",  fit2,
 #'              transformation = list(link = log, inverse = exp))
-#'
-#'
-#'
 #' Tbll(x1)
 #' Tbll(x3)
 #' Tbll(x2)
 #' Tbll(x4)
-tbll_extract.eff <-
-  function(x,
-           # caption = "",
-           # include.se = FALSE,
-           # include.ci = TRUE,
-           # include.n = FALSE,
-           # digits = 2,
-           ...) {
-    
-    tbll_extract_eff(x, ...)
-    
-    # fit <- x$transformation$inverse(x$fit)
-    # 
-    # 
-    # if (!include.se & !include.ci) {
-    #   fit <- stp25rndr::Format2(fit, digits = digits)
-    #   note <- "mean"
-    # }
-    # else if (include.ci) {
-    #   ci_low <- x$transformation$inverse(x$lower)
-    #   ci_hig <- x$transformation$inverse(x$upper)
-    #   fit <-
-    #     stp25rndr::rndr_mean_CI(fit, cbind(ci_low, ci_hig), digits = digits)
-    #   note <- "mean [95%-CI]"
-    # } else{
-    #   se <- x$transformation$inverse(x$se)
-    #   fit <- stp25rndr::rndr_mean(fit,  se, digits)
-    #   note <- "mean (SE)"
-    # }
-    # var_source <- lapply(x$variables, function(z)
-    #   z$levels)
-    # var_length <- sapply(x$variables, function(z)
-    #   length(z$levels))
-    # 
-    # if (length(var_length) > 1)
-    #   fit <- cbind(var_source[1], as.data.frame(array(
-    #     fit,
-    #     dim = var_length,
-    #     dimnames = var_source
-    #   )))
-    # else
-    #   fit <- data.frame(var_source, fit)
-    # 
-    # if (include.n) {
-    #   n <- ectract_n(x)
-    #   fit <-  stp25tools::combine_data_frame(n, fit, by = 1)
-    # 
-    # }
-    # 
-    # prepare_output(fit, caption = caption, note = note)
-  }
-
+#' 
+tbll_extract.eff <- function(x,  ...) { tbll_extract_eff(x, ...) }
 
 #' @rdname Tbll
 #' @export
 #'
-tbll_extract.efflist <-
-  function(x,  ...) {
-    tbll_extract_eff(x, ...)
-    
-    # rslt <- list()
-    # for (i in names(x)) {
-    #   rslt[[i]] <- tbll_extract.eff(
-    #     x[[i]],
-    #     caption = paste(caption, i),
-    #     include.se = include.se,
-    #     include.ci = include.ci,
-    #     include.n = include.n,
-    #     digits = digits
-    #   )
-    # }
-    # rslt
-  }
+tbll_extract.efflist <- function(x, ...) { tbll_extract_eff(x, ...) }  
 
 
 
- 
 
+#' @param x,i Werte ueber die for schleife
+#' 
+#' @noRd
+#' 
+#' extract_n
 extract_n <- function (x, i) {
-  if (inherits(x, "eff"))  x <- list(i = x)
+  if (inherits(x, "eff"))
+    x <- list(i = x)
   y <- names(x[[i]]$data)[1L]
   
-  fm <- formula(paste0(y, "~", paste0(names(x[[i]]$variables), collapse = "+")))
+  fm <-
+    formula(paste0(y, "~", paste0(names(x[[i]]$variables), collapse = "+")))
   
-  var_is_factor <- lapply(x[[i]]$variables, function(z)  z$is.factor)
-  var_source <- lapply(x[[i]]$variables, function(z) z$levels)
+  var_is_factor <-
+    lapply(x[[i]]$variables, function(z)
+      z$is.factor)
+  var_source <- lapply(x[[i]]$variables, function(z)
+    z$levels)
   for (j in names(var_source)) {
     if (!var_is_factor[[i]])
       x[[i]]$data[[j]] <-
@@ -183,36 +182,23 @@ extract_n <- function (x, i) {
   rslt_n[[ncol(rslt_n)]]
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#' orginal geht nicht  "Tue Apr 20 11:53:58 2021"
+#' @param x objekt
+#'
+#' @param type fuer transform "response", "link"
+#' 
+#' @noRd
+#'  
+#' effects_as.data.frame.eff
+#' 
+#' orginal geht nicht  "Tue Apr 20 11:53:58 2021" primär habe ich 
+#' x$transformation$inverse ergaenzt
+#' 
 effects_as.data.frame.eff <-
   function (x,
-            row.names = NULL,
-            optional = TRUE,
-            type = c("response", "link"),
-            ...)
-  {
+          #  row.names = NULL,
+           # optional = TRUE,
+            type = c("response", "link")
+          ) {
     type <- match.arg(type)
     linkinv <- if (is.null(x$link$linkinv))
       I
@@ -230,7 +216,6 @@ effects_as.data.frame.eff <-
       }
     }
     x$x <- xx
-    
     
     result <- switch(type,
                      response = {
@@ -256,7 +241,21 @@ effects_as.data.frame.eff <-
 
 
 
-
+#' @param x objekt
+#'
+#' @param caption ueberschrift
+#' @param include.fit,include.se,include.ci,include.n include
+#' @param include.format Zahl oder Text
+#' @param digits Nachkomastellen
+#' @param type fuer transform "response", "link"
+#' @param ... nicht benutzt abfangen von zn note
+#'
+#' @noRd
+#'  
+#'  tbll_extract_eff
+#'  
+#'  das ist die eigendliche Funktion die sowol efflist als auch eff  aufloest.
+#'  
 tbll_extract_eff <-
   function(x,
            caption = "",
@@ -267,22 +266,15 @@ tbll_extract_eff <-
            include.format = TRUE,
            digits = 2,
            type = c("response", "link"),
-           
-           ...)
-  {
-    #if (include.se)
-     # stop("include.se geht nicht")
+           ...)  {
+ 
     type <- match.arg(type)
     rslt <- NULL
     if (inherits(x, "eff")) {
       rslt[[1]] <- effects_as.data.frame.eff(x, type = type)
-      
-      
-      
     }
     else{
       rslt <-  lapply(x, effects_as.data.frame.eff, type = type)
-      
     }
     
     if (!include.format)
@@ -313,7 +305,7 @@ tbll_extract_eff <-
       
       
       if (include.n) {
-        rslt[[i]]$value <- paste(extract_n(x, i),  rslt[[i]]$value)
+        rslt[[i]]$value <- paste0("(", extract_n(x, i), ") ", rslt[[i]]$value)
       }
       
       rslt[[i]] <-  rslt[[i]][-(1:4 + (ncol(rslt[[i]]) - 1 - 4))]
@@ -335,6 +327,13 @@ tbll_extract_eff <-
     else
       rslt
   }
+
+
+
+
+
+
+
 
 
 # 
@@ -902,3 +901,100 @@ tbll_extract_eff <-
 #        n.excluded = n.excluded, x = x, X.mod = X.mod, cnames = cnames, 
 #        X = X, x.var = x.var)
 # }
+
+
+
+#tbll_extract.eff
+# caption = "",
+# include.se = FALSE,
+# include.ci = TRUE,
+# include.n = FALSE,
+# digits = 2,   
+# fit <- x$transformation$inverse(x$fit)
+# 
+# 
+# if (!include.se & !include.ci) {
+#   fit <- stp25rndr::Format2(fit, digits = digits)
+#   note <- "mean"
+# }
+# else if (include.ci) {
+#   ci_low <- x$transformation$inverse(x$lower)
+#   ci_hig <- x$transformation$inverse(x$upper)
+#   fit <-
+#     stp25rndr::rndr_mean_CI(fit, cbind(ci_low, ci_hig), digits = digits)
+#   note <- "mean [95%-CI]"
+# } else{
+#   se <- x$transformation$inverse(x$se)
+#   fit <- stp25rndr::rndr_mean(fit,  se, digits)
+#   note <- "mean (SE)"
+# }
+# var_source <- lapply(x$variables, function(z)
+#   z$levels)
+# var_length <- sapply(x$variables, function(z)
+#   length(z$levels))
+# 
+# if (length(var_length) > 1)
+#   fit <- cbind(var_source[1], as.data.frame(array(
+#     fit,
+#     dim = var_length,
+#     dimnames = var_source
+#   )))
+# else
+#   fit <- data.frame(var_source, fit)
+# 
+# if (include.n) {
+#   n <- ectract_n(x)
+#   fit <-  stp25tools::combine_data_frame(n, fit, by = 1)
+# 
+# }
+# 
+# prepare_output(fit, caption = caption, note = note)
+
+
+# extract_n
+# 
+# orginal geht nicht  "Tue Apr 20 11:53:58 2021"
+# 
+# function (x, row.names = NULL, optional = TRUE, type = c("response", 
+#                                                          "link"), ...) 
+# {
+#   type <- match.arg(type)
+#   linkinv <- if (is.null(x$link$linkinv)) 
+#     I
+#   else x$link$linkinv
+#   linkmu.eta <- if (is.null(x$link$mu.eta)) 
+#     function(x) NA
+#   else x$link$mu.eta
+#   xx <- x$x
+#   for (var in names(xx)) {
+#     if (is.factor(xx[[var]])) {
+#       xx[[var]] <- addNA(xx[[var]])
+#     }
+#   }
+#   x$x <- xx
+#   result <- switch(type, response = {
+#     if (is.null(x$se)) data.frame(x$x, fit = transform(x$fit)) else data.frame(x$x, 
+#                                                                                fit = linkinv(x$fit), se = linkmu.eta(x$fit) * x$se, 
+#                                                                                lower = linkinv(x$lower), upper = linkinv(x$upper))
+#   }, link = {
+#     if (is.null(x$se)) data.frame(x$x, fit = x$fit) else data.frame(x$x, 
+#                                                                     fit = x$fit, se = x$se, lower = x$lower, upper = x$upper)
+#   })
+#   attr(result, "type") <- type
+#   result
+# }
+# 
+
+#tbll_extract.efflist
+# rslt <- list()
+# for (i in names(x)) {
+#   rslt[[i]] <- tbll_extract.eff(
+#     x[[i]],
+#     caption = paste(caption, i),
+#     include.se = include.se,
+#     include.ci = include.ci,
+#     include.n = include.n,
+#     digits = digits
+#   )
+# }
+# rslt
