@@ -356,7 +356,7 @@ Tbll_likert.likert <- function(x,
   
   if (include.mean) {
     x$freq <- cbind(x$freq,
-                    mean = x$Mittelwert)
+                    'M(SD)' = x$Mittelwert)
   }
   
   ans <- cbind(x$names, x$freq)
