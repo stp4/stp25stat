@@ -2,11 +2,12 @@
 
 
 
-# stp25stat 0.2.2
+# stp25stat 0.2.4
 
 ## Changes to functions
 
 * In `APA_Table()` wurde die Funktion der GOF's geändert jetzt ist R2 eine einzelne Zeile.
+* `auto_test()` als Funktion für Tbll_desc(..., include.custom = auto_test, ...
 
 
 
