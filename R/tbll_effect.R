@@ -331,7 +331,117 @@ tbll_extract_eff <-
 
 
 
+#' @rdname Effsize
+#' @export
+APA2.eff <- function(x,
+                     caption = "Effekte: ",
+                     note = "",
+                     output = stp25output::which_output(),
+                     ...) {
+  res <- tbll_extract(x, caption =  caption, ...)
+  
+  Output(res, output = output)
+  
+  invisible(res)
+}
 
+
+#' @rdname Effsize
+#' @export
+#' @examples
+#'
+#' #' # Effekte / Mittelwerte
+#' fit1 <- lm(chol0 ~  ak + rrs0 + med + g, hyper)
+#' Tabelle2(fit1, digits = 2)  # mean SD
+#'
+#' eff <- effects::allEffects(fit1)
+#'
+#' APA2(eff)
+#'
+APA2.efflist <- function(x,
+                         caption = "Effekte: ",
+                         note = "",
+                         output = stp25output::which_output(),
+                         ...) {
+  res <- tbll_extract(x, caption =  caption, ...)
+  for (i in names(res)) {
+    Output(res[[i]],
+           caption=paste(caption, i), 
+           output=output)
+  }
+  invisible(res)
+}
+  
+  
+#APA2.eff
+# if (names(x)[2] %in% "formula") {
+#   efflist <- list(Effect = x)
+#   APA2.efflist(efflist, ...)
+# }
+# else
+#   "Weis nich was das ist?"
+
+#APA2.efflist
+#   if (is.null(type)) {
+#     if (include.fit)
+#       type <- "fit"
+#     if (include.se)
+#       type <- c(type, "se")
+#     if (include.ci)
+#       type <- c(type, "lower", "upper")
+#     if (include.n)
+#       type <- c("N", type)
+#     type <- setdiff(c("N", "fit", "se", "lower", "upper"), type)
+#   }
+#   else{
+#     type <- setdiff(c("N", "fit", "se", "lower", "upper"), type)
+#   }
+#   
+#   res <- fix_eff_to_df(x, caption =  caption,
+#                        note = note)
+#   for (i in names(res)) {
+#     
+#     # cat("\n", i ,"\n")
+#     spalte = which(names(res[[i]]) %in% type)
+#     
+#     
+#     Output(fix_format(res[[i]][-spalte], digits = digits),
+#            caption=paste(caption, i), output=output)
+#   }
+#   invisible(res)
+# }
+
+
+# fix_eff_to_df <- function(x, caption, note ) {
+#   res_list <- NULL
+#   for (i in names(x)) {
+#     info <- model_info(x[[i]])
+#     AV <- ifelse(is.na(info$labels[info$y]), info$y, info$labels[info$y])
+#     ans <- as.data.frame(x[[i]])
+#     n<- ncol(ans)
+#     
+#     ans[1:(n-4) ] <- lapply(ans[1:(n-4)], as.character)
+#     
+#     myN <- aggregate_effect(x[[i]], info$y, info$x)
+#     #- aggregate verwirft Leere Eintraege
+#     if (nrow(ans) == nrow(myN)) {
+#       ans$N <- Format2(myN[, ncol(myN)], 0)
+#       attr(ans, "note") = ""
+#     }
+#     else{
+#       ans$N <- NA
+#       attr(ans, "note") = "Warnung: Die Stichprobe ist relativ klein sodass die Anzahl nicht berechnet werden kann."
+#     }
+#     attr(ans, "caption") =  paste0("AV: ", AV)
+#     attr(ans, "N") = info$N
+#     attr(ans, "labels") = info$labels
+#     
+#     
+#     
+#     res_list[[i]] <- ans
+#   }
+#   res_list
+# }
 
 
 
