@@ -30,17 +30,29 @@
 #'          
 Tbll_reg  <- function(...,
                       caption = "",
-                      include.label = FALSE,  # geht nicht
+                      include.label = FALSE,
+                      # geht nicht
                       names = NULL,
                       digits = NULL,
-                      include.b = TRUE, include.se = TRUE, include.beta = FALSE,
-                      include.ci = FALSE,
-                      include.odds = FALSE, include.odds.ci = FALSE,
-                      include.p = FALSE, include.stars = if (include.p) FALSE else TRUE,
-                      include.r = TRUE, include.pseudo = FALSE,
-                      include.aic = TRUE, include.bic = include.aic,
-                      include.param = TRUE, include.gof = TRUE,include.custom = NULL
-                      ) {
+                      include.b = TRUE,
+                      include.se = FALSE,
+                      include.beta = FALSE,
+                      include.ci = TRUE,
+                      include.odds = FALSE,
+                      include.odds.ci = FALSE,
+                      include.p = FALSE,
+                      include.stars = if (include.p)
+                        FALSE
+                      else
+                        TRUE,
+                      include.r = TRUE,
+                      include.pseudo = FALSE,
+                      include.aic = TRUE,
+                      include.bic = include.aic,
+                      include.param = TRUE,
+                      include.gof = TRUE,
+                      include.custom = NULL) {
+  
   fit <- list(...)
   if( is.null(names)){
     names <- abbreviate(
