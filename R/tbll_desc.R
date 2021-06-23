@@ -68,7 +68,8 @@ Tbll_desc <- function (...,
                        include.normality.tests=FALSE,
                        include.multiresponse=FALSE,
                        include.custom = NULL,
-                       include.ci=FALSE
+                       include.ci=FALSE,
+                        digits=NULL
                        ) {
   note<-""
   rslt_all <- NULL
@@ -104,9 +105,12 @@ Tbll_desc <- function (...,
   }
   
   if (include.multiresponse){
-   # nein das geht nicht wegen Formel
-    # if(is.numeric(X$measure)) X$digits <- rep(0, length(X$digits))
+   # wegen Formel und weil hie auch Zhlen kommen 
+    
+     if(!is.null(digits)) X$digits <- rep(0, length(X$digits))
       X$measure <- rep("multi", length(X$measure))
+      
+ 
       
       }
   
@@ -157,15 +161,23 @@ Tbll_desc <- function (...,
         ans <- ans_i[1:2]
       names(ans_i) <-  paste0(i, "_", names(ans_i))
       ans <- cbind(ans, ans_i[-c(1:2)])
+      
+      
     }
     if (include.total)
       rslt_all <- cbind(rslt_all, ans[-c(1:2)])
     else
       rslt_all <- ans
+    
+   # print(ans)
+   
   }
-  
+  # print(rslt_all)
+   
+   
   if (include.nr) {
     if (is.null(X$group.vars)) {
+      #cat("\nis.null\n")
       n.out <- c("(N)", "", "", X$N)
       names(n.out) <- names(rslt_all)
       rslt_all <- rbind(n.out, rslt_all)
@@ -173,16 +185,24 @@ Tbll_desc <- function (...,
     else {
       tsum <- table(X$data[[X$group.vars]])
       if (include.total) {
+        #cat("\nif\n")
         n.out <- c("(N)", rep("", ncol(rslt_all) + 4))
-        n.out[grep("_m", names(rslt_all))] <-
+        n.out[ stringr::str_ends(names(rslt_all), "_m") ] <-
           as.character(c(sum(tsum), as.vector(tsum)))
+        # n.out[grep("_m", names(rslt_all))] <-
+        #   as.character(c(sum(tsum), as.vector(tsum)))
+   
       } else{
+     #   cat("\nelse\n")
         n.out <- c("(N)", rep("", ncol(rslt_all) + 2))
-        n.out[grep("_m", names(rslt_all))] <- as.character(tsum)
+        n.out[stringr::str_ends(names(rslt_all), "_m")] <- as.character(tsum)
+       # n.out[grep("_m", names(rslt_all))] <- as.character(tsum)
       }
       rslt_all <- rbind(n.out, rslt_all)
     }
   }
+ #  cat("\n nach include.nr\n")
+  # print(rslt_all)
   
   if (!include.n) {
     length.out <- if(is.null(X$group.vars)) 1 else nlevels(X$data[[X$group.vars]]) + include.total
@@ -192,10 +212,12 @@ Tbll_desc <- function (...,
         by = 2,
         length.out = length.out
       ))]
-    names(rslt_all) <- gsub("_m", "", names(rslt_all))
+    
+    names(rslt_all) <- gsub("_m$", "", names(rslt_all))
   }
   
-  
+   #cat("\n nach include.n\n")
+   #print(rslt_all)
   # Eigene Funktion fun(x, by, measure, measure.test) 
   #                 return vector ode matrix
   #                 die länge ist gleich wie bei measure oder die anzahl an factoren
@@ -371,14 +393,18 @@ Tbll_desc <- function (...,
   }
   
   rslt_all[[1]] <- paste(rslt_all[[1]], rslt_all[[2]])
+  
+  
+#  cat("\n vore prepare \n")
+#  print(rslt_all)
   prepare_output(rslt_all[-2], caption = caption, note=note, N=X$N)
 }
 
 
 #' @rdname Tbll_desc
 #' @export
-Tbll_desc_multi <- function(...) {
-  Tbll_desc(..., include.multiresponse=TRUE)
+Tbll_desc_multi <- function(..., digits=NULL) {
+  Tbll_desc(..., include.multiresponse=TRUE, digits=digits)
 }
 
 
