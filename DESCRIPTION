@@ -10,7 +10,8 @@ Encoding: UTF-8
 Imports: stp25aggregate, 
   stp25formula,
   stp25rndr,
-  stp25output
+  stp25output,
+  broom.mixed
 Suggests: 
   stats,
   lubridate, 
@@ -22,8 +23,11 @@ Suggests:
   stringr,
   magrittr,
   caret,
+  broom,
+  cowplot, 
+  rockchalk,
   pscl
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr  
 Language: de_DE

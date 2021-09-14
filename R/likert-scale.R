@@ -4,6 +4,8 @@
 #'
 #' @name Likert
 #' @param ... Alle weiteren Argumente
+#' @param reverse.labels logical levels umderehen
+#' @param labels  andere Ordung der  levels
 #' @return a likert class list with the following elements:
 #'   results: Ergebnisse der Haufigkeiten fuer zB Grafik
 #'   names: Dataframe mit Namen
@@ -91,7 +93,9 @@ Likert <- function(...,
       results <- Summarise(
         ...,
         fun = function(x) {
-          levels(x) <- labels
+        #  levels(x) <- labels
+          x <- factor(x, labels)
+          
           table(x, useNA = "always")
         },
         key = "Item"

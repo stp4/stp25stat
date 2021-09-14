@@ -10,7 +10,7 @@
 #'  function(x , by, ...){
 #' x <- scale(as.numeric(x))
 #' diff(sapply(split(x, by), mean, na.rm=TRUE))})
-#' 
+#' @param include.value vector oder data.frame in exact der reihenfolge wie die meassure-variablen.
 #' @return data.frame
 #' @export
 #' @examples
@@ -56,7 +56,32 @@
 #' # aufruf von APA2()
 #' Tbll_reg(lm1, lm2)
 #'   
+#'    
+#' Tbll_desc(
+#'   warpbreaks,
+#'   # "H1",
+#'   breaks,
+#'   tension,
+#'   by = ~ wool,
+#'   #  include.total = TRUE,
+#'   # include.n = FALSE,
+#'   include.test = TRUE,
+#'   include.value = c(breaks = "ES = 26", tension = "OR = .0256")
 #'   
+#' )
+#' 
+#' Tbll_desc(
+#'   warpbreaks,
+#'   # "H1",
+#'   breaks,
+#'   tension,
+#'   by = ~ wool,
+#'   #  include.total = TRUE,
+#'   # include.n = FALSE,
+#'   include.test = TRUE,
+#'   include.value = data.frame(ES=1:2, OR= 3:4)
+#'   
+#' )
 #'   
 Tbll_desc <- function (...,
                        caption="",
@@ -68,6 +93,7 @@ Tbll_desc <- function (...,
                        include.normality.tests=FALSE,
                        include.multiresponse=FALSE,
                        include.custom = NULL,
+                       include.value = NULL,
                        include.ci=FALSE,
                         digits=NULL
                        ) {
@@ -392,6 +418,92 @@ Tbll_desc <- function (...,
     rslt_all$normality.tests <- rslt_disttest
   }
   
+  
+  if (!is.null(include.value)) {
+    
+    rslt_custom <- NULL
+    if (is.vector(include.value)) {
+      cat("\n in vector")
+      for (i in seq_len(n)) {
+        # include.value[i] kann ein vector der laenge 1 oder eine matrix sein
+        if (X$measure[i] != "factor") {
+          rslt_custom <- append(rslt_custom, include.value[i])
+        }
+        else  if (X$measure[i] == "factor" &
+                  length(include.value[i]) == 1) {
+          rslt_custom <- append(rslt_custom, include.value[i])
+          rslt_custom <-
+            append(rslt_custom, rep("", nlevels(X$data[[X$measure.vars[i]]])))
+        } else if (X$measure[i] == "factor" &
+                   length(include.value[i]) == nlevels(X$data[[X$measure.vars[i]]])) {
+          rslt_custom <- append(rslt_custom, c("", include.value[i]))
+        } else{
+          stop("In rslt_custom stimmen die Laenge derRueckgabe nicht!")
+        }
+      }
+    }
+      
+    else{
+      cat("\n in matrix")
+     
+      
+      for (i in seq_len(n)) {
+        cat("\n i = ", i, "\n")
+        print(X$measure[i])
+        print( include.value[i,] )
+    
+        
+        if (X$measure[i] != "factor") {
+          cat( " kein Factor ")
+          rslt_custom <- rbind(rslt_custom, include.value[i,])
+        }
+        else if (X$measure[i] == "factor" & nrow(include.value[i,]) == 1) {
+          cat( " Factor und nrow = 1  " ) 
+          rslt_custom <- rbind(rslt_custom, include.value[i,])
+           print(rslt_custom) 
+          rslt_custom <- rbind(rslt_custom,
+                               matrix(
+                                 "",
+                                 ncol = ncol(rslt_custom),
+                                 nrow = nlevels(X$data[[X$measure.vars[i]]]),
+                                 dimnames = list(NULL,
+                                                  colnames(( include.value ))))
+                               )
+        }
+        else if (X$measure[i] == "factor" &
+                 nrow(include.value[i,]) == nlevels(X$data[[X$measure.vars[i]]])) {
+          cat( " Factor und  irgendwas " ) 
+          rslt_custom <- rbind(rslt_custom,
+                               matrix("",
+                                      ncol = ncol(rslt_custom),
+                                      nrow = 1,
+                                      dimnames = list(NULL,
+                                                      colnames(( include.value ))))
+          )
+          rslt_custom <- rbind(rslt_custom, include.value[i,])
+        } else{
+          stop("In rslt_custom stimmen die Laenge derRueckgabe nicht!")
+        }
+      }
+      
+      
+    }
+    
+      
+       
+    if (is.vector(rslt_custom)) {
+      if (include.nr)
+        rslt_custom <-  append(rslt_custom, "", after = 0)
+      rslt_all$value <- rslt_custom
+    }
+    else {
+      # is.matrix
+      if (include.nr)
+        rslt_custom <- rbind(rep("", ncol(rslt_custom)), rslt_custom)
+      rslt_all <- cbind(rslt_all, rslt_custom)
+    }
+  }
+  
   rslt_all[[1]] <- paste(rslt_all[[1]], rslt_all[[2]])
   
   
@@ -403,8 +515,33 @@ Tbll_desc <- function (...,
 
 #' @rdname Tbll_desc
 #' @export
-Tbll_desc_multi <- function(..., digits=NULL) {
-  Tbll_desc(..., include.multiresponse=TRUE, digits=digits)
+Tbll_desc_multi <- function(...,
+                            by = NULL,
+                            digits = 0,
+                            include.order = TRUE) {
+  rslt <- Tbll_desc(
+    ...,
+    by = by,
+    include.multiresponse = TRUE,
+    digits = digits
+  )
+  
+  if (include.order) {
+    rslt_order <- Summarise(
+      ...,
+      fun = function(x) {
+        x <- na.omit(x)
+        if (is.logical(x))
+          mean(x)
+        else if (is.numeric(x))
+          mean(x == 1)
+        else
+          mean(x == levels(x)[1])
+      }
+    )
+    rslt <- rslt[order( rslt_order$value, decreasing = TRUE),]
+  }
+  rslt
 }
 
 

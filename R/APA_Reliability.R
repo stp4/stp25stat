@@ -97,7 +97,148 @@ Reliability <- function(...) {
   UseMethod("Reliability")
 }
 
-#' @rdname APA
+
+
+
+
+
+
+#' Tbll_reliability
+#'
+#' @param ... Data, Formula
+#' @param caption,note  an prepare
+#' @param include.label Labels 
+#' @param include.item_statistic Item Statistic
+#' @param include.scale_statistic  Scale Statistic
+#' @param revcoded,na.rm,max.level,min.level an Umkodieren
+#' @param digits Digits
+#'
+#' @return list ore data.frame
+#' @export
+#'
+#' @examples
+#'
+#'   Tbll_reliability(data.frame(
+#'     x = 1:10,
+#'     y = 2:11,
+#'     z = 12:3,
+#'     w = rnorm(10)
+#'   ),
+#'   x,
+#'   y,
+#'   z,
+#'   w,
+#'   revcoded = 3)
+#' 
+#'  
+Tbll_reliability <-
+  function(...,
+           caption = "Reliability",
+           note = "",
+           include.label = TRUE,
+           include.item_statistics = TRUE,
+           include.scale_statistics = TRUE,
+           
+           # an Umcodieren
+           revcoded = FALSE,
+           
+           na.rm = TRUE,
+           max.level = NA,
+           min.level = NA,
+           
+           digits = 2) {
+    X <- stp25formula::prepare_data2(...)
+    n <- length(X$measure.vars)
+    if (!include.label)
+      X$row_name <- X$measure.vars
+    
+    if (length(X$measure.vars) > 1)   {
+      rslt <- Reliability (
+        X$data[X$measure.vars],
+        revcoded = revcoded,
+        check.keys = FALSE,
+        max.level = max.level,
+        min.level = min.level,
+        type = "mean",
+        na.rm = TRUE
+      )
+      
+      
+      
+      item <-
+        data.frame(
+          Items = paste0(rslt$labels, ifelse(rslt$keys < 0, " (-)", "")),
+          n = rslt$item_statistik$n,
+          M = stp25rndr::Format2(rslt$item_statistik$m, 2),
+          SD = stp25rndr::Format2(rslt$item_statistik$sd, 2),
+          "Alpha if Item Deleted" = stp25rndr::Format2(rslt$psych$item.stats$r.drop, 2)
+        )
+      aplha_statistik <- with(
+        rslt,
+        data.frame(
+          Items = Items,
+          n = n,
+          M = stp25rndr::Format2(M, 2),
+          SD = stp25rndr::Format2(SD, 2),
+          Alpha = stp25rndr::Format2(Alpha, 2),
+          Range = paste(stp25rndr::Format2(range, 2), collapse = "; "),
+          Skew = stp25rndr::Format2(Skew, 2),
+          Kurtosi = stp25rndr::Format2(Kurtosi, 2) ,
+          "Shapiro Test" = shapiro
+        )
+      )
+      
+      
+      item_statistics =
+        prepare_output(
+          item,
+          caption = paste("Itemstatistiken", caption),
+          note = note,
+          N = n
+        )
+      scale_statistics  =
+        prepare_output(
+          aplha_statistik ,
+          caption = paste("Item-Mittelwerte", caption),
+          note = note,
+          N = n
+        )
+      if (include.item_statistics & include.scale_statistics)
+        return(list(item_statistics = item_statistics, scale_statistics =
+                      scale_statistics))
+      else if (include.item_statistics)
+        return(item_statistics)
+      else
+        return(scale_statistics)
+    }
+    else{
+      x <- as.numeric(X$data[[1]])
+      res_shapiro <- stats::shapiro.test(x)
+      return(
+        prepare_output(
+          data.frame(
+            Items = 1,
+            n  = length(na.omit(x)),
+            M  = stp25rndr::Format2(mean(x, na.rm = na.rm), digits),
+            SD = stp25rndr::Format2(sd(x, na.rm = na.rm), digits),
+            Range = paste(stp25rndr::Format2(range(x, na.rm = na.rm), digits), collapse = "; "),
+            Alpha = "n.a.",
+            Skew    = stp25rndr::Format2(psych::skew(x, na.rm = na.rm), digits),
+            Kurtosi = stp25rndr::Format2(psych::kurtosi(x , na.rm = na.rm), digits),
+            shapiro = stp25rndr::rndr_shapiro(res_shapiro$statistic, res_shapiro$p.value)
+          )
+        ),
+        caption = paste("Item-Mittelwerte", caption),
+        note = note,
+        N = n
+      )
+    }
+  }
+
+
+
+
+#' @rdname Reliability
 #' @export
 APA.stp25_reliability <- function(x, ...) {
   paste("Alpha = ", Format2(x$Alpha, 2))
@@ -109,7 +250,7 @@ Reliability2 <- function(...) {
   APA_Reliability(...)
 }
 
-#' @rdname APA2
+#' @rdname Reliability
 #' @export
 APA2.stp25_reliability <- function(x,
                                    caption = "",
@@ -156,7 +297,7 @@ item <-
 }
 
 
-#' @rdname APA_
+#' @rdname Reliability
 #' @export
 APA_Reliability <- function(...,
                             caption = "",
@@ -306,7 +447,7 @@ Reliability.default <- function(x,
                                 type = "mean",
                                 na.rm = TRUE,
                                 ...) {
-  data <- transform_to_numeric(x)
+  data <- stp25aggregate:::transform_to_numeric(x)
   #- data ist jetzt eine Liste mit # list(data, range , label)
   result <-
     item_statistik(data, revcoded, check.keys, ...)
@@ -320,123 +461,6 @@ Reliability.default <- function(x,
   result
 }
 
-
-#' @rdname Reliability
-#' @description \code{Index} Summen Index eine Summenfunktion mit der Erweiterung zum Umcodieren
-#' @param return.index TRUE/FALSE index oder Daten
-#' @return Vektor
-#' @export
-Index <- function(x,
-                  revcoded = FALSE,
-                  fun = "mean",
-                  na.rm = TRUE,
-                  digits = 4,
-                  max.level = NA,
-                  min.level = NA,
-                  return.index =TRUE,
-                  ...) {
-  if (!all(apply(x, 2, function(objekt) {
-    class(objekt) == "numeric" || class(objekt) == "integer"
-  }))) {
-    if (any(unlist(
-      lapply(x, function(objekt)
-        class(objekt) == "factor" ||
-        class(objekt) == "labelled")
-    ))) {
-      cat("\nKonvertiere Faktoren zu Zahlen!\n\n")
-      x <- data.frame(lapply(x, as.numeric))
-    } else {
-      cat(
-        "\n",
-        "Falsches Datenformat (Numeric oder Faktor ist erlaubt)",
-        "\n",
-        apply(x, 2, function(objekt)
-          class(objekt)),
-        "\n\n"
-      )
-      return(rep(NA, nrow(x)))
-    }
-  }
-  if (!is.logical(revcoded)) {
-    cat("\n", "Umcodieren ", paste(revcoded, collapse = ", "), "\n")
-    print(head(x))
-    x <- Umcodieren(x, revcoded, max.level, min.level)
-    print(head(x))
-  }
-  index <- switch(
-    fun,
-    mean = round(rowMeans(x, na.rm = na.rm), digits),
-    sum =  round(rowSums(x, na.rm = na.rm), digits),
-    rep(NA, nrow(x))
-  )
-
-  if (return.index)
-    return(index)
-  else
-    return(list(data = x, index = index))
-
-}
-
-
-#' Umcodieren
-#' 
-#' @noRd
-Umcodieren <- function(x,
-                       revcoded,
-                       max.level = NA,
-                       min.level = NA) {
-  if (is.na(max.level))
-    max.level <- max(x, na.rm = TRUE)
-  if (is.na(min.level))
-    min.level <- min(x, na.rm = TRUE)
-  mytempdata <- x[, revcoded]
-
-  if (is.numeric(mytempdata))
-    x[, revcoded] <- max.level + min.level - mytempdata
-  else
-    x[, revcoded] <-
-    apply(mytempdata, 2, function(item)
-      max.level + min.level - item)
-  return(x)
-}
-
-
-
-#' Transformieren zu numeric
-#' 
-#' @noRd
-transform_to_numeric <- function(data, data_range) {
-  #data2<- na.omit(data)
-  lvls <- stp25aggregate::GetLabelOrName(data)
-
-  objects <-
-    sapply(data, function(x)
-      if (is.factor(x))
-        "factor"
-      else if (is.numeric(x))
-        "numeric"
-      else
-        "unknown")
-  if (all(objects == "numeric"))
-    data_range <- range(data, na.rm = T)
-  else if (all(objects == "factor")) {
-    data <- data.frame(sapply(data, as.numeric))
-    data_range <- range(data, na.rm = T)
-  }
-  else {
-    cat("\n",
-        "Falsches Datenformat (Numeric oder Faktor ist erlaubt)",
-        "\n")
-    # print(objects)
-    data <- sapply(data, as.numeric)
-    data_range <- range(data, na.rm = T)
-  }
-
-  list(data = data,
-       range = data_range,
-       labels = lvls)
-
-}
 
 
  
@@ -457,7 +481,7 @@ item_statistik <- function(data, #Data ist Liste
   }
   #Text(revcoded)
   if (is.numeric(revcoded) | is.character(revcoded)) {
-    data$data <- Umcodieren(data$data,
+    data$data <- stp25aggregate:::Umcodieren(data$data,
                             revcoded,
                             max.level = data$range[2],
                             min.level = data$range[1])
@@ -474,7 +498,7 @@ item_statistik <- function(data, #Data ist Liste
     data$keys <- alp_check$keys
     if (any(alp_check$keys == -1)) {
       data$data <-
-        Umcodieren(
+        stp25aggregate:::Umcodieren(
           data$data,
           which(alp_check$keys == -1),
           max.level = data$range[2],

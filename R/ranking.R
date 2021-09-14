@@ -166,12 +166,12 @@
 #' x<-Rangreihe(R1 + R2 +R3 ~sex, DF, include.percent=FALSE, output=FALSE)
 #' 
 #' 
-#' names( x)
+#' names(x)
 #' x$mean
 #' 
-#' #' 
-#' #lattice::dotplot( reorder(Items, mean)~ mean|"Kaffee", 
-#'                   x$mean, groups=group , xlab="",
+#' #
+#' # lattice::dotplot( reorder(Items, mean)~ mean|"Kaffee", 
+#' #                   x$mean, groups=group , xlab="",
 #' #                  xlim=range(x$mean$mean)*1.10 , auto.key=list(), cex=1)
 #'  
 Rangreihe <- function(...,

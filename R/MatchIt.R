@@ -10,7 +10,7 @@
 #' require(MatchIt)
 #' require(wakefield)
 #' require(stpvers)
-#' #Projekt("html")
+#' # Projekt("html")
 #' 
 #' 
 #' set.seed(0815)
@@ -31,11 +31,11 @@
 #' 
 #' #+ results='asis'
 #' DF3$metra <- c(rep(0, nonMetra),  rep(1, Metra))
-#' DF3$Metra<- factor(DF3$metra, 0:1,  c("non-Metra", "Metra"))
+#' DF3$Metra <- factor(DF3$metra, 0:1,  c("non-Metra", "Metra"))
 #' fm <-  metra ~  d.age + d.sex + r.hcv + et.dri + d.dcd + d.steatose
 #' 
 #' 
-#' # 
+#' #
 #' # m.out <- matchit(fm, data = DF3,   method = "nearest")
 #' # APA2(m.out,caption = "Exact Matching ")
 #' # df.match <- match.data(m.out)
@@ -46,12 +46,16 @@
 #' 
 #' 
 #' m.out0 <- matchit(fm, data = DF3,   method = "full")
-#' APA2(m.out0,caption = "Matching  method = full")
+#' Tbll(m.out0) %>% Output(caption = "Matching  method = full")
+#' summary(m.out0) %>%  Tbll() %>% Output()
 #' 
 #' # m.out1 <- matchit(fm, data = DF3, method = "genetic")
 #' # APA2(m.out1,caption = "Matching method = genetic")
 #' 
-#' m.out2 <- matchit(fm, data = DF3, method = "optimal", ratio = 1)
+#' m.out2 <- matchit(fm,
+#'                   data = DF3,
+#'                   method = "optimal",
+#'                   ratio = 1)
 #' APA2(m.out2, caption = "Matching  method = optimal, ratio = 1")
 #' 
 #' #APA2(summary(m.out0, standardize = TRUE))
@@ -59,15 +63,19 @@
 #' 
 #' 
 #' df.match0 <- match.data(m.out0)
-#' summary(df.match0)
-#' df.match0 %>% Tabelle2(
-#'   d.age, d.sex, r.hcv, et.dri, d.dcd, d.steatos,
-#'   distance,
-#'   weights,
-#'   subclass,
-#'   by =  ~ Metra,
-#'   APA = TRUE
-#' )
+#' 
+#' 
+#' 
+#' df.match0 %>% Tbll_desc(d.age,
+#'                         d.sex,
+#'                         r.hcv,
+#'                         et.dri,
+#'                         d.dcd,
+#'                         d.steatos,
+#'                         distance,
+#'                         weights,
+#'                         subclass,
+#'                         by =  ~ Metra)
 #' 
 #' # df.match1 <- match.data(m.out1)
 #' # summary(df.match1)
@@ -80,18 +88,21 @@
 #' # )
 #' 
 #' df.match2 <- match.data(m.out2)
-#' summary(df.match2)
-#' df.match2 %>% Tabelle2(
-#'   d.age, d.sex, r.hcv, et.dri, d.dcd, d.steatos,
-#'   distance,
-#'   weights,
-#'   subclass,
-#'   by =  ~ Metra,
-#'   APA = TRUE
-#' )
+#' #summary(df.match2)
+#' df.match2 %>% Tbll_desc(d.age,
+#'                         d.sex,
+#'                         r.hcv,
+#'                         et.dri,
+#'                         d.dcd,
+#'                         d.steatos,
+#'                         distance,
+#'                         weights,
+#'                         subclass,
+#'                         by =  ~ Metra)
 #' 
-#' #df.match0$subclass 
-#' # End()
+#' #df.match0$subclass
+#' #End()
+
 APA2.matchit <- function (x,
                           caption = "",
                           note = "",
