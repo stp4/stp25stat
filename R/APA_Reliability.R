@@ -138,7 +138,8 @@ Tbll_reliability <-
            include.label = TRUE,
            include.item_statistics = TRUE,
            include.scale_statistics = TRUE,
-           
+           include.cronbachs.alpha =TRUE,
+           include.inter.item.correlation =FALSE,
            # an Umcodieren
            revcoded = FALSE,
            
@@ -180,13 +181,20 @@ Tbll_reliability <-
           n = n,
           M = stp25rndr::Format2(M, 2),
           SD = stp25rndr::Format2(SD, 2),
-          Alpha = stp25rndr::Format2(Alpha, 2),
+          
           Range = paste(stp25rndr::Format2(range, 2), collapse = "; "),
           Skew = stp25rndr::Format2(Skew, 2),
           Kurtosi = stp25rndr::Format2(Kurtosi, 2) ,
           "Shapiro Test" = shapiro
         )
       )
+      
+      if (include.cronbachs.alpha)
+        aplha_statistik$Alpha = 
+        stp25rndr::Format2(rslt$Alpha, 2)
+      if (include.inter.item.correlation)
+        aplha_statistik$inter.item.correlation =    
+        stp25rndr::Format2(performance::item_intercor(rslt$data), 2)
       
       
       item_statistics =
@@ -222,7 +230,7 @@ Tbll_reliability <-
             M  = stp25rndr::Format2(mean(x, na.rm = na.rm), digits),
             SD = stp25rndr::Format2(sd(x, na.rm = na.rm), digits),
             Range = paste(stp25rndr::Format2(range(x, na.rm = na.rm), digits), collapse = "; "),
-            Alpha = "n.a.",
+         #   Alpha = "n.a.",
             Skew    = stp25rndr::Format2(psych::skew(x, na.rm = na.rm), digits),
             Kurtosi = stp25rndr::Format2(psych::kurtosi(x , na.rm = na.rm), digits),
             shapiro = stp25rndr::rndr_shapiro(res_shapiro$statistic, res_shapiro$p.value)
